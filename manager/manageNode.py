@@ -128,11 +128,11 @@ def handle_info_response(node, msg, clientID):
     return
 
   if msg[0] == "DB":
-    self.dbInfo = msg[1]
+    node.dbInfo = msg[1]
   elif msg[0] == "FS":
-    self.fsInfo = msg[1]
+    node.fsInfo = msg[1]
   elif msg[0] == "Q":
-    self.qInfo = msg[1]
+    node.qInfo = msg[1]
 
   checkReady(node)
 

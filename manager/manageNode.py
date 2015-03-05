@@ -381,5 +381,5 @@ class MountClient(Client):
     if msg[0] == ManageNode.FS_MOUNT:
       fsinfo, fsclient = msg[1]
       #Mount the drive
-      pexpect.run("sshfs %s@%s:%s %s" @ (fsinfo['user'], fsclient.listeningAddr[0], fsinfo['path'], self.mntPoint))
+      pexpect.run("sshfs %s@%s:%s %s" % (fsinfo['user'], fsclient.listeningAddr[0], fsinfo['path'], self.mntPoint))
       self.mntTried = True

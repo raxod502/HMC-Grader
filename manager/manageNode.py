@@ -155,15 +155,15 @@ def checkReady(node):
 
   #Get the info we need to know how to connect
   if node.dbInfo == None:
-    node.sendClientMessage(node.providesDB, MessageNode.INFO_REQUEST, {'req': "DB"})
+    node.sendClientMessage(node.providesDB, ManageNode.INFO_REQUEST, {'req': "DB"})
     return
 
   if node.fsInfo == None:
-    node.sendClientMessage(node.providesFS, MessageNode.INFO_REQUEST, {'req': "FS"})
+    node.sendClientMessage(node.providesFS, ManageNode.INFO_REQUEST, {'req': "FS"})
     return
 
   if node.qInfo == None:
-    node.sendClientMessage(node.providesQ, MessageNode.INFO_REQUEST, {'req': "Q"})
+    node.sendClientMessage(node.providesQ, ManageNode.INFO_REQUEST, {'req': "Q"})
 
   if node.providesFlask or node.providesCelery:
     #Once we have all the info make sure that we have a FSWatching client

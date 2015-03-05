@@ -74,7 +74,7 @@ def instructorSaveTestFile(pid, filename):
     filepath = os.path.join(filepath, filename+".json")
 
     with open(filepath, 'w') as f:
-      json.dump(content, f, sort_keys=True, indent=4, separators=(',', ': '))
+      json.dump(content, f, sort_keys=True,indent=4, separators=(',', ': '))
 
     return jsonify(res=True)
   except (Course.DoesNotExist, Problem.DoesNotExist, AssignmentGroup.DoesNotExist):

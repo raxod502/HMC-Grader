@@ -1,6 +1,10 @@
 # coding=utf-8
 
 from node import *
+import re
+import pexpect
+from curses.ascii import ctrl
+import re
 
 #Overloading the typical LOST, AUTH, and ACK to add some features for this
 #system
@@ -111,20 +115,6 @@ def handle_info_request(node, msg, clientID):
   if msg['req'] == "DB" and node.providesDB == -1:
     client.sendMsg(ManageNode.INFO_RESPONSE, ["DB", node.dbInfo])
   elif msg['req'] == "FS" and node.providesFS == -1:
-    from os.path import join
-    #If we already have their key shortcircuit and skip it
-    with open(join('/home', node.fsInfo['user'], '.ssh/authorized_keys'), 'r') as f:
-      contents = f.read()
-      if msg['key'] in contents:
-        #Send them the connection information
-        client.sendMsg(ManageNode.INFO_RESPONSE, ["FS", node.fsInfo])
-        return
-
-    #Add their key to the authorized_keys file
-    with open(join('/home', node.fsInfo['user'], '.ssh/authorized_keys'), 'a') as f:
-      f.write(msg['key'] + '\n')
-
-    #Send them the connection information
     client.sendMsg(ManageNode.INFO_RESPONSE, ["FS", node.fsInfo])
   elif msg['req'] == "Q" and node.providesW == -1:
     client.sendMsg(ManageNode.INFO_RESPONSE, ["Q", node.qInfo])
@@ -146,6 +136,14 @@ def handle_info_response(node, msg, clientID):
 
   checkReady(node)
 
+def handle_mount_event(node, msg, clientID):
+  #If we got a mount then check to see if we can startup
+  #otherwise check if we have to spool down
+  if msg == True:
+    checkReady(node)
+  else:
+    checkUnready(node)
+
 #Check if we are ready
 #REady means that we have all provides and
 def checkReady(node):
@@ -155,20 +153,138 @@ def checkReady(node):
      node.providesQ  == None:
     return
 
+  #Get the info we need to know how to connect
   if node.dbInfo == None:
     node.sendClientMessage(node.providesDB, MessageNode.INFO_REQUEST, {'req': "DB"})
     return
 
   if node.fsInfo == None:
-    node.sendClientMessage(node.providesFS, MessageNode.INFO_REQUEST, {'req': "FS", "key":""})
+    node.sendClientMessage(node.providesFS, MessageNode.INFO_REQUEST, {'req': "FS"})
     return
 
   if node.qInfo == None:
     node.sendClientMessage(node.providesQ, MessageNode.INFO_REQUEST, {'req': "Q"})
-  pass
+
+  if node.providesFlask or node.providesCelery:
+    #Once we have all the info make sure that we have a FSWatching client
+    if node.FSWatcher == None:
+      #If we aren't watching the mount point watch it now
+      num = node.getClientNum()
+      node.clients[num] = MountClient.spawn(node.mntPoint, node.queue, num, 0.1)
+      node.FSWatcher = num
+
+    client = node.getClient(node.FSWatcher)
+
+    #Make sure the filesystem is mounted otherwise we wait for a mount event
+    if not client.mounted:
+      client.sendMsg(ManageNode.FS_MOUNT, (node.fsInfo, node.getClient(node.providesFS)))
+      return
+
+  if node.providesFlask:
+    setupFlask(node)
 
 def checkUnready(node):
+  if node.FSWatcher != None:
+    fswatch = node.getClient(node.FSWatcher)
+
+    if not fswatch.mounted:
+      if node.providesFlask:
+          shutdownFlask(node)
+
+      if node.providesCelery:
+          shutdownCelery(node)
+
+  if node.providesDB == None or \
+     node.providesFS == None or \
+     node.providesQ  == None:
+
+    if node.providesFlask:
+       shutdownFlask(node)
+
+    if node.providesCelery:
+        shutdownCelery(node)
+
+
+#Functions for putting up and taking down
+
+def setupFlask(node):
+  #only start flask if it isn't already started
+  if not node.flaskUp:
+    if node.flaskScreen == None:
+      screen = pexpect.spawn('screen -S flask')
+      #Move to the right folder
+      screen.sendline("cd " + os.getcwd())
+      #exit the screen to get its name
+      screen.sendline(ctrl('a')+'d')
+      screen.expect("\[detached from (.*)\]")
+      match = re.match("\[detached from (.*)\]", screen.after)
+      node.flaskScreen = match.group(1)
+
+    if node.flowerScreen == None:
+      screen = pexpect.spawn('screen -S flower')
+      #Move to the right folder
+      screen.sendline("cd " + os.getcwd())
+      #exit the screen to get its name
+      screen.sendline(ctrl('a')+'d')
+      screen.expect("\[detached from (.*)\]")
+      match = re.match("\[detached from (.*)\]", screen.after)
+      node.flowerScreen = match.group(1)
+
+    #now that we have the screens up connect to them and do our business
+    #we use -x to force reconnect even if someone else has connected externally
+    screen = pexpect.spawn('screen -x ' + node.flaskScreen)
+    screen.sendline('./graderpython/bin/gunicorn -w 4 -k gevent -b 0.0.0.0:%d app:app' @ (node.flaskPort))
+    screen.sendline(ctrl('a')+'d')
+
+    screen = pexpect.spawn('screen -x ' + node.flowerScreen)
+    screen.sendline('./graderpython/bin/celery flower --port=%d -A app:celery')
+    screen.sendline(ctrl('a')+'d')
+
+    #Mark that flask is up
+    node.flaskUp = True
+
+
+
+
+def shutdownFlask(node):
+  if node.flaskUp:
+    if node.flaskScreen:
+      screen = pexpect.spawn('screen -x ' + node.flaskScreen)
+      screen.sendline(ctrl('c'))
+      screen.sendline(ctrl('a')+'d')
+
+    if node.flowerScreen:
+      screen = pexpect.spawn('screen -x ' + node.flowerScreen)
+      screen.sendline(ctrl('c'))
+      screen.sendline(ctrl('a')+'d')
+
+    node.flaskUp = False
+
+def setupCelery(node):
+  if not node.celeryUp:
+    if node.celeryScreen == None:
+      screen = pexpect.spawn('screen -S celery')
+      #Move to the right folder
+      screen.sendline("cd " + os.getcwd())
+      #exit the screen to get its name
+      screen.sendline(ctrl('a')+'d')
+      screen.expect("\[detached from (.*)\]")
+      match = re.match("\[detached from (.*)\]", screen.after)
+      node.celeryScreen = match.group(1)
+
+    screen = pexpect.spawn('screen -x ' + node.celeryScreen)
+    screen.sendline('./graderpython/bin/celery worker -A app:celery')
+    screen.sendline(ctrl('a')+'d')
+    node.celeryUp = True
+
   pass
+
+def shutdownCelery(node):
+  screen = pexpect.spawn('screen -x ' + node.celeryScreen)
+  screen.sendline(ctrl('c'))
+  screen.sendline(ctrl('a')+'d')
+  pass
+
 
 class ManageNode(Node):
   INITIALIZE_REQUEST      = "init_req"
@@ -176,6 +292,9 @@ class ManageNode(Node):
   PROVIDES_MSG            = "provides"
   INFO_REQUEST            = "info_req"
   INFO_RESPONSE           = "info_resp"
+
+  FS_MOUNT_EVENT            = "filesystem_mount_event"
+  FS_MOUNT                = "filesystem_mount"
 
   def __init__(self, host, port):
       Node.__init__(self, host, port, True)
@@ -195,15 +314,31 @@ class ManageNode(Node):
       self.providesDB = None
       self.providesFS = None
       self.providesQ  = None
+      self.FSWatcher = None
 
       #Info dictionaries for storing useful data
       self.dbInfo = None
       self.fsInfo = None
       self.qInfo  = None
 
-
       #Client side information
       self.publicKey = None
+
+      #Front-end information
+      self.mntPoint = None
+      self.providesFlask = False
+      self.providesCelery   = False
+
+      #Names of the screens we have created
+      self.flaskScreen = None
+      self.flowerScreen = None
+      self.celeryScreen = None
+
+      self.flaskPort = 5050
+
+      #Status of flask and celery
+      self.flaskUp = False
+      self.celeryUp = False
 
       #Set up the dispatch table
       self.dispatch[Node.CON_LOST] = handle_con_lost
@@ -214,3 +349,42 @@ class ManageNode(Node):
       self.dispatch[ManageNode.PROVIDES_MSG] = handle_provides_msg
       self.dispatch[ManageNode.INFO_REQUEST] = handle_info_request
       self.dispatch[ManageNode.INFO_RESPONSE] = handle_info_response
+      self.dispatch[ManageNode.FS_MOUNT_EVENT] = handle_mount_event
+
+class MountClient(Client):
+  def __init__(self, mntPoint, queue, id, stopPoll=0.5):
+    Client.__init__(self, queue, id, stopPoll)
+    self.mntPoint = mntPoint
+    self.mntTried = False
+    self.mounted = self.checkMounted()
+
+  def checkMounted(self):
+    with open('/proc/mounts', 'r') as mounts:
+      contents = mounts.read()
+
+    if re.search(self.mntPoint, contents):
+      return True
+    else:
+      return False
+
+  def run(self):
+    while self.running:
+      iready, oready, eready = select.select([self.msgQueue._reader], [],[], self.stopPoll)
+
+      for s in iready:
+        self.putMsg(self.msgQueue.get())
+
+      #Check for changes to /proc/mounts
+      mountStatus = self.checkMounted()
+      if (self.mounted != mountStatus) or (self.mounted == False and self.mntTrued):
+        #If the mount status changed notify the host node
+        self.mounted = mountStatus
+        self.queue.put((ManageNode.FS_MOUNT_EVENT, self.mounted))
+        pass
+
+  def putMsg(self, msg):
+    if msg[0] == ManageNode.FS_MOUNT:
+      fsinfo, fsclient = msg[1]
+      #Mount the drive
+      pexpect.run("sshfs %s@%s:%s %s" @ (fsinfo['user'], fsclient.listeningAddr[0], fsinfo['path'], self.mntPoint))
+      self.mntTried = True

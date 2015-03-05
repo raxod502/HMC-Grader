@@ -116,7 +116,7 @@ def handle_info_request(node, msg, clientID):
     client.sendMsg(ManageNode.INFO_RESPONSE, ["DB", node.dbInfo])
   elif msg['req'] == "FS" and node.providesFS == -1:
     client.sendMsg(ManageNode.INFO_RESPONSE, ["FS", node.fsInfo])
-  elif msg['req'] == "Q" and node.providesW == -1:
+  elif msg['req'] == "Q" and node.providesQ == -1:
     client.sendMsg(ManageNode.INFO_RESPONSE, ["Q", node.qInfo])
 
 

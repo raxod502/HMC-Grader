@@ -23,14 +23,11 @@ This machine can listen on the following addresses
   iplist = []
   ipnum = 0
   for interface in netifaces.interfaces():
-        for link in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
-          print " %d) %s" % (ipnum, link['addr'])
-          iplist.append(link['addr'])
-          ipnum += 1
-        # for link in netifaces.ifaddresses(interface)[netifaces.AF_INET6]:
-        #   print " %d) %s" % (ipnum, link['addr'])
-        #   iplist.append(link['addr'])
-        #   ipnum += 1
+    if netifaces.AF_INET in netifaces.ifaddresses(interface):
+      for link in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
+        print " %d) %s" % (ipnum, link['addr'])
+        iplist.append(link['addr'])
+        ipnum += 1
 
   choice = getInput("Use address #: ", int, lambda x: x >=0 and x < ipnum)
 

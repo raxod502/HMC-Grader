@@ -168,7 +168,6 @@ def setupFilesystem(mN):
   ensurePathExists(join(filePath, 'plugins/latework'))
   print "Storage space setup complete."
   user = getInput("What user should other nodes connect as?: ", str, lambda x: True)
-  ensurePathExists(keyPath)
   mN.fsInfo = {}
   mN.fsInfo['filePath'] = filePath
   mN.fsInfo['user'] = user

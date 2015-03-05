@@ -3,6 +3,7 @@
 import sys
 from utilities import getInput, checkForProgram, makeStatusMsg, getYN
 from manageNode import ManageNode
+from getpass import getpass
 
 
 def runSetup(mN):

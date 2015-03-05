@@ -257,17 +257,56 @@ class Node(threading.Thread):
     else:
       return None
 
-class ConnectionClient(Greenlet):
-  def __init__(self, (socket, addr), queue, id, encrypt=False, stopPoll=0.5):
+class Client(Greenlet):
+  '''Generic message client. This is a base class and is meant to provide
+  default functions to define the interface. It should be used as a superclass
+  for all other clients.
+
+  Clients are designed to take some sort of external input: Network Comms,
+  FS events, User input, ETC...
+  '''
+  def __init__(self, queue, id, stopPoll=0.5):
     Greenlet.__init__(self)
-    self.client = socket.makefile('r+b', bufsize=1024)
-    self.addr = addr
     self.queue = queue
+    self.id = id
+    self.stopPoll = stopPoll
     self.running = True
     self.msgQueue = Queue()
-    self.accepted = False
     self.stopPoll = stopPoll
     self.id = id
+
+  def run(self):
+    '''Basic loop which gets items off of the msgQueue (which are messages from
+    the node) and puts them onto the client interface with putMsg'''
+    while self.running:
+      iready, oready, eready = select.select([self.msgQueue._reader], [],[], self.stopPoll)
+
+      for s in iready:
+        self.putMsg(self.msgQueue.get())
+
+  def putMsg(self, msg):
+    '''Puts a message onto the client interface. This function is what gets
+    called when the node wants to send a message to this client'''
+    pass
+
+  def stop(self):
+    self.running = False
+
+  def sendMsg(self, msgType, msg):
+    self.msgQueue.put((msgType, msg))
+
+class ConnectionClient(Client):
+  '''A client that manages a TCP connection. It can utilize encryption.
+
+  It is designed for direct Node to Node communication and utilizes a very
+  basic JSON based communcation which sends packets that contain
+  [msgType, msgBody]
+  '''
+  def __init__(self, (socket, addr), queue, id, encrypt=False, stopPoll=0.5):
+    Client.__init__(self)
+    self.client = socket.makefile('r+b', bufsize=1024)
+    self.addr = addr
+    self.accepted = False
     self.listeningAddr = None
     self.encrypt = encrypt
     #Encryption stuff
@@ -327,9 +366,3 @@ class ConnectionClient(Greenlet):
 
     msgType, msg = json.loads(data)
     self.queue.put((msgType, msg, self.id))
-
-  def stop(self):
-    self.running = False
-
-  def sendMsg(self, msgType, msg):
-    self.msgQueue.put((msgType, msg))

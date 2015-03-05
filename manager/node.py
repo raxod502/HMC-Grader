@@ -303,7 +303,7 @@ class ConnectionClient(Client):
   [msgType, msgBody]
   '''
   def __init__(self, (socket, addr), queue, id, encrypt=False, stopPoll=0.5):
-    Client.__init__(self)
+    Client.__init__(self, queue, id, stopPoll)
     self.client = socket.makefile('r+b', bufsize=1024)
     self.addr = addr
     self.accepted = False

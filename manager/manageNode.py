@@ -232,11 +232,11 @@ def setupFlask(node):
     #now that we have the screens up connect to them and do our business
     #we use -x to force reconnect even if someone else has connected externally
     screen = pexpect.spawn('screen -x ' + node.flaskScreen)
-    screen.sendline('./graderpython/bin/gunicorn -w 4 -k gevent -b 0.0.0.0:%d app:app' @ (node.flaskPort))
+    screen.sendline('./graderpython/bin/gunicorn -w 4 -k gevent -b 0.0.0.0:%d app:app'%(node.flaskPort))
     screen.sendline(ctrl('a')+'d')
 
     screen = pexpect.spawn('screen -x ' + node.flowerScreen)
-    screen.sendline('./graderpython/bin/celery flower --port=%d -A app:celery')
+    screen.sendline('./graderpython/bin/celery flower --port=%d -A app:celery'%(node.flaskPort+1))
     screen.sendline(ctrl('a')+'d')
 
     #Mark that flask is up

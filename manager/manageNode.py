@@ -206,7 +206,6 @@ def checkUnready(node):
 
 
 #Functions for putting up and taking down
-
 def setupFlask(node):
   #only start flask if it isn't already started
   if not node.flaskUp:
@@ -244,8 +243,6 @@ def setupFlask(node):
     node.flaskUp = True
 
 
-
-
 def shutdownFlask(node):
   if node.flaskUp:
     if node.flaskScreen:
@@ -277,13 +274,11 @@ def setupCelery(node):
     screen.sendline(ctrl('a')+'d')
     node.celeryUp = True
 
-  pass
 
 def shutdownCelery(node):
   screen = pexpect.spawn('screen -x ' + node.celeryScreen)
   screen.sendline(ctrl('c'))
   screen.sendline(ctrl('a')+'d')
-  pass
 
 
 class ManageNode(Node):

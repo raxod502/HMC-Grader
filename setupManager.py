@@ -39,8 +39,6 @@ This machine can listen on the following addresses
 
 
 if __name__ == "__main__":
-  if not os.geteuid() == 0:
-    sys.exit('Script must be run as root')
 
   print """
 ================================================================================
@@ -69,11 +67,6 @@ system.
 NOTE:
 You must first set up the support servers before launching any of the
 application servers.
-
-ABOUT PERMISSIONS:
-This script is running as a root user. Do NOT fear. The script will drop
-permissions as needed to prevent web-servers and auto-graders from running with
-root permissions.
 
 Press enter to continue...
 """

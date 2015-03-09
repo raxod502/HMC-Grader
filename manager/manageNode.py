@@ -74,8 +74,10 @@ def handle_initialize_request(node, msg, clientID):
   if client == None:
       return
 
+  print "Creating client list"
   clients = [x.listeningAddr for x in node.clients.values() if not x == client]
 
+  print "Sending client message"
   client.sendMsg(ManageNode.INITIALIZE_RESPONSE, clients)
 
 def handle_initialize_response(node, msg, clientID):

@@ -6,6 +6,8 @@ import pexpect
 from curses.ascii import ctrl
 import re
 
+from utilities import makeConfig
+
 #Overloading the typical LOST, AUTH, and ACK to add some features for this
 #system
 
@@ -86,6 +88,7 @@ def handle_initialize_response(node, msg, clientID):
   #We should be given a list of all of the nodes in the network
   #We then connect to all of these nodes
   for client in msg:
+    print client
     node.connect(client[0], client[1])
 
 #PROVIDES_MSG: If we get a provides message add that provider and
@@ -183,6 +186,10 @@ def checkReady(node):
     if not client.mounted:
       client.sendMsg(ManageNode.FS_MOUNT, (node.fsInfo, node.getClient(node.providesFS)))
       return
+
+  if node.providesFlask or node.providesCelery:
+    with open('config.py', 'w') as f:
+      f.write( makeConfig(node) )
 
   if node.providesFlask:
     setupFlask(node)

@@ -144,6 +144,10 @@ def handle_mount_event(node, msg, clientID):
   else:
     checkUnready(node)
 
+def handle_self_check(node, msg, clientID):
+  checkUnready(node)
+  checkReady(node)
+
 #Check if we are ready
 #REady means that we have all provides and
 def checkReady(node):
@@ -288,8 +292,10 @@ class ManageNode(Node):
   INFO_REQUEST            = "info_req"
   INFO_RESPONSE           = "info_resp"
 
-  FS_MOUNT_EVENT            = "filesystem_mount_event"
+  FS_MOUNT_EVENT          = "filesystem_mount_event"
   FS_MOUNT                = "filesystem_mount"
+
+  SELF_CHECK              = "self_check"
 
   def __init__(self, host, port):
       Node.__init__(self, host, port, True)
@@ -345,6 +351,18 @@ class ManageNode(Node):
       self.dispatch[ManageNode.INFO_REQUEST] = handle_info_request
       self.dispatch[ManageNode.INFO_RESPONSE] = handle_info_response
       self.dispatch[ManageNode.FS_MOUNT_EVENT] = handle_mount_event
+      self.dispatch[ManageNode.SELF_CHECK] = handle_self_check
+
+  def getDBIP(self):
+    client = self.getClient(self.providesDB)
+    return client.listeningAddr()[0]
+
+  def getQIP(self):
+    client = self.getClient(self.providesQ)
+    return client.listeningAddr()[0]
+
+  def selfCheck(self):
+    self.localMessage(ManageNode.SELF_CHECK, None)
 
 class MountClient(Client):
   def __init__(self, mntPoint, queue, id, stopPoll=0.5):

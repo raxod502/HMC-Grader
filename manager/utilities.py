@@ -34,7 +34,19 @@ def makeStatusMsg(mN, status):
     client = mN.getClient(status)
     return "Provided by %s:%d" % (client.listeningAddr[0], client.listeningAddr[1])
 
-config_template = """
+def makeConfig(mN):
+  return CONFIG_TEMPLATE.format(\
+      dbname=mN.dbInfo['dbName'],\
+      dbuser=mN.dbInfo['dbUser'],\
+      dbpass=mN.dbInfo['dbPass'],\
+      dbhost=mN.getDBIP(),\
+      dbport=mN.dbInfo['dbPort'].\
+      quser=mN.qInfo['qUser'],\
+      qpass=mN.qPass['qPass'],\
+      qhost=mN.getQIP(),\
+      mntpoint=mN.mntPoint)
+
+CONFIG_TEMPLATE = """
 # coding=utf-8
 
 import os
@@ -49,22 +61,23 @@ SECRET_KEY="Grutors <3 SPAM"
 #
 #Mongo settings
 #
-MONGODB_SETTINGS = {'DB': 'submissionsite',
-'username': 'grader',
-'password': 'grutorsLoveGrading',
-'host': '134.173.43.27'}
+MONGODB_SETTINGS = {{'DB': {dbname:r},
+'username': {dbuser:r},
+'password': {dbpass:r},
+'host': {dbhost:r}},
+'port': {dbport:r}}
 
 DATABASE_QUERY_TIMEOUT = 0.5
 
 #
 #Celery config ssettings
 #
-CELERY_BROKER_URL="amqp://grader:grutorsLoveGrading@134.173.43.27"
+CELERY_BROKER_URL="amqp://{quser:s}:{qpass:s}@{qhost:s}"
 
 #
 # Settings for file storage
 #
-STORAGE_HOME="/home/hmcgrader/GraderStorage"
+STORAGE_HOME={mntpoint:r}
 
 
 #

@@ -251,6 +251,8 @@ setup this node can use this information to help make setup easier.
     else:
       setupApplication.runSetup(mN)
 
+    mN.selfCheck()
+
     #Once setup is done we can then just wait for the managment node to be
     #finished
     commandLine(mN)

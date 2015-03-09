@@ -40,9 +40,9 @@ def makeConfig(mN):
       dbuser=mN.dbInfo['dbUser'],\
       dbpass=mN.dbInfo['dbPass'],\
       dbhost=mN.getDBIP(),\
-      dbport=mN.dbInfo['dbPort'].\
+      dbport=mN.dbInfo['dbPort'],\
       quser=mN.qInfo['qUser'],\
-      qpass=mN.qPass['qPass'],\
+      qpass=mN.qInfo['qPass'],\
       qhost=mN.getQIP(),\
       mntpoint=mN.mntPoint)
 

@@ -36,6 +36,7 @@ def makeStatusMsg(mN, status):
 
 def makeConfig(mN):
   return CONFIG_TEMPLATE.format(\
+      secretKey = mN.clusterKey,\
       dbname=mN.dbInfo['dbName'],\
       dbuser=mN.dbInfo['dbUser'],\
       dbpass=mN.dbInfo['dbPass'],\
@@ -56,7 +57,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # Settings for WTForms
 #
 CSRF_ENABLES=True
-SECRET_KEY="Grutors <3 SPAM"
+SECRET_KEY={secretKey:r}
 
 #
 #Mongo settings

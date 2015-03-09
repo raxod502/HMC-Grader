@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from utilities import makeStatusMsg
+import json
 
 def commandLine(manageNode):
   print """
@@ -19,12 +20,17 @@ Starting interactive command line...
 
 Database Status:     %s
 DB Info: %s
+
 File System Status:  %s
 FS Info: %s
+
 Work Queue Status:   %s
 Q Info: %s
 """ % (
-  makeStatusMsg(manageNode, manageNode.providesDB), str(manageNode.dbInfo),
-  makeStatusMsg(manageNode, manageNode.providesFS), str(manageNode.fsInfo),
-  makeStatusMsg(manageNode, manageNode.providesQ), str(manageNode.qInfo),
+  makeStatusMsg(manageNode, manageNode.providesDB),
+  json.dumps(manageNode.dbInfo, sort_keys=True, indent=4, separators=(',', ': ')),
+  makeStatusMsg(manageNode, manageNode.providesFS),
+  json.dumps(manageNode.dbInfo, sort_keys=True, indent=4, separators=(',', ': ')),
+  makeStatusMsg(manageNode, manageNode.providesQ),
+  json.dumps(manageNode.dbInfo, sort_keys=True, indent=4, separators=(',', ': ')),
   )

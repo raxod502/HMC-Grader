@@ -15,7 +15,7 @@ Starting interactive command line...
     elif cmd.lower() == "status":
       print """
 ================================================================================
-= Backing system status                                                        =
+= Backing System Status                                                        =
 ================================================================================
 
 Database Status:     %s
@@ -26,6 +26,14 @@ FS Info: %s
 
 Work Queue Status:   %s
 Q Info: %s
+
+================================================================================
+= Node Status                                                                  =
+================================================================================
+
+clients: %d
+messages: %d
+
 """ % (
   makeStatusMsg(manageNode, manageNode.providesDB),
   json.dumps(manageNode.dbInfo, sort_keys=True, indent=4, separators=(',', ': ')),
@@ -33,4 +41,6 @@ Q Info: %s
   json.dumps(manageNode.dbInfo, sort_keys=True, indent=4, separators=(',', ': ')),
   makeStatusMsg(manageNode, manageNode.providesQ),
   json.dumps(manageNode.dbInfo, sort_keys=True, indent=4, separators=(',', ': ')),
+  len(manageNode.clients),
+  manageNode.queue.qsize()
   )

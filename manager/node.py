@@ -198,6 +198,7 @@ class Node(threading.Thread):
         else:
           msgType, msg, client = self.queue.get()
           if msgType in self.dispatch:
+            print msgType
             self.dispatch[msgType](self, msg, client)
           else:
             print >> sys.stderr, "Recieved message that has no associated handler"

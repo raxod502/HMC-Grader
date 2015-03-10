@@ -90,8 +90,8 @@ def handle_initialize_response(node, msg, clientID):
   #We should be given a list of all of the nodes in the network
   #We then connect to all of these nodes
   for client in msg:
-    print client
-    node.connect(client[0], client[1])
+    newClientNum = self.getClientNum()
+    self.queue.put((Node.Connect, client, newClientNum))
 
 #PROVIDES_MSG: If we get a provides message add that provider and
 #check if we are ready

@@ -91,7 +91,7 @@ def handle_initialize_response(node, msg, clientID):
   #We then connect to all of these nodes
   for client in msg:
     newClientNum = node.getClientNum()
-    node.queue.put((Node.Connect, client, newClientNum))
+    node.queue.put((Node.CONNECT, client, newClientNum))
 
 #PROVIDES_MSG: If we get a provides message add that provider and
 #check if we are ready

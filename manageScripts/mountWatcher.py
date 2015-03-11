@@ -27,6 +27,7 @@ Usage:
   #Arguments 2-n are our screens
   screenNames = sys.argv[2:]
 
+  print "Checking mount status of: {}".format(mntPoint)
   if not checkMounted(mntPoint):
     sys.exit("Directory is not currently mounted")
 

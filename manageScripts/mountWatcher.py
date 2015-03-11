@@ -1,4 +1,5 @@
 # coding=utf-8
+#/usr/bin/python
 
 import sys, subprocess, time, re
 
@@ -16,13 +17,21 @@ def killScreen(screenName):
   subprocess.call(["screen", "-X", "-S", screenName, "kill"])
 
 if __name__ == "__main__":
-  mntPoint = raw_input("What directory should be mounted?: ")
-  screenName = raw_input("What screen should be shutdown?: ")
+  if len(sys.argv) < 3:
+    print """
+Usage:
+  mountWatcher.py <mount Point> <screens to kill ...>
+"""
+  #Argument one is our mount point
+  mntPoint = sys.argv[1]
+  #Arguments 2-n are our screens
+  screenNames = sys.argv[2:]
 
   if not checkMounted(mntPoint):
     sys.exit("Directory is not currently mounted")
 
   while True:
     if not checkMounted(mntPoint):
-      killScreen(screenName)
+      for screen in screenNames:
+        killScreen(screen)
     time.sleep(1)

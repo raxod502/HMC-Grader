@@ -14,9 +14,9 @@ To run this site you must create a python virtual env for testing. This has to h
  * python-dateutil
  * pygments
  * celery
+ * flower
  * psutil
- * netifaces
- * pexpect
+ * gunicorn
  * gevent
 
 The site can then be run with the command:

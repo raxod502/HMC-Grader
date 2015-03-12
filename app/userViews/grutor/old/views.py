@@ -20,32 +20,32 @@ from app.structures.models.course import *
 import os, datetime, fcntl, random
 from werkzeug import secure_filename
 
-@app.route('/grutor/assignments/<cid>')
-@login_required
-def grutorAssignments(cid):
-  '''
-  Function Type: View Function
-  Template: grutor/assignments.html
-  Purpose: Display all of the assignment groups and problems in those groups
-  for the course specified by <cid>.
-
-  Inputs:
-    cid: A course object ID
-
-  Template Parameters:
-    course: The course object specified by <cid>
-
-  Forms Handled: None
-  '''
-  try:
-    c = Course.objects.get(id=cid)
-    #For security purposes we send anyone who isnt grading this class to the index
-    if not ( c in current_user.gradingCourses()):
-      abort(403)
-
-    return render_template("grutor/assignments.html", course=c)
-  except Course.DoesNotExist as e:
-    abort(404)
+# @app.route('/grutor/assignments/<cid>')
+# @login_required
+# def grutorAssignments(cid):
+#   '''
+#   Function Type: View Function
+#   Template: grutor/assignments.html
+#   Purpose: Display all of the assignment groups and problems in those groups
+#   for the course specified by <cid>.
+#
+#   Inputs:
+#     cid: A course object ID
+#
+#   Template Parameters:
+#     course: The course object specified by <cid>
+#
+#   Forms Handled: None
+#   '''
+#   try:
+#     c = Course.objects.get(id=cid)
+#     #For security purposes we send anyone who isnt grading this class to the index
+#     if not ( c in current_user.gradingCourses()):
+#       abort(403)
+#
+#     return render_template("grutor/assignments.html", course=c)
+#   except Course.DoesNotExist as e:
+#     abort(404)
 
 @app.route('/grutor/gradelist/problem/<pid>')
 @login_required

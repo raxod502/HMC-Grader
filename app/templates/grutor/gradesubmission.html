@@ -58,7 +58,7 @@ Assignments for {{course.name}}
       <tr>
         <th>Submission Status</th>
         {% with c,text = submission.getStatus() %}
-        <td class="{{c}}">{% if submission.isLate %}<span style="color:red">[Late] </span>{% endif %}{{text}}</td>
+        <td class="{{c}}"><span id="latespan" style="color:red">{% if submission.isLate %}[Late] {% endif %}</span>{{text}}</td>
         {% endwith %}
       </tr>
       <tr>
@@ -317,7 +317,11 @@ $("#toggleLate").click(function(){
   $.ajax({
     url:"{{url_for('grutorToggleLate', pid=problem.id, uid=user.id, subnum=subnum)}}",
     success: function(data) {
-      location.reload()
+      if($("#latespan").text() == "") {
+        $("#latespan").text("[late] ")
+      } else {
+        $("#latespan").text("")
+      }
     }
   })
 })

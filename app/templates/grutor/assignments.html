@@ -81,26 +81,36 @@ $(function(){
       });
     };
   }
-  {% for a in course.assignments[::-1] %}
-  {% for p in a.problems|sort(attribute="name") %}
-  $.ajax({
-    url:"{{url_for('grutorGetStatus', pid=p.id)}}",
-    dataType:'json',
-    success: function(data){
-      if(data.u == 0 && data.i == 0) {
-        $("#{{p.id}}").addClass('success');
-        $("#{{p.id}}").html("Done")
-      } else if (data.u == 0 && data.i != 0) {
-        $("#{{p.id}}").addClass('warning');
-        $("#{{p.id}}").html("In Progress ({0})".format(data.i))
-      } else {
-        $("#{{p.id}}").addClass('danger');
-        $("#{{p.id}}").html("Unfinished ({0}-{1})".format(data.u, data.i));
-      }
+  var problems = [
+  {% for a in course.assignments[::-1] %}{% for p in a.problems|sort(attribute="name") %}{% if not loop.last %}"{{p.id}}",{% else %}"{{p.id}}"{% endif %}{% endfor %}{% endfor %}
+  ]
+  for (var i = 0; i < problems.length; ++i) {
+    console.log("calculating " + problems[i])
+    var ajaxUrl = "{{url_for('grutorGetStatus', pid="pid")}}";
+    console.log(ajaxUrl);
+    ajaxUrl = ajaxUrl.replace("pid", problems[i]);
+    console.log(ajaxUrl);
+    ajaxCall = function(ajaxUrl, pid) {
+      $.ajax({
+        url:ajaxUrl,
+        dataType:'json',
+        success: function(data){
+          if(data.u == 0 && data.i == 0) {
+            $("#"+pid).addClass('success');
+            $("#"+pid).html("Done")
+          } else if (data.u == 0 && data.i != 0) {
+            $("#"+pid).addClass('warning');
+            $("#"+pid).html("In Progress ({0})".format(data.i))
+          } else {
+            $("#"+pid).addClass('danger');
+            $("#"+pid).html("Unfinished ({0}-{1})".format(data.u, data.i));
+          }
+        }
+      })
     }
-  })
-  {% endfor %}
-  {% endfor %}
+    ajaxCall(ajaxUrl, problems[i])
+  }
 });
+
 </script>
 {% endblock %}

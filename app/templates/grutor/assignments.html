@@ -84,9 +84,7 @@ $(function(){
   var problems = [
   {% for a in course.assignments[::-1] %}
   {% for p in a.problems|sort(attribute="name") %}
-  {% if not loop.last %}
-  "{{p.id}}",{% else %}
-  "{{p.id}}"{% endif %}
+  "{{p.id}}",
   {% endfor %}
   {% endfor %}
   ]

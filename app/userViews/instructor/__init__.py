@@ -5,5 +5,4 @@ This module supports operations for instructors to manage courses and assignment
 '''
 #We need this to import all the submodules of the problem module
 
-__all__ = ["courseSettings", "courseStatistics", "problemSettings", "testSettings",
-"viewStudent"]
+__all__ = ["courseSettings", "problemSettings", "testSettings", "viewStudent"]

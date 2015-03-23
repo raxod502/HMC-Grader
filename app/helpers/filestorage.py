@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from app import app
-import os, shutil
+import os, shutil, re
 
 def cleanPath(path):
   '''
@@ -108,12 +108,17 @@ def removePath(path):
 # Functions for makeing sure that we are putting data in the right mount point
 #
 
-def checkMounted(mntPoint):
+def checkMounted():
   '''
   Reads /proc/mounts to see if mntPoint is listed as mounted
   '''
+  if not app.config['STORAGE_MOUNTED']:
+    return
+
   with open('/proc/mounts', 'r') as mounts:
-    if re.search(mntPoint, mounts.read()):
-      return True
+    if re.search(app.config['STORAGE_HOME'], mounts.read()):
+      return
     else:
-      return False
+      raise Exception("""
+Your request has been terminated because the backing filesystem is not mounted.
+Please try again in a few minutes. If this error persists please contact an administrator""")

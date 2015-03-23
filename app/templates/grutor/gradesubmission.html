@@ -84,7 +84,7 @@ Assignments for {{course.name}}
       <tr>
         <td colspan="2" style="text-align:right">
           <a href="{{url_for('grutorReleaseSubmission', pid=problem.id, uid=user.id, subnum=subnum)}}" class="btn btn-danger btn-xs">Cancel Grade</a>
-          <a href="{{url_for('grutorFinishSubmission', pid=problem.id, uid=user.id, subnum=subnum)}}" id="finishGrading" class="btn btn-success btn-xs">Finish Grading (save all)</a>
+          <button onclick="saveAllAndFinish()" class="btn btn-success btn-xs">Finish Grading (save all)</button>
         </td>
       </tr>
     </table>
@@ -232,33 +232,30 @@ Assignments for {{course.name}}
 
 {% block scripts %}
 {{super()}}
+
 <script>
 
 function saveGrades(){
   var values = {};
-  console.log("called")
   $("form#scores :input").not(":input[type=submit]").each(function(){
-    console.log($(this).val() + " " + $(this).attr("name"));
     values[$(this).attr("name")] = $(this).val();
   });
-  var wasError = false;
 
-  callback = function(data) {
-    if (data.res == false) {
+  successCallBack = function(data) {
+    if (data.res == true) {
+      flash("Student points saved", "success");
+    } else {
       flash("An error occured: " + data.error, "error");
     }
-    wasError = data.res;
   }
   //Send the data to the server
-  $.ajax({
+  $.when($.ajax({
     url:"{{url_for('grutorSaveGrades', pid=problem.id, uid=user.id, subnum=subnum)}}",
     type:'POST',
     contentType:'application/json',
     data: JSON.stringify(values),
-    async: false,
-    dataType: 'json',
-    success: callback
-  });
+    dataType: 'json'
+  })).then(successCallBack);
   return false;
 };
 
@@ -266,17 +263,22 @@ function saveComments(){
   values = {}
   values["text"] = $("#commentarea").val()
   values["autotext"] = $("#autocommentarea").val()
-  $.ajax({
+
+  successCallBack = function(data) {
+    if (data.res == true) {
+      flash("Comments saved", "success");
+    } else {
+      flash("An error occured: " + data.error, "error");
+    }
+  }
+
+  $.when($.ajax({
     url:"{{url_for('grutorSaveComment', pid=problem.id, uid=user.id, subnum=subnum)}}",
     type:'POST',
     contentType:'application/json',
     data: JSON.stringify(values),
-    async: false,
-    dataType: 'json',
-    success: function(data) {
-      //Nothing to do
-    }
-  });
+    dataType: 'json'
+  })).then(successCallBack);
 }
 
 $("#previewLink").click(function(){
@@ -313,11 +315,57 @@ $("#previewAutoLink").click(function(){
   });
 })
 
-//$("#saveBtn").click(saveComments());
-$("#finishGrading").click(function(){
-  saveGrades();
-  saveComments();
-})
+function saveAllAndFinish(){
+  console.log("savingall")
+  var scoreValues = {};
+  $("form#scores :input").not(":input[type=submit]").each(function(){
+    scoreValues[$(this).attr("name")] = $(this).val();
+  });
+
+  var comValues = {}
+  comValues["text"] = $("#commentarea").val()
+  comValues["autotext"] = $("#autocommentarea").val()
+
+
+  callBack = function(data1, data2) {
+    var url = "{{url_for('grutorFinishSubmission', pid=problem.id, uid=user.id, subnum=subnum)}}"
+    var gradeData = data1[0];
+    var comData = data2[0];
+    if (gradeData.res && comData.res) {
+      console.log("Changing href");
+      window.location.href = url;
+    }
+
+    if (!gradeData.res) {
+      flash("Error saving grades: " + gradeData.error, "error");
+    }
+
+    if (!comData.res) {
+      flash("Error saving comments: " + comData.error, "error");
+    }
+  }
+
+  $.when(
+    $.ajax({
+      url:"{{url_for('grutorSaveGrades', pid=problem.id, uid=user.id, subnum=subnum)}}",
+      type:'POST',
+      contentType:'application/json',
+      data: JSON.stringify(scoreValues),
+      dataType: 'json'
+    }),
+    $.ajax({
+      url:"{{url_for('grutorSaveComment', pid=problem.id, uid=user.id, subnum=subnum)}}",
+      type:'POST',
+      contentType:'application/json',
+      data: JSON.stringify(comValues),
+      dataType: 'json'
+    })
+  ).done(callBack);
+
+
+  flash("Saving all data please wait...")
+  return false;
+}
 
 $("#toggleLate").click(function(){
   $.ajax({

@@ -241,6 +241,14 @@ function saveGrades(){
     console.log($(this).val() + " " + $(this).attr("name"));
     values[$(this).attr("name")] = $(this).val();
   });
+  var wasError = false;
+
+  callback = function(data) {
+    if (data.res == false) {
+      flash("An error occured: " + data.error, "error");
+    }
+    wasError = data.res;
+  }
   //Send the data to the server
   $.ajax({
     url:"{{url_for('grutorSaveGrades', pid=problem.id, uid=user.id, subnum=subnum)}}",
@@ -249,9 +257,7 @@ function saveGrades(){
     data: JSON.stringify(values),
     async: false,
     dataType: 'json',
-    success: function(data) {
-      //Do nothing with returned data
-    }
+    success: callback
   });
   return false;
 };

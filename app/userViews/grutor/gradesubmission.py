@@ -254,7 +254,7 @@ def grutorSaveGrades(pid, uid, subnum):
     return jsonify(res=True)
 
   except Exception as e:
-    return jsonify(res="Exception raised: "+ str(e))
+    return jsonify(res=False, error=str(e))
 
 @app.route('/grutor/grade/preview', methods=['POST'])
 @login_required

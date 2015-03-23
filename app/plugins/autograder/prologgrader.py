@@ -7,7 +7,7 @@ from os import environ
 
 PLUGIN_NAME = "Prolog (plunit)"
 
-PROLOG_TEST_REGEX = r"^test\((.*)\) *:- .*$"
+PROLOG_TEST_REGEX = r"^test\((.*)(?: *,.*)\) *:- .*$"
 
 def testFileParser(filename):
   '''Takes a prolog test file and attempts to extract all the tests'''

@@ -103,3 +103,17 @@ def ensurePathExists(path):
 
 def removePath(path):
   shutil.rmtree(path)
+
+#
+# Functions for makeing sure that we are putting data in the right mount point
+#
+
+def checkMounted(mntPoint):
+  '''
+  Reads /proc/mounts to see if mntPoint is listed as mounted
+  '''
+  with open('/proc/mounts', 'r') as mounts:
+    if re.search(mntPoint, mounts.read()):
+      return True
+    else:
+      return False

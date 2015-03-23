@@ -12,6 +12,8 @@ from app.structures.models.course import *
 
 from app.helpers.filestorage import *
 
+from app.helpers.autograder import regradeSubmission
+
 import codecs
 
 import os

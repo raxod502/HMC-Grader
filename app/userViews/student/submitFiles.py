@@ -106,6 +106,8 @@ def uploadFiles(pid, uid):
         if form.partner.data != "None":
           partner = User.objects.get(id=form.partner.data)
 
+        #Make sure the FS is mounted before we try to do anything with the FS
+        checkMounted()
         #Create the submissions
         userSub, userSubPath = createSubmission(p, user, now)
         userSub.save()

@@ -30,7 +30,7 @@ FLOWER_ACCESS_URL="http://127.0.0.1:5555"
 #
 STORAGE_HOME="/home/hmcgrader/GraderStorage"
 
-STORAGE_MOUNTED=False
+STORAGE_MOUNTED=True
 
 
 #

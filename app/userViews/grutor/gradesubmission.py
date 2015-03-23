@@ -244,6 +244,9 @@ def grutorSaveGrades(pid, uid, subnum):
       sub.save()
     #End definition
 
+    #Before we change anything make sure all changes can go through
+    checkMounted()
+
     user = User.objects.get(id=uid)
     sub = p.getSubmission(user, subnum)
 
@@ -253,10 +256,9 @@ def grutorSaveGrades(pid, uid, subnum):
       score(sub.partnerSubmission)
       grutorSubArchive(p, c, a, sub.partner, sub.partnerSubmission)
 
-    return jsonify(res=True)
-
+    return jsonify(res=True, type="grades")
   except Exception as e:
-    return jsonify(res="Exception raised: "+ str(e))
+    return jsonify(res=False, error=str(e))
 
 @app.route('/grutor/grade/preview', methods=['POST'])
 @login_required
@@ -324,6 +326,10 @@ def grutorSaveComment(pid, uid, subnum):
     user = User.objects.get(id=uid)
     sub = p.getSubmission(user, subnum)
 
+
+    #Before we change anything make sure all changes can go through
+    checkMounted()
+
     comment(sub)
 
     grutorSubArchive(p, c, a, user, sub)
@@ -331,14 +337,12 @@ def grutorSaveComment(pid, uid, subnum):
       comment(sub.partnerSubmission)
       grutorSubArchive(p, c, a, sub.partner, sub.partnerSubmission)
 
-
     #Save changes to the problem
     p.save(cascade=True)
 
-    return jsonify(res=True)
-
+    return jsonify(res=True, type="comments")
   except Exception as e:
-    return jsonify(res="Exception raised: "+ str(e))
+    return jsonify(res=False, error=str(e))
 
 @app.route('/grutor/toggleLate/<pid>/<uid>/<subnum>')
 @login_required

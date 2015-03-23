@@ -73,10 +73,4 @@ class RecoverAccount(db.Document):
   '''
 
   user = db.ReferenceField('User')
-  created = db.DateTimeField(default=datetime.now)
-
-  meta = {
-    'indexes': [
-      {'fields': ['created'], 'expireAfterSeconds': 3600}
-    ]
-  }
+  created = db.DateTimeField(default=datetime.utcnow())

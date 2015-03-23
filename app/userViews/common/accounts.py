@@ -145,8 +145,15 @@ def requestRecovery():
 
 @app.route('/recover/<rid>', methods=['POST', 'GET'])
 def recovery(rid):
+  from datetime import datetime, timedelta
   try:
     rec = RecoverAccount.objects.get(id=rid)
+    diff = datetime.utcnow() - rec.created
+
+    if diff > timedelta(hours=2):
+      flash("This recovery ticket has expired")
+      return redirect(url_for('login'))
+
     if request.method == 'POST':
       form = ResetPasswordForm(request.form)
       if form.validate():
@@ -164,7 +171,7 @@ def recovery(rid):
     else:
       return render_template('accounts/recover.html', pwform=ResetPasswordForm(), rid=rid)
   except RecoverAccount.DoesNotExist:
-    flash("This recovery ticket has expired", "warning")
+    flash("This recovery ticket does not exist", "warning")
   return redirect(url_for('login'))
 
 @app.route('/logout')

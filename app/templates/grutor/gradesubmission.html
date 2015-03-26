@@ -292,6 +292,9 @@ $("#previewLink").click(function(){
     contentType:'application/json',
     data: JSON.stringify(values),
     dataType: 'json',
+    error: function(data) {
+      console.log(data);
+    },
     success: function(data) {
       $("#preview").html(data["res"]);
     }

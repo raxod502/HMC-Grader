@@ -16,6 +16,8 @@ from app.helpers.autograder import regradeSubmission
 
 import codecs
 
+import markdown
+
 import os
 
 @app.route('/grutor/grade/<pid>/<uid>/<subnum>')

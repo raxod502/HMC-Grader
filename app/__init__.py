@@ -94,8 +94,12 @@ bleach.ALLOWED_TAGS += ['pre']
 def cleanHTML(html):
   return bleach.clean(html)
 
+def formatScore(score):
+  return "%.2f" % (score)
+
 #Add the bleach filter
 app.jinja_env.filters['bleach'] = cleanHTML
+app.jinja_env.filters['formatScore'] = formatScore
 
 #We import all of the various modules in userViews. These modules contain functions
 #which generate URL->enpoint bindings which allows the pages to be rendered or

@@ -92,9 +92,7 @@ app.jinja_env.globals.update(walkFileTree=walkFileTree)
 bleach.ALLOWED_TAGS += ['pre']
 
 def cleanHTML(html):
-  output = bleach.clean(html)
-  print output
-  return output
+  return bleach.clean(html)
 
 #Add the bleach filter
 app.jinja_env.filters['bleach'] = cleanHTML

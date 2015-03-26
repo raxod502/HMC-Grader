@@ -61,6 +61,9 @@ class Submission(db.Document):
     elif self.status == SUBMISSION_GRADED:
       return "success", "Graded"
 
+  def setGrades(self, gradeDict):
+    pass
+
 class StudentSubmissionList(db.EmbeddedDocument):
   '''
   A list of all the submissions a student has made for a specific problem.

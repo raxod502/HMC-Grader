@@ -152,7 +152,7 @@ Assignments for {{course.name}}
         </div>
         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
           <div class="panel-body" id="preview">
-            {{ submission.comments|markdown}}
+            {{ submission.comments|bleach|markdown}}
           </div>
         </div>
       </div>
@@ -193,7 +193,7 @@ Assignments for {{course.name}}
         </div>
         <div id="collapseAutoTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingAutoTwo">
           <div class="panel-body" id="autopreview">
-            {{ submission.autoGraderComments|markdown}}
+            {{ submission.autoGraderComments|bleach|markdown}}
           </div>
         </div>
       </div>
@@ -284,7 +284,6 @@ function saveComments(){
 $("#previewLink").click(function(){
   values = {}
   values["text"] = $("#commentarea").val()
-  values["autotext"] = $("#autocommentarea").val()
   $("#preview").html("<b>Loading</b>")
   $.ajax({
     url:"{{url_for('grutorPreview')}}",
@@ -303,8 +302,7 @@ $("#previewLink").click(function(){
 
 $("#previewAutoLink").click(function(){
   values = {}
-  values["text"] = $("#commentarea").val()
-  values["autotext"] = $("#autocommentarea").val()
+  values["text"] = $("#autocommentarea").val()
   $("#autopreview").html("<b>Loading</b>")
   $.ajax({
     url:"{{url_for('grutorPreview')}}",
@@ -313,7 +311,7 @@ $("#previewAutoLink").click(function(){
     data: JSON.stringify(values),
     dataType: 'json',
     success: function(data) {
-      $("#autopreview").html(data["autores"]);
+      $("#autopreview").html(data["res"]);
     }
   });
 })

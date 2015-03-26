@@ -16,7 +16,8 @@ from app.helpers.autograder import regradeSubmission
 
 import codecs
 
-import markdown
+import markdown, bleach
+from markdown.extensions.attr_list import AttrListExtension
 
 import os
 
@@ -279,9 +280,8 @@ def grutorPreview():
     res: The resulting html generated from the markdown
   '''
   content = request.get_json()
-  html = markdown.markdown(content["text"])
-  autohtml = markdown.markdown(content['autotext'])
-  return jsonify(res=html, autores=autohtml)
+  html = markdown.markdown(bleach.clean(content["text"]), [AttrListExtension()])
+  return jsonify(res=html)
 
 @app.route('/grutor/grade/<pid>/<uid>/<subnum>/savecomment', methods=['POST'])
 @login_required

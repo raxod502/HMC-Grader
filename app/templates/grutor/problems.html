@@ -88,7 +88,7 @@ Submissions for grading
             <td style="text-align:center" class={% if sub.isLate %}"danger"{% else %}"{{c}}" {%endif%}>{% if sub.isLate %}<span class="octicon octicon-check"></span>{%endif%}</td>
             {% endwith %}
             <td class="time">{{sub.submissionTime.isoformat()}}</td>
-            <td {% if sub.grade.totalScore() == 0 %} class="danger" {% endif %}>{{sub.grade.totalScore()}}</td>
+            <td {% if sub.grade.totalScore() == 0 %} class="danger" {% endif %}>{{sub.grade.totalScore()}}/{{problem.totalPoints()}}</td>
             <td><a href="{{url_for('grutorGradeSubmission', pid=problem.id, uid=user.id, subnum=problem.getSubmissionNumber(user))}}" class="btn btn-primary btn-xs">Grade</a></td>
             <td>{% if sub.gradedBy == None %}None{%else%}{{sub.gradedBy.username}}{%endif%}</td>
           {% endif %}

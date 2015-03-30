@@ -102,10 +102,6 @@ def requestRecovery():
     form = SignInForm(request.form)
     if form.validate():
       try:
-        if form.username.data == "":
-          flash("You must enter a username to recover an account", "error")
-          return redirect(url_for('login'))
-
         user = User.objects.get(username=form.username.data)
         if user.email == None or len(user.email) == 0:
           flash("No email address on file for this user", "error")
@@ -113,6 +109,7 @@ def requestRecovery():
 
         rec = RecoverAccount()
         rec.user = user
+        rec.requestIP = str(request.environ['REMOTE_ADDR'])
         rec.save()
 
         #Send an email to recover the password
@@ -145,6 +142,9 @@ def requestRecovery():
       except User.DoesNotExist:
         flash("The user you specified could not be found.", "error")
         return redirect(url_for('login'))
+    else:
+      for v in form.errors.values():
+        flash(v[0], "error")
   return redirect(url_for('login'))
 
 @app.route('/recover/<rid>', methods=['POST', 'GET'])

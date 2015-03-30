@@ -73,4 +73,5 @@ class RecoverAccount(db.Document):
   '''
 
   user = db.ReferenceField('User')
+  requestIP = db.StringField(default="")
   created = db.DateTimeField(default=datetime.utcnow())

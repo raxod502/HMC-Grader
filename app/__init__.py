@@ -90,6 +90,7 @@ app.jinja_env.globals.update(walkFileTree=walkFileTree)
 
 #Set up allowed HTML tags in markdown
 bleach.ALLOWED_TAGS += ['pre', 'font']
+bleach.ALLOWED_ATTRIBUTES[u'font'] = [u'color']
 
 def cleanHTML(html):
   return bleach.clean(html)

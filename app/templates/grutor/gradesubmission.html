@@ -420,6 +420,8 @@ function preview(filename) {
         $("#previewArea").append("<object data='"+data.url+"' type='application/pdf' width='100%' height='800px'>\
         <p>It appears your browser doesn't have a built in PDF viewer</p>\
         </object>");
+      } else if (data.minorType == 'x-empty') {
+        $("#previewArea").append("<span class='mega-octicon octicon-file-text'></span><br><b>File is empty</b>")
       } else {
         $("#previewArea").append("<span class='mega-octicon octicon-file-binary'></span><br><b>Cannot preview this file</b>");
       }

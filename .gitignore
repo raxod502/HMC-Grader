@@ -1,4 +1,6 @@
 subpython/
+testpython/
+graderpython/
 venv/
 
 # Byte-compiled / optimized / DLL files

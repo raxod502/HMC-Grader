@@ -106,12 +106,15 @@ def uploadFiles(pid, uid):
         if form.partner.data != "None":
           partner = User.objects.get(id=form.partner.data)
 
+        #Make sure the FS is mounted before we try to do anything with the FS
+        checkMounted()
         #Create the submissions
         userSub, userSubPath = createSubmission(p, user, now)
         userSub.save()
 
         #Save the files to the folder
-        error = saveFiles(userSubPath, request.files.getlist("files"))
+        fileList = request.files.getlist("files")
+        error = saveFiles(userSubPath, fileList)
 
         if error != None:
           #Remove the files
@@ -196,7 +199,7 @@ def saveFiles(filePath, files):
         continue
       f.save(os.path.join(filePath, filename))
       processZip(filePath, filename)
-      return None
+    return None
   except Exception as e:
     flash("One of your files has caused our system to crash."+\
     " This most commonly happens with zip files which contain two copies of files with the same name or a file which has the same name as the zip file itself."+\

@@ -109,6 +109,7 @@ def requestRecovery():
 
         rec = RecoverAccount()
         rec.user = user
+        rec.requestIP = str(request.environ['REMOTE_ADDR'])
         rec.save()
 
         #Send an email to recover the password
@@ -138,15 +139,25 @@ def requestRecovery():
 
         flash("Password reset request sent", "success")
         return redirect(url_for('login'))
-      except Exception as e:
-        flash("An error occured while trying to recover your account", "error")
-        return redirect(url_for('index'))
+      except User.DoesNotExist:
+        flash("The user you specified could not be found.", "error")
+        return redirect(url_for('login'))
+    else:
+      for v in form.errors.values():
+        flash(v[0], "error")
   return redirect(url_for('login'))
 
 @app.route('/recover/<rid>', methods=['POST', 'GET'])
 def recovery(rid):
+  from datetime import datetime, timedelta
   try:
     rec = RecoverAccount.objects.get(id=rid)
+    diff = datetime.utcnow() - rec.created
+
+    if diff > timedelta(hours=2):
+      flash("This recovery ticket has expired")
+      return redirect(url_for('login'))
+
     if request.method == 'POST':
       form = ResetPasswordForm(request.form)
       if form.validate():
@@ -164,7 +175,7 @@ def recovery(rid):
     else:
       return render_template('accounts/recover.html', pwform=ResetPasswordForm(), rid=rid)
   except RecoverAccount.DoesNotExist:
-    flash("This recovery ticket has expired", "warning")
+    flash("This recovery ticket does not exist", "warning")
   return redirect(url_for('login'))
 
 @app.route('/logout')

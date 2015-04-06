@@ -84,7 +84,7 @@ Assignments for {{course.name}}
       <tr>
         <td colspan="2" style="text-align:right">
           <a href="{{url_for('grutorReleaseSubmission', pid=problem.id, uid=user.id, subnum=subnum)}}" class="btn btn-danger btn-xs">Cancel Grade</a>
-          <a href="{{url_for('grutorFinishSubmission', pid=problem.id, uid=user.id, subnum=subnum)}}" id="finishGrading" class="btn btn-success btn-xs">Finish Grading (save all)</a>
+          <button onclick="saveAllAndFinish()" class="btn btn-success btn-xs">Finish Grading (save all)</button>
         </td>
       </tr>
     </table>
@@ -152,7 +152,7 @@ Assignments for {{course.name}}
         </div>
         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
           <div class="panel-body" id="preview">
-            {{ submission.comments|markdown}}
+            {{ submission.comments|bleach|markdown}}
           </div>
         </div>
       </div>
@@ -193,7 +193,7 @@ Assignments for {{course.name}}
         </div>
         <div id="collapseAutoTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingAutoTwo">
           <div class="panel-body" id="autopreview">
-            {{ submission.autoGraderComments|markdown}}
+            {{ submission.autoGraderComments|bleach|markdown}}
           </div>
         </div>
       </div>
@@ -232,27 +232,30 @@ Assignments for {{course.name}}
 
 {% block scripts %}
 {{super()}}
+
 <script>
 
 function saveGrades(){
   var values = {};
-  console.log("called")
   $("form#scores :input").not(":input[type=submit]").each(function(){
-    console.log($(this).val() + " " + $(this).attr("name"));
     values[$(this).attr("name")] = $(this).val();
   });
+
+  successCallBack = function(data) {
+    if (data.res == true) {
+      flash("Student points saved", "success");
+    } else {
+      flash("An error occured: " + data.error, "error");
+    }
+  }
   //Send the data to the server
-  $.ajax({
+  $.when($.ajax({
     url:"{{url_for('grutorSaveGrades', pid=problem.id, uid=user.id, subnum=subnum)}}",
     type:'POST',
     contentType:'application/json',
     data: JSON.stringify(values),
-    async: false,
-    dataType: 'json',
-    success: function(data) {
-      //Do nothing with returned data
-    }
-  });
+    dataType: 'json'
+  })).then(successCallBack);
   return false;
 };
 
@@ -260,23 +263,27 @@ function saveComments(){
   values = {}
   values["text"] = $("#commentarea").val()
   values["autotext"] = $("#autocommentarea").val()
-  $.ajax({
+
+  successCallBack = function(data) {
+    if (data.res == true) {
+      flash("Comments saved", "success");
+    } else {
+      flash("An error occured: " + data.error, "error");
+    }
+  }
+
+  $.when($.ajax({
     url:"{{url_for('grutorSaveComment', pid=problem.id, uid=user.id, subnum=subnum)}}",
     type:'POST',
     contentType:'application/json',
     data: JSON.stringify(values),
-    async: false,
-    dataType: 'json',
-    success: function(data) {
-      //Nothing to do
-    }
-  });
+    dataType: 'json'
+  })).then(successCallBack);
 }
 
 $("#previewLink").click(function(){
   values = {}
   values["text"] = $("#commentarea").val()
-  values["autotext"] = $("#autocommentarea").val()
   $("#preview").html("<b>Loading</b>")
   $.ajax({
     url:"{{url_for('grutorPreview')}}",
@@ -284,6 +291,9 @@ $("#previewLink").click(function(){
     contentType:'application/json',
     data: JSON.stringify(values),
     dataType: 'json',
+    error: function(data) {
+      console.log(data);
+    },
     success: function(data) {
       $("#preview").html(data["res"]);
     }
@@ -292,8 +302,7 @@ $("#previewLink").click(function(){
 
 $("#previewAutoLink").click(function(){
   values = {}
-  values["text"] = $("#commentarea").val()
-  values["autotext"] = $("#autocommentarea").val()
+  values["text"] = $("#autocommentarea").val()
   $("#autopreview").html("<b>Loading</b>")
   $.ajax({
     url:"{{url_for('grutorPreview')}}",
@@ -302,16 +311,62 @@ $("#previewAutoLink").click(function(){
     data: JSON.stringify(values),
     dataType: 'json',
     success: function(data) {
-      $("#autopreview").html(data["autores"]);
+      $("#autopreview").html(data["res"]);
     }
   });
 })
 
-//$("#saveBtn").click(saveComments());
-$("#finishGrading").click(function(){
-  saveGrades();
-  saveComments();
-})
+function saveAllAndFinish(){
+  console.log("savingall")
+  var scoreValues = {};
+  $("form#scores :input").not(":input[type=submit]").each(function(){
+    scoreValues[$(this).attr("name")] = $(this).val();
+  });
+
+  var comValues = {}
+  comValues["text"] = $("#commentarea").val()
+  comValues["autotext"] = $("#autocommentarea").val()
+
+
+  callBack = function(data1, data2) {
+    var url = "{{url_for('grutorFinishSubmission', pid=problem.id, uid=user.id, subnum=subnum)}}"
+    var gradeData = data1[0];
+    var comData = data2[0];
+    if (gradeData.res && comData.res) {
+      console.log("Changing href");
+      window.location.href = url;
+    }
+
+    if (!gradeData.res) {
+      flash("Error saving grades: " + gradeData.error, "error");
+    }
+
+    if (!comData.res) {
+      flash("Error saving comments: " + comData.error, "error");
+    }
+  }
+
+  $.when(
+    $.ajax({
+      url:"{{url_for('grutorSaveGrades', pid=problem.id, uid=user.id, subnum=subnum)}}",
+      type:'POST',
+      contentType:'application/json',
+      data: JSON.stringify(scoreValues),
+      dataType: 'json'
+    }),
+    $.ajax({
+      url:"{{url_for('grutorSaveComment', pid=problem.id, uid=user.id, subnum=subnum)}}",
+      type:'POST',
+      contentType:'application/json',
+      data: JSON.stringify(comValues),
+      dataType: 'json'
+    })
+  ).done(callBack);
+
+
+  flash("Saving all data please wait...")
+  return false;
+}
 
 $("#toggleLate").click(function(){
   $.ajax({
@@ -365,6 +420,8 @@ function preview(filename) {
         $("#previewArea").append("<object data='"+data.url+"' type='application/pdf' width='100%' height='800px'>\
         <p>It appears your browser doesn't have a built in PDF viewer</p>\
         </object>");
+      } else if (data.minorType == 'x-empty') {
+        $("#previewArea").append("<span class='mega-octicon octicon-file-text'></span><br><b>File is empty</b>")
       } else {
         $("#previewArea").append("<span class='mega-octicon octicon-file-binary'></span><br><b>Cannot preview this file</b>");
       }

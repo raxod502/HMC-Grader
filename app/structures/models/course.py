@@ -61,6 +61,31 @@ class Submission(db.Document):
     elif self.status == SUBMISSION_GRADED:
       return "success", "Graded"
 
+  def setGrades(self, gradeDict, zeroOthers=False):
+    for k in gradeDict.iterkeys():
+      if not k in problem.rubric:
+        raise Exception("Requested rubric section " + k + " is not in the problem rubric")
+
+    #If we validated all the keys then apply the grades
+    #iterate across the rubric so that we can zero non-supplied grades if needed
+    for k in problem.rubric.iterkeys():
+      if not k in gradeDict and zeroOthers:
+        self.grade[k] = 0.0
+      else:
+        self.grade[k] = gradeDict[k]
+
+    #save the grade when we are done
+    self.grade.save()
+
+  def setGradedBy(self, grader):
+    if type(grader) is str:
+      grader = User.objects.get(username=grader)
+
+    if type(grader) is User:
+      self.gradedBy = grader
+    else:
+      raise Exception("Invalid type for gradedBy field")
+
 class StudentSubmissionList(db.EmbeddedDocument):
   '''
   A list of all the submissions a student has made for a specific problem.

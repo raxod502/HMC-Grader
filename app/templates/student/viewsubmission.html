@@ -107,7 +107,7 @@ Your submission
     <div id="collapseComments" class="panel-collapse collapse in">
       <div class="panel-body">
         {% if submission.status == 4 %}
-        {{ submission.comments|markdown}}
+        {{ submission.comments|bleach|markdown}}
         {% else %}
         Grading incomplete
         {% endif %}

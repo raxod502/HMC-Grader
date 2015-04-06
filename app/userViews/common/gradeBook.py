@@ -395,3 +395,29 @@ def editAuxillaryGrades(cid, instr, col):
     return render_template("common/auxillaryGrades.html", course = course, col=column, users=users, instructor=instr)
   except (Course.DoesNotExist, GBColumn.DoesNotExist):
     abort(404)
+
+@app.route('/gradebook/<cid>/<col>/save', methods=['POST'])
+@login_required
+def saveGradeColumn(cid,col):
+  try:
+    course = Course.objects.get(id=cid)
+    column = GBColumn.objects.get(id=col)
+
+    if not (course in current_user.gradingCourses() or current_user.isAdmin):
+      return jsonify(res=False)
+
+    content = request.get_json()
+
+    column.maxScore = content['maxScore']
+
+    for id in content['scores']:
+      u = User.objects.get(id=id)
+      column.scores[u.username].scores['score'] = content['scores'][id]
+      column.scores[u.username].save()
+
+    column.save()
+
+    return jsonify(res=True)
+
+  except Exception as e:
+    return jsonify(res=False, exeption=str(e))

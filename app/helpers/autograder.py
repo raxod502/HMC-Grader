@@ -53,6 +53,12 @@ def makeTestInfo(problem, user, subnum, msg=None):
   else:
     print "\n" + infoString + "\nMessage: " + msg
 
+def rawTestOutput(testOutputDir, summary, testFile):
+  with open(os.path.join(testOutputDir, testFile+'.out'), 'w') as out:
+    out.write(summary.setdefault('rawOut', ""))
+  with open(os.path.join(testOutputDir, testFile+'.err'), 'w') as out:
+    out.write(summary.setdefault('rawErr', ""))
+
 
 @celery.task()
 def regradeSubmission(submission):
@@ -92,6 +98,7 @@ def gradeSubmission(pid, uid, subnum):
 
     #Get all submitted files and put them in the temp directory
     submissionDir = getSubmissionPath(course, assignment, problem, user, subnum)
+    testOutputDir = os.path.join(submissionDir, 'rawTestOutput')
     testsDir = getTestPath(course, assignment, problem)
     submittedFiles = [f for f in os.listdir(submissionDir) if os.path.isfile(os.path.join(submissionDir, f))]
 
@@ -139,6 +146,13 @@ def gradeSubmission(pid, uid, subnum):
 
     sub.autoGraderComments = ""
 
+    try:
+      shutil.rmtree(testOutputDir)
+    except:
+      pass
+    finally:
+      os.makedirs(testOutputDir)
+
     #Run each test function and parse the results
     for f in problem.testfiles:
 
@@ -161,7 +175,11 @@ def gradeSubmission(pid, uid, subnum):
       try:
         testRunner = getTestRunners()[gradeSpec['type']]
 
+        #Run the test
         summary, failedTests = testRunner(prefix, f, gradeSpec.setdefault('timeout', 30))
+
+        #Put the raw test output in the test output directory
+        rawTestOutput(testOutputDir, summary, f)
 
         if summary['timeout']:
           sub.autoGraderComments += "<font color='Red'>A timeout occurred</font>\n\n"

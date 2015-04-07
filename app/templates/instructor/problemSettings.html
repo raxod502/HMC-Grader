@@ -4,7 +4,6 @@
 Edit Problem
 {% endblock %}
 
-
 {% block styles %}
 {{super()}}
 <link id="bsdp-css" href="{{url_for('static', filename='eternicode-bootstrap-datepicker/css/datepicker3.css')}}" rel="stylesheet">
@@ -19,80 +18,110 @@ Edit Problem
   <div class="col-sm-2">
   </div>
   <div class="col-sm-8">
+    <div class="heading">
+      <ol class="breadcrumb">
+        <li><a href="{{url_for('instructorCourseSettings', cid=course.id)}}">{{course.name}}</a></li>
+        <li>{{assignment.name}}</li>
+        <li>{{problem.name}}</li>
+      </ol>
+    </div>
+  </div>
+  <div class="col-sm-2">
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-2">
+  </div>
+  <div class="col-sm-8">
     <form class="form" action="{{url_for('instructorSaveProblemSettings', pid=problem.id)}}" method="POST" role="form">
       {{ form.hidden_tag() }}
-      <div class="heading">
-        <ol class="breadcrumb">
-          <li><a href="{{url_for('instructorCourseSettings', cid=course.id)}}">{{course.name}}</a></li>
-          <li>{{assignment.name}}</li>
-          <li>{{problem.name}}</li>
-        </ol>
+      <div class="row">
+        <div class="col-sm-12">
+          <h4>Problem Information</h4>
+        </div>
       </div>
-      <div class="form-group">
-        {{form.name.label}}
-        {{form.name(placeholder="eg. Problem 1", class="form-control")}}
-      </div>
-      <div class="form-group">
-        {{form.date.label}}
-        {{form.date(placeholder="eg. 10/4/2014", class="form-control")}}
-      </div>
-      <div class="form-group">
-        {{form.time.label}}
-        {{form.time(placeholder="eg. 11:59 PM", class="form-control")}}
+      <div class="row">
+        <div class="col-sm-12">
+          {{ render_field(form.name, placeholder="eg. Problem 1")}}
+        </div>
       </div>
 
-      <div class="form-group">
-        {{form.strictFiles.label}}
-        {{form.strictFiles(placeholder="eg. foo.py, bar.py", class="form-control")}}
+      <div class="row">
+        <div class="col-sm-6">
+          {{ render_field(form.date, placeholder="eg. 10/4/2014")}}
+        </div>
+        <div class="col-sm-6">
+          {{ render_field(form.time, placeholder="eg. 11:59PM")}}
+        </div>
       </div>
 
-      <div class="form-group">
-        {{form.requiredFiles.label}}
-        {{form.requiredFiles(placeholder="eg. foo.py, bar.py", class="form-control")}}
+      <div class="row">
+        <div class="col-sm-6">
+          {{ render_field(form.strictFiles, placeholder="eg. foo.py, bar.py")}}
+        </div>
+        <div class="col-sm-6">
+          {{ render_field(form.requiredFiles, placeholder="eg. foo.py, bar.py")}}
+        </div>
       </div>
 
-      <div class="form-group">
-        {{form.problemPage.label}}&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="{{url_for('instructorMakeProblemPage', pid=problem.id, t='problemPage')}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Make Page</a>
-        {% if problem.problemPage != None %}
-        <a target="_blank" href="{{problem.problemPage}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-share"></span> Test Link</a>
-        {% endif %}
-        {{form.problemPage(placeholder="eg. cs.hmc.edu/cs5/hw3.html", class="form-control")}}
+      {# Unfortunately we can't use macros for these because of the extra buttons #}
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="{{form.problemPage.id}}" class="control-label">{{form.problemPage.label}}</label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="{{url_for('instructorMakeProblemPage', pid=problem.id, t='problemPage')}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Make Page</a>
+            {% if problem.problemPage != None %}
+            <a target="_blank" href="{{problem.problemPage}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-share"></span> Test Link</a>
+            {% endif %}
+            {{form.problemPage(placeholder="eg. cs.hmc.edu/cs5/hw3.html", class="form-control")}}
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="{{form.gradeNotes.id}}" class="control-label">{{form.gradeNotes.label}}</label>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="{{url_for('instructorMakeProblemPage', pid=problem.id, t='notes')}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Make Page</a>
+            {% if problem.gradeNotes != None %}
+            <a target="_blank" href="{{problem.gradeNotes}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-share"></span> Test Link</a>
+            {% endif %}
+            {{form.gradeNotes(placeholder="eg. cs.hmc.edu/cs5/hw3grading.html", class="form-control")}}
+          </div>
+        </div>
       </div>
 
+      {# Eventually the table should go here but some more work has to be done #}
 
-      <div class="form-group">
-        {{form.gradeNotes.label}}&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="{{url_for('instructorMakeProblemPage', pid=problem.id, t='notes')}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Make Page</a>
-        {% if problem.gradeNotes != None %}
-        <a target="_blank" href="{{problem.gradeNotes}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-share"></span> Test Link</a>
-        {% endif %}
-        {{form.gradeNotes(placeholder="eg. cs.hmc.edu/cs5/hw3grading.html", class="form-control")}}
+      <div class="row">
+        <div class="col-sm-12">
+          <h4>Problem Settings</h4>
+        </div>
       </div>
-      <div class="form-group">
-        <label>
-        {{form.allowPartners()}} {{form.allowPartners.label}}
-        </label>
+
+      <div class="row">
+        <div class="col-sm-6">
+          {{ render_checkbox(form.allowPartners)}}
+        </div>
+        <div class="col-sm-6">
+          {{render_checkbox(form.isOpen)}}
+        </div>
       </div>
-      <div class="form-group">
-        <label>
-          {{form.releaseAutoComments()}} {{form.releaseAutoComments.label}}
-        </label>
+
+      <div class="row">
+        <div class="col-sm-6">
+          {{render_checkbox(form.releaseAutoComments)}}
+        </div>
+        <div class="col-sm-6">
+          {{render_checkbox(form.autoGradeOnly)}}
+        </div>
       </div>
-      <div class="form-group">
-        <label>
-          {{form.autoGradeOnly()}} {{form.autoGradeOnly.label}}
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          {{form.isOpen()}} {{form.isOpen.label}}
-        </label>
-      </div>
+
       <div style="display:none;">
         {{form.hiddentime()}}
       </div>
-      <button type="submit" class="btn btn-primary">Save</button>
+      <div class="row">
+        <div class="col-sm-12">
+          <button class="btn btn-success" id="save"><span class='glyphicon glyphicon-saved'></span> Saved</button>
+        </div>
+      </div>
     </form>
   </div>
   <div class="col-sm-2">
@@ -100,15 +129,15 @@ Edit Problem
 </div>
 
 <div class="row">
-  <div class="col-sm-2">
-  </div>
+  <div class="col-sm-2"></div>
   <div class="col-sm-8">
-    <h3>Problem Rubric</h3>
+    <h4>Problem Rubric</h4>
     <table class="table table-bordered table-responsive">
       <thead>
         <tr>
           <th>Name</th>
           <th>Points</th>
+          <th>Add/Remove</th>
         </tr>
       </thead>
       <tbody>
@@ -121,6 +150,7 @@ Edit Problem
         <tr>
           <td><b>Total</b></td>
           <td>{{problem.totalPoints()}}</td>
+          <td></td>
         </tr>
         <form class="form" role="form" method="GET" action="{{url_for('addRubricSec', pid=problem.id)}}">
         <tr>
@@ -132,9 +162,9 @@ Edit Problem
       </tbody>
     </table>
   </div>
-  <div class="col-sm-2">
-  </div>
+  <div class="col-sm-2"></div>
 </div>
+
 <div class="row">
   <div class="col-sm-2">
   </div>
@@ -224,17 +254,51 @@ $(function(){
   //Turn the forms into a date picker and time picker
   $('#date').datepicker({format:'mm/dd/yyyy', todayHighlight:true});
   $('#time').timepicker({});
+  //build all the functions that change the symbol to unsaved during changes
+  buildChangeFunc("#name");
+  buildChangeFunc("#allowPartners");
+  buildChangeFunc("#releaseAutoComments");
+  buildChangeFunc("#autoGradeOnly");
+  buildChangeFunc("#isOpen");
+  buildChangeFunc("#gradeNotes");
+  buildChangeFunc("#problemPage");
+  buildChangeFunc("#requiredFiles");
+  buildChangeFunc("#strictFiles");
+  saved();
 });
 
 
 $('#date').change(function(){
   d = new Date($('#date').val() + " " + $('#time').val());
   $('#hiddentime').val( d.toISOString());
+  unsaved();
 });
 
 $('#time').change(function(){
   d = new Date($('#date').val() + " " + $('#time').val());
   $('#hiddentime').val( d.toISOString());
+  unsaved();
 })
+</script>
+
+<script>
+function buildChangeFunc(name){
+  $(name).change(function(){
+    unsaved();
+    $(this).parent().addClass("has-warning");
+  });
+}
+
+function unsaved(){
+  $("button#save").removeClass("btn-success")
+  $("button#save").addClass("btn-warning")
+  $("button#save").html("<span class='glyphicon glyphicon-save'></span> Unsaved")
+}
+
+function saved(){
+  $("button#save").removeClass("btn-warning")
+  $("button#save").addClass("btn-success")
+  $("button#save").html("<span class='glyphicon glyphicon-saved'></span> Saved")
+}
 </script>
 {% endblock %}

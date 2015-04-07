@@ -272,12 +272,14 @@ $('#date').change(function(){
   d = new Date($('#date').val() + " " + $('#time').val());
   $('#hiddentime').val( d.toISOString());
   unsaved();
+  $(this).parent().addClass("has-warning");
 });
 
 $('#time').change(function(){
   d = new Date($('#date').val() + " " + $('#time').val());
   $('#hiddentime').val( d.toISOString());
   unsaved();
+  $(this).parent().addClass("has-warning");
 })
 </script>
 

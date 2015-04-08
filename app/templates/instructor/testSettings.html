@@ -99,7 +99,7 @@ Edit Tests
 <script>
 
 function cleanID(id){
-  var newId = id.split(' ').join('_')
+  var newId = id.replace(/\s/g, '_');//id.split(' ').join('_')
   var newId = newId.replace(/\W/g, '')
   return newId
 }

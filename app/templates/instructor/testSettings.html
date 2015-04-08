@@ -28,7 +28,7 @@ Edit Tests
       </thead>
       <tbody>
         {% for k, v in problem.rubric.iteritems() %}
-        <tr id="{{k|replace(' ', '_')|replace('\W','')}}"><td>{{k}}</td><td>0</td><td>{{v}}</td></tr>
+        <tr id="{{k|cleanID}}"><td>{{k}}</td><td>0</td><td>{{v}}</td></tr>
         {% endfor %}
       </tbody>
     </table>

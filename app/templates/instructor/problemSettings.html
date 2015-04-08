@@ -231,6 +231,12 @@ function saved(){
   $("button#save").addClass("btn-success")
   $("button#save").html("<span class='glyphicon glyphicon-saved'></span> Saved")
 }
+
+function cleanID(id){
+  var newId = id.replace(/\s/g, '_');//split(' ').join('_')
+  var newId = newId.replace(/\W/g, '')
+  return newId
+}
 </script>
 
 <script>
@@ -257,27 +263,27 @@ function addRubricRow(){
   if (rubric[key] != undefined) {
     console.log("UPDATING");
     rubric[key] = points.toFixed(2)
-    var oldPoints = Number($("#rubric_" + key + " td:nth-child(2)").html());
+    var oldPoints = Number($("#rubric_" + cleanID(key) + " td:nth-child(2)").html());
     var totalPoints = Number($("#rubricTotal").html())
     totalPoints -= oldPoints;
     totalPoints += points;
     $("#rubricTotal").html(totalPoints.toFixed(2))
-    $("#rubric_" + key + " td:nth-child(2)").html(points.toFixed(2));
-    if(!$("#rubric_" + key).hasClass("success")){
-      $("#rubric_" + key).addClass("warning");
+    $("#rubric_" + cleanID(key) + " td:nth-child(2)").html(points.toFixed(2));
+    if(!$("#rubric_" + cleanID(key)).hasClass("success")){
+      $("#rubric_" + cleanID(key)).addClass("warning");
     }
-  } else if ($("#rubric_" + key).html() != undefined) {
+  } else if ($("#rubric_" + cleanID(key)).html() != undefined) {
     console.log("UPDATEING DELETED");
-    $("#rubric_" + key + " td:nth-child(2)").html(points.toFixed(2));
+    $("#rubric_" + cleanID(key) + " td:nth-child(2)").html(points.toFixed(2));
     unmarkRow(key)
-    $("#rubric_" + key).addClass("warning");
+    $("#rubric_" + cleanID(key)).addClass("warning");
   } else {
     console.log("ADDING");
     rubric[key] = points.toFixed(2);
-    $('#rubricTotalRow').before("<tr id='rubric_"+key+"' class='success'></tr>")
-    $('#rubric_'+key).append("<td>"+key+"</td>")
-    $('#rubric_'+key).append("<td>"+rubric[key]+"</td>")
-    $('#rubric_'+key).append("<td><button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button></td>")
+    $('#rubricTotalRow').before("<tr id='rubric_"+cleanID(key)+"' class='success'></tr>")
+    $('#rubric_'+cleanID(key)).append("<td>"+key+"</td>")
+    $('#rubric_'+cleanID(key)).append("<td>"+rubric[key]+"</td>")
+    $('#rubric_'+cleanID(key)).append("<td><button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button></td>")
     var totalPoints = Number($("#rubricTotal").html())
     totalPoints += points;
     $("#rubricTotal").html(totalPoints.toFixed(2))
@@ -287,24 +293,24 @@ function addRubricRow(){
 
 function markRowForRemoval(key){
   var totalPoints = Number($("#rubricTotal").html())
-  $('#rubric_'+key).addClass("danger");
+  $('#rubric_'+cleanID(key)).addClass("danger");
   totalPoints -= Number(rubric[key]);
   delete rubric[key]
   $("#rubricTotal").html(totalPoints.toFixed(2))
   unsaved();
-  $('#rubric_'+key+' td:last').html("<button type='button' class='btn btn-xs btn-primary' onclick=\"unmarkRow('"+key+"')\"><span class='glyphicon glyphicon-plus'></span></button>")
+  $('#rubric_'+cleanID(key)+' td:last').html("<button type='button' class='btn btn-xs btn-primary' onclick=\"unmarkRow('"+key+"')\"><span class='glyphicon glyphicon-plus'></span></button>")
   return false;
 }
 
 function unmarkRow(key){
   var totalPoints = Number($("#rubricTotal").html())
-  $('#rubric_'+key).removeClass("danger");
-  var points = Number($("#rubric_"+key+" td:nth-child(2)").html())
+  $('#rubric_'+cleanID(key)).removeClass("danger");
+  var points = Number($("#rubric_"+cleanID(key)+" td:nth-child(2)").html())
   rubric[key] = points.toFixed(2);
   totalPoints += points
   $("#rubricTotal").html(totalPoints.toFixed(2))
   unsaved();
-  $('#rubric_'+key+' td:last').html("<button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button>")
+  $('#rubric_'+cleanID(key)+' td:last').html("<button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button>")
   return false;
 }
 
@@ -393,10 +399,10 @@ $('#time').change(function(){
 function makeRubricTable(){
   totalPoints = 0
   for(var key in rubric){
-    $('#rubricTotalRow').before("<tr id='rubric_"+key+"'></tr>")
-    $('#rubric_'+key).append("<td>"+key+"</td>")
-    $('#rubric_'+key).append("<td>"+rubric[key]+"</td>")
-    $('#rubric_'+key).append("<td><button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button></td>")
+    $('#rubricTotalRow').before("<tr id='rubric_"+cleanID(key)+"'></tr>")
+    $('#rubric_'+cleanID(key)).append("<td>"+key+"</td>")
+    $('#rubric_'+cleanID(key)).append("<td>"+rubric[key]+"</td>")
+    $('#rubric_'+cleanID(key)).append("<td><button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button></td>")
     totalPoints += Number(rubric[key]);
   }
   $('#rubricTotal').html(totalPoints.toFixed(2))

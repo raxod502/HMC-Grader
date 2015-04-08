@@ -125,6 +125,28 @@ def instructorSaveProblemSettings(pid):
         else:
           p.strictFiles = None
 
+        #here we edit the rubric
+        newRubric = json.loads(form.hiddenRubric.data)
+        for k, v in newRubric.iteritems():
+          rubricSec = k
+          rubricSec = rubricSec.replace('$',u'＄').replace('.', u'．')
+          p.rubric[rubricSec] = Decimal(v)
+
+        #Find which keys were removed
+        toDel = []
+        for k in p.rubric.iterkeys():
+          rubricSec = k
+          rubricSec = rubricSec.replace('$',u'＄').replace('.', u'．')
+          if not rubricSec in newRubric:
+            toDel.append(rubricSec)
+
+        #remove the keys
+        for k in toDel:
+          del p.rubric[k]
+
+
+        p.gradeColumn.maxScore = p.totalPoints()
+        p.gradeColumn.save()
         p.save()
 
   except (Course.DoesNotExist, Problem.DoesNotExist, AssignmentGroup.DoesNotExist):

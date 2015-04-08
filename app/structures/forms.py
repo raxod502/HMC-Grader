@@ -6,7 +6,7 @@ This module supports all of the forms for the site
 
 from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField, BooleanField, SelectField
-from wtforms import TextAreaField, BooleanField, FileField
+from wtforms import TextAreaField, BooleanField, FileField, DecimalField
 from wtforms.validators import Required, EqualTo, Optional
 from wtforms.validators import Length, Email
 
@@ -102,6 +102,7 @@ class ProblemOptionsForm(Form):
   autoGradeOnly = BooleanField("Finish grading after autograder (Releases scores and comments)")
   isOpen = BooleanField("Is the problem open for submissions")
   hiddentime = TextField("")
+  hiddenRubric = TextField("")
 
 class AddTestForm(Form):
   '''

@@ -33,7 +33,7 @@ Edit Problem
   <div class="col-sm-2">
   </div>
   <div class="col-sm-8">
-    <form class="form" action="{{url_for('instructorSaveProblemSettings', pid=problem.id)}}" method="POST" role="form">
+    <form class="form" role="form" action="{{url_for('instructorSaveProblemSettings', pid=problem.id)}}" method="POST" id="settingsForm">
       {{ form.hidden_tag() }}
       <div class="row">
         <div class="col-sm-12">
@@ -88,7 +88,37 @@ Edit Problem
         </div>
       </div>
 
-      {# Eventually the table should go here but some more work has to be done #}
+      <div class="row">
+        <div class="col-sm-12">
+          <h4>Problem Rubric</h4>
+          <table class="table table-bordered table-responsive" id="rubricTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Points</th>
+                <th>Add/Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Javascript will put the rubric rows in here :D-->
+              <tr id="rubricTotalRow">
+                <td><b>Total</b></td>
+                <td id="rubricTotal">{{problem.totalPoints()}}</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                  <input class="form-control" id="rubricName" placeholder="eg. Auto-grader points" value="">
+                </td>
+                <td>
+                  <input class="form-control" id="rubricPoints" placeholder="eg. 5.00" value="" type="decimal">
+                </td>
+                <td><button type="button" class="btn btn-primary btn-s" onclick="addRubricRow()"><span class="glyphicon glyphicon-plus"></span></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-sm-12">
@@ -117,52 +147,20 @@ Edit Problem
       <div style="display:none;">
         {{form.hiddentime()}}
       </div>
+
+      <div style="display:none;">
+        {{form.hiddenRubric()}}
+      </div>
+
       <div class="row">
         <div class="col-sm-12">
-          <button class="btn btn-success" id="save"><span class='glyphicon glyphicon-saved'></span> Saved</button>
+          <button id="save" type="button" class="btn btn-success" onclick="formSubmit()"><span class='glyphicon glyphicon-saved'></span> Saved</button>
         </div>
       </div>
     </form>
   </div>
   <div class="col-sm-2">
   </div>
-</div>
-
-<div class="row">
-  <div class="col-sm-2"></div>
-  <div class="col-sm-8">
-    <h4>Problem Rubric</h4>
-    <table class="table table-bordered table-responsive">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Points</th>
-          <th>Add/Remove</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in problem.rubric|dictsort %}
-        <tr>
-          <td>{{item[0]}}</td>
-          <td>{{item[1]}}</td>
-          <td><a href="{{url_for('delRubricSec', pid=problem.id, name=item[0])}}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-minus"></span></a></td>
-        {% endfor %}
-        <tr>
-          <td><b>Total</b></td>
-          <td>{{problem.totalPoints()}}</td>
-          <td></td>
-        </tr>
-        <form class="form" role="form" method="GET" action="{{url_for('addRubricSec', pid=problem.id)}}">
-        <tr>
-          <td><input class="form-control" name="name" type="text"></td>
-          <td><input class="form-control" name="points" type="number"></td>
-          <td><button type="submit" class="btn btn-primary btn-s"><span class="glyphicon glyphicon-plus"></span></button></td>
-        </tr>
-        </form>
-      </tbody>
-    </table>
-  </div>
-  <div class="col-sm-2"></div>
 </div>
 
 <div class="row">
@@ -213,7 +211,114 @@ Edit Problem
 <script src="{{url_for('static', filename='bootstrap-timepicker/js/bootstrap-timepicker.js')}}"></script>
 <script src="{{url_for('static', filename='moment.js')}}"></script>
 
+<script>
+//This script is helper functions for handling onchange and save events
+function buildChangeFunc(name){
+  $(name).change(function(){
+    unsaved();
+    $(this).parent().addClass("has-warning");
+  });
+}
+
+function unsaved(){
+  $("button#save").removeClass("btn-success")
+  $("button#save").addClass("btn-warning")
+  $("button#save").html("<span class='glyphicon glyphicon-save'></span> Unsaved")
+}
+
+function saved(){
+  $("button#save").removeClass("btn-warning")
+  $("button#save").addClass("btn-success")
+  $("button#save").html("<span class='glyphicon glyphicon-saved'></span> Saved")
+}
+</script>
+
+<script>
+//This script handles all of the asyncrhonous work being done to make the page
+//nice
+
+//We make some global variables so that we can track some stuff we might need
+//The current rubric. We will edit this as needed
+var rubric = {{problem.rubric|dedecimal|tojson}};
+//Track if there are changes. This is used for confirmation when adding tests
+var change = false;
+
+function addRubricRow(){
+  var key = $("#rubricName").val()
+  var points = Number($("#rubricPoints").val())
+  if (key == ""){
+    alert("You must provide a name for the rubric section")
+    return false
+  }
+  if (isNaN(points)){
+    alert("You must provide a valid amount of points")
+    return false
+  }
+  if (rubric[key] != undefined) {
+    console.log("UPDATING");
+    rubric[key] = points.toFixed(2)
+    var oldPoints = Number($("#rubric_" + key + " td:nth-child(2)").html());
+    var totalPoints = Number($("#rubricTotal").html())
+    totalPoints -= oldPoints;
+    totalPoints += points;
+    $("#rubricTotal").html(totalPoints.toFixed(2))
+    $("#rubric_" + key + " td:nth-child(2)").html(points.toFixed(2));
+    if(!$("#rubric_" + key).hasClass("success")){
+      $("#rubric_" + key).addClass("warning");
+    }
+  } else if ($("#rubric_" + key).html() != undefined) {
+    console.log("UPDATEING DELETED");
+    $("#rubric_" + key + " td:nth-child(2)").html(points.toFixed(2));
+    unmarkRow(key)
+    $("#rubric_" + key).addClass("warning");
+  } else {
+    console.log("ADDING");
+    rubric[key] = points.toFixed(2);
+    $('#rubricTotalRow').before("<tr id='rubric_"+key+"' class='success'></tr>")
+    $('#rubric_'+key).append("<td>"+key+"</td>")
+    $('#rubric_'+key).append("<td>"+rubric[key]+"</td>")
+    $('#rubric_'+key).append("<td><button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button></td>")
+    var totalPoints = Number($("#rubricTotal").html())
+    totalPoints += points;
+    $("#rubricTotal").html(totalPoints.toFixed(2))
+  }
+  unsaved();
+}
+
+function markRowForRemoval(key){
+  var totalPoints = Number($("#rubricTotal").html())
+  $('#rubric_'+key).addClass("danger");
+  totalPoints -= Number(rubric[key]);
+  delete rubric[key]
+  $("#rubricTotal").html(totalPoints.toFixed(2))
+  unsaved();
+  $('#rubric_'+key+' td:last').html("<button type='button' class='btn btn-xs btn-primary' onclick=\"unmarkRow('"+key+"')\"><span class='glyphicon glyphicon-plus'></span></button>")
+  return false;
+}
+
+function unmarkRow(key){
+  var totalPoints = Number($("#rubricTotal").html())
+  $('#rubric_'+key).removeClass("danger");
+  var points = Number($("#rubric_"+key+" td:nth-child(2)").html())
+  rubric[key] = points.toFixed(2);
+  totalPoints += points
+  $("#rubricTotal").html(totalPoints.toFixed(2))
+  unsaved();
+  $('#rubric_'+key+' td:last').html("<button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button>")
+  return false;
+}
+
+function formSubmit() {
+  //Put the rubric into a hidden form field so that changes can be made
+  //to the rubric during the save operation
+  $("#hiddenRubric").val(JSON.stringify(rubric));
+  console.log(rubric);
+  $("#settingsForm").submit();
+}
+</script>
+
 <script type="text/javascript">
+//This scipt handles all of the setup of the page.
 $(function(){
   //Fill in the form for the name of the submission if it has been named
   if ("{{problem.name}}"!="") {
@@ -265,7 +370,9 @@ $(function(){
   buildChangeFunc("#requiredFiles");
   buildChangeFunc("#strictFiles");
   saved();
+  //We have to remove has-warning from the time field for some reason
   $("#time").parent().removeClass("has-warning");
+  makeRubricTable();
 });
 
 
@@ -282,26 +389,18 @@ $('#time').change(function(){
   unsaved();
   $(this).parent().addClass("has-warning");
 })
-</script>
 
-<script>
-function buildChangeFunc(name){
-  $(name).change(function(){
-    unsaved();
-    $(this).parent().addClass("has-warning");
-  });
+function makeRubricTable(){
+  totalPoints = 0
+  for(var key in rubric){
+    $('#rubricTotalRow').before("<tr id='rubric_"+key+"'></tr>")
+    $('#rubric_'+key).append("<td>"+key+"</td>")
+    $('#rubric_'+key).append("<td>"+rubric[key]+"</td>")
+    $('#rubric_'+key).append("<td><button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button></td>")
+    totalPoints += Number(rubric[key]);
+  }
+  $('#rubricTotal').html(totalPoints.toFixed(2))
 }
 
-function unsaved(){
-  $("button#save").removeClass("btn-success")
-  $("button#save").addClass("btn-warning")
-  $("button#save").html("<span class='glyphicon glyphicon-save'></span> Unsaved")
-}
-
-function saved(){
-  $("button#save").removeClass("btn-warning")
-  $("button#save").addClass("btn-success")
-  $("button#save").html("<span class='glyphicon glyphicon-saved'></span> Saved")
-}
 </script>
 {% endblock %}

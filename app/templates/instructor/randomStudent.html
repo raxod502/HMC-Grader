@@ -46,6 +46,15 @@ Random Student
             <div class="form-group">
               <input id="returnToPool" name="returnToPool" type="checkbox" value="y"><label for="returnToPool">Return Picked student to pool immediately</label>
             </div>
+            <div class="form-group">
+              <label>Force Next</label>
+              <select id="nextUp">
+                <option value="null">None</option>
+                {% for u in userList %}
+                <option value='{{u|tojson}}'>{{u[2]}} {{u[3]}}</option>
+                {% endfor %}
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -65,19 +74,23 @@ var imgUrlTemplate = "{{url_for('sendProfilePicture', uid='uid')}}"
 
 
 function getNext() {
-  if (availableUsers.length == 0){
-      availableUsers = users.slice(0);
+  var nextUp = JSON.parse($("#nextUp option:selected").val())
+  if (nextUp != null) {
+    current = nextUp;
+  } else {
+    if (availableUsers.length == 0){
+        availableUsers = users.slice(0);
+    }
+
+    //Get a random user
+    var index = Math.floor(Math.random()*availableUsers.length);
+    current = availableUsers[index];
+
+    //If we are not saving them splice them out
+    if (!$("#returnToPool").prop("checked")) {
+      availableUsers.splice(index, 1);
+    }
   }
-
-  //Get a random user
-  var index = Math.floor(Math.random()*availableUsers.length);
-  current = availableUsers[index];
-
-  //If we are not saving them splice them out
-  if (!$("#returnToPool").prop("checked")) {
-    availableUsers.splice(index, 1);
-  }
-
 }
 
 function displayCurrent() {

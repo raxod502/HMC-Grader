@@ -116,12 +116,12 @@ def instructorSaveProblemSettings(pid):
           p.problemPage = None
 
         if len(form.requiredFiles.data) > 0:
-          p.requiredFiles = form.requiredFiles.data
+          p.requiredFiles = form.requiredFiles.data.strip()
         else:
           p.requiredFiles = None
 
         if len(form.strictFiles.data) > 0:
-          p.strictFiles = form.strictFiles.data
+          p.strictFiles = form.strictFiles.data.strip()
         else:
           p.strictFiles = None
 

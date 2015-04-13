@@ -137,8 +137,10 @@ def instructorSaveProblemSettings(pid):
         for k in p.rubric.iterkeys():
           rubricSec = k
           rubricSec = rubricSec.replace('$',u'＄').replace('.', u'．')
-          if not rubricSec in newRubric:
+          #Terrible list comprehension so that we can correct the keys
+          if not rubricSec in [x.replace('$',u'＄').replace('.', u'．') for x in newRubric.keys()]:
             toDel.append(rubricSec)
+
 
         #remove the keys
         for k in toDel:

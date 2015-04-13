@@ -191,7 +191,7 @@ def grutorSubArchive(p, c, a, user, sub):
   with open(os.path.join(getSubmissionPath(c,a,p,user,subnum), '.gradeArchive'), 'w') as f:
     f.write("#Scores#\n")
     for sec, score in sub.grade.scores.iteritems():
-      f.write(sec+":"+str(score)+"\n")
+      f.write(sec.encode('utf-8') +":"+str(score)+"\n")
     f.write("\n#info#\n")
     f.write("isLate:" + str(sub.isLate)+"\n")
     if sub.partner == None:
@@ -200,8 +200,10 @@ def grutorSubArchive(p, c, a, user, sub):
       f.write("partner: " + sub.partner.username + "\n")
     if sub.gradedBy != None: #This should always be true
       f.write("gradedBy: " + sub.gradedBy.username + "\n")
-    f.write('\n')
-    f.write(sub.comments)
+    f.write('\n#Comments#\n')
+    f.write(sub.comments.encode('utf-8'))
+    f.write('\n#Autograder Comments#\n')
+    f.write(sub.autoGraderComments.encode('utf-8'))
 
 @app.route('/grutor/grade/<pid>/<uid>/<subnum>/savegrade', methods=['POST'])
 @login_required
@@ -344,7 +346,9 @@ def grutorSaveComment(pid, uid, subnum):
 
     return jsonify(res=True, type="comments")
   except Exception as e:
-    return jsonify(res=False, error=str(e))
+    import traceback
+    tb = traceback.format_exc()
+    return jsonify(res=False, error=str(tb))
 
 @app.route('/grutor/toggleLate/<pid>/<uid>/<subnum>')
 @login_required

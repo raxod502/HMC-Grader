@@ -690,7 +690,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
       value = TYPES[k]
       if 'initial' in value: start_state = k
 
-    if initial_state == None:
+    if start_state == None:
       #If we hav eno initial state just die
       summary = {}
       summary['died'] = True
@@ -709,7 +709,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
     for i in INPUTS2.iterkeys():
       BEENTO = {}
-      result = tm_stateTrans2(initial_state,i)
+      result = tm_stateTrans2(start_state,i)
       summary['totalTests'] += 1
       if INPUTS2[i] != result:
         summary['failedTests'] += 1

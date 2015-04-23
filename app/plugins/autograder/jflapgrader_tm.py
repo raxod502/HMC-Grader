@@ -709,7 +709,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
     for i in INPUTS2.iterkeys():
       BEENTO = {}
-      result = tm_stateTrans2(start_state,i)
+      result = tm_stateTrans2(start_state,'',i)
       summary['totalTests'] += 1
       if INPUTS2[i] != result:
         summary['failedTests'] += 1

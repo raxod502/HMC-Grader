@@ -638,7 +638,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
     global INPUTS, TRANS, STATES, TYPES, TRANS2, count, success, BEENTO, \
            current_state_id, current_start_state, current_end_state, seeking_start_state, \
            seeking_end_state, seeking_trans, current_trans, seeking_read, seeking_write, \
-           current_read, current_write, seeking_move, current_move
+           current_read, current_write, seeking_move, current_move, steps
     STATES = []
     TYPES = {}
     TRANS = {}
@@ -709,6 +709,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
     for i in INPUTS2.iterkeys():
       BEENTO = {}
+      steps = 0
       result = tm_stateTrans2(start_state,'',i)
       summary['totalTests'] += 1
       if INPUTS2[i] != result:

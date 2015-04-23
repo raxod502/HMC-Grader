@@ -222,14 +222,14 @@ class Problem(db.Document):
   def getRequiredFiles(self):
     import re
     if self.requiredFiles != None and len(self.requiredFiles) > 0:
-      return re.split(', *', self.requiredFiles)
+      return re.split(' *, *', self.requiredFiles)
     else:
       return []
 
   def getStrictFiles(self):
     import re
     if self.strictFiles != None and len(self.strictFiles) > 0:
-      return re.split(', *', self.strictFiles)
+      return re.split(' *, *', self.strictFiles)
     else:
       return []
 

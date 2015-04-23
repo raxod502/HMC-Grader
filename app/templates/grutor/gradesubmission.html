@@ -235,6 +235,14 @@ Assignments for {{course.name}}
 
 <script>
 
+$(document).keydown(function(e) {
+    if(e.keyCode == 83 && (navigator.platform.match("Mac")? e.metaKey : e.ctrlKey)){
+      e.preventDefault();
+      saveGrades();
+      saveComments();
+    }
+});
+
 function saveGrades(){
   var values = {};
   $("form#scores :input").not(":input[type=submit]").each(function(){

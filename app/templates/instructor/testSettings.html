@@ -28,7 +28,7 @@ Edit Tests
       </thead>
       <tbody>
         {% for k, v in problem.rubric.iteritems() %}
-        <tr id="{{k|replace(' ', '_')}}"><td>{{k}}</td><td>0</td><td>{{v}}</td></tr>
+        <tr id="{{k|cleanID}}"><td>{{k}}</td><td>0</td><td>{{v}}</td></tr>
         {% endfor %}
       </tbody>
     </table>
@@ -99,7 +99,7 @@ Edit Tests
 <script>
 
 function cleanID(id){
-  var newId = id.split(' ').join('_')
+  var newId = id.replace(/\s/g, '_');//id.split(' ').join('_')
   var newId = newId.replace(/\W/g, '')
   return newId
 }

@@ -22,3 +22,7 @@ To run this site you must create a python virtual env for testing. This has to h
 The site can then be run with the command:
 
 `<virtualenv>/bin/python run.py`
+
+If you use SSHFS it is recommended to use the following command to mount your remote drive
+
+`sshfs -o reconnect user@remotehost:/remote/path /local/path`

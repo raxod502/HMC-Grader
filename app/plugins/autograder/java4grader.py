@@ -10,7 +10,7 @@ from os import environ
 
 PLUGIN_NAME = "Java (junit4)"
 
-JAVA_TEST_REGEX = r"@Test\s+public\s+void\s+([a-zA-Z0-9-_]+)"
+JAVA_TEST_REGEX = r"@Test\s+.*\s*public\s+void\s+([a-zA-Z0-9-_]+)"
 
 def testFileParser(filename):
   '''

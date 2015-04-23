@@ -7,10 +7,21 @@ Student Details: {{user.username}}
 {% block rows %}
 <div class="row">
   <div class="col-sm-2"></div>
-  <div class="col-sm-8">
-    <h3>Details for: {{user.username}}</h3>
+  <div class="col-sm-2">
+    <img src="{{url_for('sendProfilePicture', uid=user.id)}}" class="img-rounded" style="max-width:200px; max-height:200px; margin-left:auto; margin-right:auto; display:block;"></br>
   </div>
-  <div class="col-sm-2"></div>
+  <div class="col-sm-3">
+    <div class="heading">
+        <h2 class="form-heading">User: {{user.username}}</h2>
+    </div>
+    <table class="table">
+      <body>
+        <tr><td>First Name:</td><td>{{user.firstName}}</td></tr>
+        <tr><td>Last Name:</td><td>{{user.lastName}}</td></tr>
+        <tr><td>Email:</td><td>{{user.emailName}}</td></tr>
+      </body>
+    </table>
+  </div>
 </div>
 <div class="row">
   <div class="col-sm-2"></div>

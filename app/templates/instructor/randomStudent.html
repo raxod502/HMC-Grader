@@ -1,0 +1,114 @@
+{% extends "base-layout.html" %}
+
+{% block title %}
+Random Student
+{% endblock %}
+
+{% block rows %}
+
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8" style="text-align:center;">
+    <img id="photo" src="{{url_for('static', filename='images/questionMark.png')}}" class="img-rounded" style="max-width:350px; max-height:350px;margin-left:auto; margin-right:auto; display:block;">
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8" style="text-align:center;">
+    <h1 id="name">???</h1>
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8" style="text-align:center;">
+    <button class="btn btn-primary btn-lg" id="next">Next</button>
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+<br>
+<hr>
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+              Settings
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <div class="form-group">
+              <input id="returnToPool" name="returnToPool" type="checkbox" value="y"><label for="returnToPool">Return Picked student to pool immediately</label>
+            </div>
+            <div class="form-group">
+              <label>Force Next</label>
+              <select id="nextUp">
+                <option value="null">None</option>
+                {% for u in userList %}
+                <option value='{{u|tojson}}'>{{u[2]}} {{u[3]}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  <div class="col-sm-2"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script>
+var users = {{userList| tojson}};
+var current = null;
+var availableUsers = users.slice(0);
+var imgUrlTemplate = "{{url_for('sendProfilePicture', uid='uid')}}"
+
+
+function getNext() {
+  var nextUp = JSON.parse($("#nextUp option:selected").val())
+  if (nextUp != null) {
+    current = nextUp;
+  } else {
+    if (availableUsers.length == 0){
+        availableUsers = users.slice(0);
+    }
+
+    //Get a random user
+    var index = Math.floor(Math.random()*availableUsers.length);
+    current = availableUsers[index];
+
+    //If we are not saving them splice them out
+    if (!$("#returnToPool").prop("checked")) {
+      availableUsers.splice(index, 1);
+    }
+  }
+}
+
+function displayCurrent() {
+  if (current == null) {
+    $("#name").html("???");
+    $("#photo").attr("src", "{{url_for('static', filename='images/questionMark.png')}}")
+  } else {
+    $("#name").html(current[2] + " " + current[3]);
+    var url = imgUrlTemplate.replace("uid", current[0]);
+    $("#photo").attr("src", url)
+  }
+}
+
+$("#next").click(function(){getNext();displayCurrent()});
+
+$("#returnToPool").change(function(){
+  //Whenever the checkbox changes put the default list of users back as available
+  availableUsers = users.slice(0);
+})
+</script>
+{% endblock %}

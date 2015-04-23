@@ -11,7 +11,7 @@ from flask.ext.markdown import Markdown
 from helpers.celeryconfig import make_celery
 
 from markdown.extensions.attr_list import AttrListExtension
-
+import bleach, re
 
 app = Flask(__name__)
 
@@ -84,9 +84,36 @@ def walkFileTree(filepath):
 
 
 
-
+#Add globals to the templates
 app.jinja_env.globals.update(activeCourses=activeCourses)
 app.jinja_env.globals.update(walkFileTree=walkFileTree)
+
+#Set up allowed HTML tags in markdown
+bleach.ALLOWED_TAGS += ['pre', 'font']
+bleach.ALLOWED_ATTRIBUTES[u'font'] = [u'color']
+
+def cleanHTML(html):
+  return bleach.clean(html)
+
+def formatScore(score):
+  return "%.2f" % (score)
+
+def dedecimal(d):
+  out = {}
+  for k,v in d.iteritems():
+    out[k] = str(v)
+  return out
+
+def cleanID(ID):
+  ID = re.sub('\s', '_', ID)
+  ID = re.sub('\W', '', ID)
+  return ID
+
+#Add the bleach filter
+app.jinja_env.filters['bleach'] = cleanHTML
+app.jinja_env.filters['formatScore'] = formatScore
+app.jinja_env.filters['dedecimal'] = dedecimal
+app.jinja_env.filters['cleanID'] = cleanID
 
 #We import all of the various modules in userViews. These modules contain functions
 #which generate URL->enpoint bindings which allows the pages to be rendered or

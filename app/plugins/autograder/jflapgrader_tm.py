@@ -687,8 +687,8 @@ def runTests(cmdPrefix, testFile, timeLimit):
     #find the initial state
     start_state = None
     for k in TYPES:
-      value = TYPES[key]
-      if 'initial' in value: start_state = key
+      value = TYPES[k]
+      if 'initial' in value: start_state = k
 
     if initial_state == None:
       #If we hav eno initial state just die

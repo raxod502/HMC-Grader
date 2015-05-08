@@ -37,7 +37,7 @@ with CS coursework. It is designed to support basic grading functionality and au
 Additionally it is designed to be extended to support new testing systems through a simple plug-in system
 which can hot-load new plugins on a live instance.
 
-This document will attempt to get you familiar with the \csgt system and guide you through using and maintaining 
+This document will attempt to get you familiar with the \csgt system and guide you through using and maintaining
 its various features. \csgt provides the following major features:
 
 \begin{itemize}
@@ -54,7 +54,7 @@ permissions levels.
 \end{itemize}
 
 This document will attempt to guide you through the use of these features. Because not all features are useful to
-every class of user this document is divided into three chapters. The \nameref{ch:use} chapter should be 
+every class of user this document is divided into three chapters. The \nameref{ch:use} chapter should be
 enough for instructors, tutors, and students. The \nameref{ch:admin} chapter will cover topics required to set-up
 and maintain the \csgt system. Finally, the \nameref{ch:develop} chapter will cover topics required to develop
 new plug-ins and modify the core functionality of the system.
@@ -68,8 +68,8 @@ In addition it will describe the built in wiki system which ships with the \csgt
 \section{General Use}
 This section covers general account management.
 \subsection{Logging in/Password Recovery}
-Most of the features for the site are restricted to registered users. The login button is located in the 
-top right corner of the page, see Figure \ref{fig:main_page}. 
+Most of the features for the site are restricted to registered users. The login button is located in the
+top right corner of the page, see Figure \ref{fig:main_page}.
 
 \begin{figure}
 \centering
@@ -78,7 +78,7 @@ top right corner of the page, see Figure \ref{fig:main_page}.
 \label{fig:main_page}
 \end{figure}
 
-If you forget your password (and the system has been configured to send emails, see Section \ref{sec:config}) 
+If you forget your password (and the system has been configured to send emails, see Section \ref{sec:config})
 you may recover your password on the login page, shown in Figure \ref{fig:login_page}.
 
 \begin{figure}
@@ -90,7 +90,7 @@ you may recover your password on the login page, shown in Figure \ref{fig:login_
 
 \subsection{The Main Navigation Bar}
 
-Most navigation will be done through the use of the main navigation bar at the top of the screen, see 
+Most navigation will be done through the use of the main navigation bar at the top of the screen, see
 Figure \ref{fig:nav_bar}. The navigation bar's content will change based on the permissions of your
 account. Figure \ref{fig:nav_bar} shows an account that occupies all three roles, student, grader, and
 instructor.
@@ -106,13 +106,13 @@ From right to left the links on the navigation bar are:
 \begin{description}
 \item[Home] Takes you to the main page.
 \item[Courses] Presents a drop-down menu which can take you to the homepage for active courses in the system.
-\item[Active Grutors] Takes you to a page which shows where the current active grutors are for 
+\item[Active Grutors] Takes you to a page which shows where the current active grutors are for
 courses you are involved with (enrolled, grading, or teaching).
 \item[Student] This only appears if you are a student in a course and will present a drop-down that can take
 you to the problem submission page for your course or a summary of your grades.
 \item[Grader] This only appears for graders and instructors of a course. It presents a drop-down for choosing
 which course you want to grade assignments for.
-\item[Instructor] This only appears for instructors. It presents a drop-down for which course you want to 
+\item[Instructor] This only appears for instructors. It presents a drop-down for which course you want to
 edit settings for.
 \item[Leave a Comment] Takes you to a feedback page. Feedback provided through this page is sent to the
 admin.
@@ -139,7 +139,7 @@ Problems are grouped by \textbf{Assignment Group} which may refer to single week
 grouping of multiple problems. Assignment groups are displayed in reverse order so that the most recently
 assigned group is at the top of the list and thus easier to find.
 
-Once you have located the problem you wish to submit click the blue \emph{Submit} button. This will direct 
+Once you have located the problem you wish to submit click the blue \emph{Submit} button. This will direct
 you to a page like in figure \ref{fig:submit_page}.
 
 \begin{figure}
@@ -153,10 +153,10 @@ On the submit page there is information about what files are expected, a place f
 files you are submitting and a drop-down to select an optional partner.
 
 \begin{description}
-\item[Required Files For Submission] These files must be present in the set of files you select or else 
+\item[Required Files For Submission] These files must be present in the set of files you select or else
 the system will reject the submission.
 \item[Required Files For Auto-Grading] If any of these files are not present the submission will be accepted
-but the auto-grader will not run. 
+but the auto-grader will not run.
 \item[Files] Will open a file selection window. To submit multiple files you may either select multiple files in
 the window, or submit a zip file. If you need to preserve directory structure submit a zip file.
 \item[Partner] A drop-down of all the students in the course for selecting a partner. If you select a partner
@@ -165,7 +165,7 @@ your partner does not have to submit the solution as well.
 
 \subsection{Viewing Grades}
 There are two ways to view grades. First on the problem list page, see figure \ref{fig:problem_list}, you can
-click the \emph{view} button to see the grade and grader comments for an individual problem. 
+click the \emph{view} button to see the grade and grader comments for an individual problem.
 
 If you want an overview of all of your grades you can go to the \emph{My Grades} page which is under the student
 drop-down menu. The My Grades page will display something like in figure \ref{fig:my_grades}.
@@ -180,11 +180,11 @@ drop-down menu. The My Grades page will display something like in figure \ref{fi
 \section{Grader Use}
 \label{sec:graders}
 Graders can assign grades in one of two ways, they can grade submitted assignments, or they can enter
-external grades into the grade-book. This section will cover both of these options. 
+external grades into the grade-book. This section will cover both of these options.
 
 \subsection{Grading Submitted Homework}
-First to grade a student's submitted work click the \emph{Grader} drop-down from the navigation bar 
-(see Figure \ref{fig:nav_bar}) select the course you wish to grade. This will bring up a list of all the 
+First to grade a student's submitted work click the \emph{Grader} drop-down from the navigation bar
+(see Figure \ref{fig:nav_bar}) select the course you wish to grade. This will bring up a list of all the
 problems currently assigned as seen in Figure \ref{fig:grutor_problems}.
 
 \begin{figure}[h]
@@ -195,7 +195,7 @@ problems currently assigned as seen in Figure \ref{fig:grutor_problems}.
 \end{figure}
 
 On this page click the \emph{Grade} button for the problem you wish to grade. This will bring up a list of all
-of the students in the class with the status of their submission, see Figure \ref{fig:grutor_problem_list}. 
+of the students in the class with the status of their submission, see Figure \ref{fig:grutor_problem_list}.
 
 \begin{figure}[h]
 \centering
@@ -205,7 +205,7 @@ of the students in the class with the status of their submission, see Figure \re
 \end{figure}
 
 There are two ways to claim a submission to grade. First, you can click the \emph{Random Grade} button.
-This button will atomically select a currently ungraded assignment for you. Second, you can click the 
+This button will atomically select a currently ungraded assignment for you. Second, you can click the
 \emph{grade} button for the student you wish to grade. Once you have selected a problem to grade you will
 see a page like in Figures \ref{fig:grade_page_top} and \ref{fig:grade_page_bottom}.
 
@@ -382,8 +382,8 @@ the grey cog button for the problem you wish to modify.
 \chapter{Administration}
 \label{ch:admin}
 \section{Server Structure}
-The \csgt system is designed to be modular and expandable as the number of users of the system grows. 
-To accommodate this each of the five major components are designed to be operated as a separate server. 
+The \csgt system is designed to be modular and expandable as the number of users of the system grows.
+To accommodate this each of the five major components are designed to be operated as a separate server.
 The five components are:
 
 \begin{enumerate}
@@ -394,13 +394,13 @@ The five components are:
 \item RabbitMQ for passing grading requests to workers
 \end{enumerate}
 
-In the most basic configuration, which is most useful for testing, all of the required components will be 
-on one machine. As the requirement for redundancy and scalability increases components may be moved to 
+In the most basic configuration, which is most useful for testing, all of the required components will be
+on one machine. As the requirement for redundancy and scalability increases components may be moved to
 separate servers and replicated. Figure \ref{fig:layout} shows one possible configuration of the servers
 which provides redundancy on both the front and back end. It is important to note that a load-balancer is
 required to support multiple front-ends.
 
-\textbf{Note:} Currently even though MongoDB and rabbitMQ support distributed options the system has never 
+\textbf{Note:} Currently even though MongoDB and rabbitMQ support distributed options the system has never
 been tested using that configuration. This is a feature which may be researched in the future if it becomes
 needed.
 
@@ -417,8 +417,8 @@ needed.
 
 \section{Set-up}
 Once you have decided on the basic configuration for your servers setting up the requisite systems requires a
-little work. For each server type I will provide basic set-up instructions. These instructions are listed in 
-order to prevent dependency issues. 
+little work. For each server type I will provide basic set-up instructions. These instructions are listed in
+order to prevent dependency issues.
 
 \subsection{MongoDB Set-up}
 To set-up a brand new MongoDB instance you can use the instructions below. If you already have a running version
@@ -426,7 +426,7 @@ of MongoDB you can adapt the instructions or request help from your database adm
 \begin{enumerate}
 \item Get the latest version of MongoDB from \href{http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/}{here}.
 \item Follow \href{http://docs.mongodb.org/manual/tutorial/enable-authentication/}{these} instructions to create an administrator account.
-\item Edit \verb|/etc/mongodb.conf| so that 
+\item Edit \verb|/etc/mongodb.conf| so that
 \verb|bind_ip| is commented and uncomment
 \verb|auth = true|. Additionally it is recommended to change the port that the server listens on
 to prevent attacks.
@@ -436,9 +436,9 @@ to prevent attacks.
 \item Add a user for this database by typing
 \begin{verbatim}
 > db.createUser(
-  { user: "grader", 
+  { user: "grader",
     pwd: "{your password}",
-    roles: [{role: "dbOwner", db: "submissionsite"}] 
+    roles: [{role: "dbOwner", db: "submissionsite"}]
   }
 )
 \end{verbatim}
@@ -485,7 +485,7 @@ RabbitMQ is now in a very basic workable configuration.
 \subsection{Create config.py}
 \label{sec:config}
 The \texttt{config.py} file handles all of the connection configuration for the system.
-Inside \texttt{config.py} there are several sections that need to be modified using configuration 
+Inside \texttt{config.py} there are several sections that need to be modified using configuration
 information from the steps above.
 
 \begin{enumerate}
@@ -517,7 +517,7 @@ SMTP_SERVER = "{smtp_server}"
 This configuration file should be passed to all front/back-end servers.
 \\
 \\
-\noindent\textbf{Note:} There is an additional setting \verb|GRADER_USER| which is currently set to 
+\noindent\textbf{Note:} There is an additional setting \verb|GRADER_USER| which is currently set to
 \verb|None|. This setting is supposed to set which user to switch to as the auto-grader but it
 is currently non-functional.
 
@@ -540,7 +540,7 @@ of pymongo. To solve this install version 2.8 \verb|$ <venv_name>/bin/pip instal
 \verb|$ <venv_name>/bin/gunicorn -w 4 -k gevent -b 0.0.0.0:80 app:app|
 \end{enumerate}
 
-\noindent\textbf{Note:} You may have to modify some permissions to allow \emph{gunicorn} to bind to port 80. 
+\noindent\textbf{Note:} You may have to modify some permissions to allow \emph{gunicorn} to bind to port 80.
 Additionally if you are using a load balancer you may want to bind it to some other higher port.
 
 \subsection{Celery Worker Back-end Set-up}
@@ -563,7 +563,7 @@ of pymongo. To solve this install version 2.8 \verb|$ <venv_name>/bin/pip instal
 
 \subsection{Bootstrap the Administrator Account}
 All of the previous sections have gotten a working version of the system but currently there are no accounts
-in the database. To begin creating accounts there must be an administrator account. 
+in the database. To begin creating accounts there must be an administrator account.
 
 The easiest way to create the \texttt{admin} account is to run\\
 \verb|$ <venv_name>/bin/python run.py|\\
@@ -577,8 +577,8 @@ if no account is found it creates it. You can find the password for the default 
 
 \section{Managing Courses}
 \subsection{Creating Courses}
-The administrator is required to create all of the courses for the system. When a course is created all administrators are invisibly added as instructors. Any other instructors must be explicitly added by an 
-administrator. 
+The administrator is required to create all of the courses for the system. When a course is created all administrators are invisibly added as instructors. Any other instructors must be explicitly added by an
+administrator.
 
 To add a new course to the system first navigate to the \emph{Admin Dashboard} (See Figure \ref{fig:admindash}).
 Once in the Admin Dashboard click the link for the \emph{Courses} panel. Fill in the required information and
@@ -598,14 +598,14 @@ This requires the following actions:
 \item Navigate to the course settings page. If you just created the course find it in the \emph{Active Courses}
 list and click \emph{Administer}. If you are on the main page click the \emph{Instructor} drop-down and click on
 the course link.
-\item Scroll to the bottom of the course settings page. 
-\item Under the instructors heading enter the user-name of the desired instructor. (If the instructor does not have an account yet see Section \ref{sec:createusers}). Click the plus button. 
+\item Scroll to the bottom of the course settings page.
+\item Under the instructors heading enter the user-name of the desired instructor. (If the instructor does not have an account yet see Section \ref{sec:createusers}). Click the plus button.
 \item That user is now an instructor.
 \end{enumerate}
 
 \subsection{Deactivating Courses}
 When a course is finished it is desired to prevent that course from being modified. Additionally we want
-currently activated courses to be prioritized when displaying lists of courses to users. 
+currently activated courses to be prioritized when displaying lists of courses to users.
 To accomplish this \csgt allows the administrator to \textbf{Deactivate} a course. When a course is deactivated
 it no longer accepts submissions and is moved from the main drop down menus into a separate page of old courses.
 
@@ -613,7 +613,7 @@ To deactivate a course first navigate to the Admin Dashboard and then to the Cou
 panel find the desired course and click the \emph{Deactivate} button.
 \\
 \\
-\noindent\textbf{Note:} Some of the archival pages are still works in progress, but the framework is there to 
+\noindent\textbf{Note:} Some of the archival pages are still works in progress, but the framework is there to
 accomplish these features. If you run into problems with deactivated courses please submit a bug report.
 
 
@@ -621,7 +621,7 @@ accomplish these features. If you run into problems with deactivated courses ple
 \section{Creating User Accounts}
 \label{sec:createusers}
 One of the primary roles of the \texttt{admin} account is to create user accounts. There are two methods
-for creating accounts for users. 
+for creating accounts for users.
 
 \subsection{Creating via web}
 Web creation is the easiest way to create a small number of accounts. The steps are as follows:
@@ -641,8 +641,8 @@ Web creation is the easiest way to create a small number of accounts. The steps 
 \end{enumerate}
 
 \subsection{Creating via command line}
-Creating new users via the command line is generally one of the easiest ways to add large batches of users. 
-There are already several scripts (Located in \verb|app/scripts| in the repository) which demonstrate how to 
+Creating new users via the command line is generally one of the easiest ways to add large batches of users.
+There are already several scripts (Located in \verb|app/scripts| in the repository) which demonstrate how to
 add users from various files (CSV files with different column layouts). Below are general instructions for adding
 a user via command line:
 \\
@@ -683,5 +683,47 @@ $ <venv_name>/bin/python
 Foo
 
 \chapter{Command Line Reference}
-Foo
+Some functionality is too infrequently used or too cumbersome to provide through
+the web interface. Including:
+
+\begin{itemize}
+  \item Assigning all students a comment and a score for a given prolem.
+  \item Changing the password of a student.
+  \item Adding a user to a large number of courses at once.
+  \item Making a user an administrator.
+  \item Creating a large number of user acounts from a file.
+\end{itemize}
+
+Other functionality simply hasn't been made available yet
+in the web interface and will be added later. Including:
+\begin{itemize}
+  \item Marking all submission grading status as "Done".
+  \item Sending all submissions through the auto-grader again.
+\end{itemize}
+
+This section will demonstrate how to use the scripts provided to perform these
+functions as well as other useful tips for the command line.
+
+\section{Setting up the Environment}
+Because of the way the python import system works, before you can run any
+scripts or do work on the command line you must first export the enviornment
+variable \textt{PYTHONPATH} to the location of the root of your repository.
+One easy way to do this is:
+\begin{verbatim}
+$ cd <your_repository>
+$ export PYTHONPATH=`pwd`
+\end{verbatim}
+
+\section{Using the provided scripts}
+The repository contains several useful scripts in the directory
+\texttt{app/scripts}.
+
+\subsection{Adding batches of users}
+The three scripts \textt{addUsersFromList}, \texttt{addUsersFromSakai},
+\texttt{addGrutorsFromList} all provide examples for how to read \texttt{CSV}
+style files and creating user accounts from them.
+
+Theses scripts were designed for the data format used by the Harvey Mudd
+College Registrar and so may not be immediately useful at other schools, but
+they will provide good reference.
 \end{document}

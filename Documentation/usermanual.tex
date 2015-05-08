@@ -178,6 +178,7 @@ drop-down menu. The My Grades page will display something like in figure \ref{fi
 \end{figure}
 
 \section{Grader Use}
+\label{sec:graders}
 Graders can assign grades in one of two ways, they can grade submitted assignments, or they can enter
 external grades into the grade-book. This section will cover both of these options. 
 
@@ -222,12 +223,161 @@ see a page like in Figures \ref{fig:grade_page_top} and \ref{fig:grade_page_bott
 \label{fig:grade_page_bottom}
 \end{figure}
 
+Grading is fairly simple, using the list of student files (Bottom of Figure \ref{fig:grade_page_bottom}) you
+can view most textual, image, and PDF files. Files that cannot be directly viewed in browser may be
+downloaded. 
+
+To help during grading the professor can supply grading notes. These notes are in the \emph{Submission Properties}
+table in the row labelled \emph{Grade Notes} (See Figure \ref{fig:grade_page_top}). If notes are supplied a button 
+will be presented which will open the specified link in a new tab.
+
+Once you have assessed the students submission and left comments (Figure \ref{fig:grade_page_bottom}) you must
+save your changes and mark the submission as graded. All of this is handled by clicking the green
+\emph{Finish Grading (save all)} button. Clicking this button will save all of the fields on the page and 
+take you back to the list of submissions (Figure \ref{fig:grutor_problem_list}).
+
+\noindent\textbf{Note:} If the submission you are working on has a partner that submission will receive the
+exact same grades and comments that you put on this submission.
+
+Additional things you can do on the grade page are modifying the late status of a submission, sending the
+submission through the auto-grader again, and viewing old versions of the submission. These functions are 
+all found in the \emph{Submission Properties} table (Figure \ref{fig:grade_page_top}).
+
+\subsubsection{Status of Grading}
+
+It is important to understand the different stages of grading for a submission. Each submission can be in
+one of six stages:
+\begin{enumerate}
+\item Unsubmitted
+\item Submitted: No auto-grading or grading
+\item Auto-grading in progress
+\item \label{item:autograded} Submitted: Auto-graded but not graded
+\item \label{item:inprogress} Grading in progress
+\item \label{item:graded} Graded
+\end{enumerate}
+
+Along with the status a submission also has a grader associated with it. For the most part submissions will always 
+be in state \ref{item:autograded} when a grade gets to them. 
+The largest area of confusion is how the \emph{Cancel Grade} and \emph{Finish Grading} buttons affect the
+status of the submission. There are simple rules for how this works:
+\begin{itemize}
+\item You are listed as the grader of the submission.
+\begin{description}
+\item[Finish Grading] Sets the status to \ref{item:graded}. You are still the grader.
+\item[Cancel Grading] Sets the status to \ref{item:autograded}. The submission has no grader.
+\item[Leaving the page (other links)] Submission status does not change. Grader does not change.
+\end{description}
+\item Another grader is listed as the submission's grader
+\begin{description}
+\item[Finish Grading] Sets the status to \ref{item:graded}. You are now the grader.
+\item[Cancel Grading] Submission status does not change. Grader does not change.
+\item[Leaving the page (other links)] Submission status does not change. Grader does not change.
+\end{description}
+\end{itemize}
+
+It is important to remember that if you leave the page via \emph{Cancel Grade} or any other link
+none of your changes will be saved. If you want to make changes and leave with these methods you must
+use the explicit blue save buttons for each section you modify.
+
+\subsection{Entering grades in the Grade-book}
+The other way graders can assign grades is through the grade-book. The grade-book is intended for assigning
+grades to assignments or other parts of the class that were not submitted through the system, (e.g. 
+Participation, Quizzes, Tests...).
+
+To get to the Grade-Book click the Grader drop-down menu and select the course you wish to grade. This
+brings up a page like in Figure \ref{fig:grutor_problems}. On this page click the \emph{Gradebook} button.
+This will display a page like in Figure \ref{fig:gradebook}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{diagrams/gradebook}
+\caption{The grade-book for the course CS Test}
+\label{fig:gradebook}
+\end{figure}
+
+Non-submitted grade-book columns are always the right most columns in the grade-book. For example in 
+Figure \ref{fig:gradebook} The column \textbf{Quiz 1} in the category \textbf{Tests} is a non-submitted
+column. 
+
+To assign grades click the name of the column, in this case \textbf{Quiz 1}. This will take you to a page
+like seen in Figure \ref{fig:gradecolumn}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{diagrams/gradecolumn}
+\caption{The grade column for Quiz 1 in CS Test}
+\label{fig:gradecolumn}
+\end{figure}
+
+From here you may edit each students score. When you are done you can press save and leave. 
+\textbf{Important Note:} Two graders cannot be editing the same grade-book column at the same time
+once one grader saves their changes it will overwrite the other graders changes.
 
 \pagebreak
 \section{Instructor Use}
-Foo
+Instructors are responsible for configuring problems and adding columns to the grade-book as well as grading.
+Since grading was covered in Section \ref{sec:graders} this section will focus on configuring courses and 
+problems.
+
+\subsection{General Course Settings}
+Once an administrator has created a course and assigned you as an instructor you will need to begin configuring
+your course. The course settings page is shown in Figure \ref{fig:course_settings}, this section will describe
+the functionality of this page. \textbf{Note:} The figure does not show the entire page. At the bottom of the
+page is the list of students, grutors, and instructors. This document will explain later how to use these lists.
+
+First let us examine the \emph{Settings} panel near the bottom of the page. There are three major settings for
+a course.
+
+\begin{description}
+\item[Course Homepage] This setting changes where the link in the \emph{Courses} drop down from the nav-bar
+goes. By default it links to an empty built-in wiki page (use of the wiki is described in Section \ref{sec:wiki})
+but it can be changed to link to an external site.
+\item[Use Anonymous Grading] This boolean setting changes whether or not usernames are made anonymous to 
+graders. If it is active any page under the \emph{Grader} drop-down for this course will use anonymous usernames. 
+All pages in the \emph{Instructor} drop-down for this course will display both usernames.
+\item[Late Work Policy] The late work policy changes how the system handles scoring assignments submitted late.
+The default is \emph{Highlighter} which simply highlights late assignments red in the grade book. This policy can
+be replaced via plug-in to modify scores based on how late or how many late assignments a student has turned in.
+\end{description}
+
+\noindent\textbf{Note (Possible feature request):} Currently the modified grade calculated by the late policy
+is only displayed in the grade-book or the students \emph{My Grades} page. If a student views a problem 
+individually it will show the original grade for that problem. This may be fixed in future versions of the
+\csgt system.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{diagrams/course_settings}
+\caption{The main course settings page, minus the users lists}
+\label{fig:course_settings}
+\end{figure}
+
+\subsection{Adding Problems}
+Once you have configured the course to have the settings you want you will want to add problems.
+Within the \csgt system problems are always contained within an \textbf{assignment group}. Assignment 
+groups are ways to logically group related problems. For example assignment groups could be based on which week
+the problems material relates to, which chapter of the book they relate to, or what problem set they are from.
+Assignment groups are always displayed with the most recently assigned at the top of the page. This helps
+students quickly locate the most relevant assignments.
+	
+To add a problem you must first create an assignment group. To create an assignment group type in the text-box
+that displays the place-holder text \emph{eg. Week 0} and press the \emph{Add Assignment Group} button. In
+Figure \ref{fig:course_settings} we can see that this course has assignment groups \textbf{Week 0} and 
+\textbf{Week 1}. 
+
+Once you have created an assignment group you can add a problem by clicking the blue plus button in the 
+problem column for the assignment group you want. This will take you to the \textbf{Problem Settings} page, 
+explained in Section \ref{sec:problem_settings}, you can also get to the problem settings page by clicking
+the grey cog button for the problem you wish to modify.
+
+\subsection{Problem Settings}
+
+
+
 
 \section{Wiki Use}
+\label{sec:wiki}
+
 
 \chapter{Administration}
 \label{ch:admin}

@@ -371,8 +371,50 @@ explained in Section \ref{sec:problem_settings}, you can also get to the problem
 the grey cog button for the problem you wish to modify.
 
 \subsection{Problem Settings}
+The problem settings page has four major sections: Problem Information, Problem Rubric, Problem Settings
+(all seen in Figure \ref{fig:problem_settings}), and Tests. The first three sections are inter-related and
+are all saved at once using the Save button at the bottom of the Problem Settings section. The tests are 
+handled separately and will be described later in the chapter. 
 
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{diagrams/problem_settings}
+\caption{The problem settings page}
+\label{fig:problem_settings}
+\end{figure}
 
+\subsubsection{Problem Information}
+The Problem Information section of the page allows you to enter basic information about the assignment.
+Most of the sections are fairly self explanatory, but there are subtle distinctions about some:
+
+\begin{description}
+\item[Do not accept without] A comma separated list of files which the system should reject a submission
+if any of them are missing. This is useful to prevent students from turning in partial assignments.
+\item[Do not auto-grade without] A comma separated list of files which the system should look for to
+be allowed to run the auto-grader. This is good if you want to accept partial submissions but some files
+may be required to not crash the auto-grading system.
+\item[Problem Description URL] A link to the specification of the problem. This can be an external link
+(preceded with \texttt{http://}) or a wiki page (See section \ref{sec:wiki}). The \emph{Make Page} button
+will generate a wiki page where you can write the specification for the problem.
+\item[Grading Notes URL] A link to the specification for graders to use to grade problems. This link is only
+made available to graders. Similarly to the Problem Description URL it can be a wiki page generated with the
+\emph{Make Page} button.
+\end{description}
+
+\subsubsection{Problem Rubric}
+The problem rubric is where you can specify how many points a problem is worth. Rubrics may contain
+multiple sections to help both graders and students better understand what deductions are for. 
+
+Sections can be added to the rubric by typing a name and a number of points into the fields at the bottom
+of the table then clicking the \emph{plus} button. Similarly you can remove a section by clicking the 
+\emph{minus} button. Modifications are color coded and only applied when the save button is pressed
+
+\noindent\textbf{Note:} To change the number of points assigned by a section simply re-add that section.
+
+\noindent\textbf{Note:} Removing a section of the rubric does not remove any points assigned to a student 
+in that particular field of the rubric. If you need to remove a section of the rubric that has already been
+graded you will need to use the command line to remove or rename the assigned points. Example in section
+\ref{sec:assigning_points:fixing_rubrics}.
 
 
 \section{Wiki Use}
@@ -706,8 +748,8 @@ functions as well as other useful tips for the command line.
 
 \section{Setting up the Environment}
 Because of the way the python import system works, before you can run any
-scripts or do work on the command line you must first export the enviornment
-variable \textt{PYTHONPATH} to the location of the root of your repository.
+scripts or do work on the command line you must first export the environment
+variable \texttt{PYTHONPATH} to the location of the root of your repository.
 One easy way to do this is:
 \begin{verbatim}
 $ cd <your_repository>
@@ -719,11 +761,27 @@ The repository contains several useful scripts in the directory
 \texttt{app/scripts}.
 
 \subsection{Adding batches of users}
-The three scripts \textt{addUsersFromList}, \texttt{addUsersFromSakai},
+The three scripts \texttt{addUsersFromList}, \texttt{addUsersFromSakai},
 \texttt{addGrutorsFromList} all provide examples for how to read \texttt{CSV}
 style files and creating user accounts from them.
 
 Theses scripts were designed for the data format used by the Harvey Mudd
 College Registrar and so may not be immediately useful at other schools, but
 they will provide good reference.
+
+\subsection{Assigning Points}
+\label{sec:assigning_points}
+
+\subsubsection{Removing points from removed rubric sections}
+\label{sec:assigning_points:fixing_rubrics}
+When a section is removed from the rubric the system doesn't remove any assigned points from submissions.
+To handle this situation you must delete or move the assigned points in the submission's grade object.
+\begin{verbatim}
+>>> s = #A submission object obtained by magic (Python)
+>>> #Move points from a badly named section
+>>> s.grade.scores['Points'] = s.grade.scores['Pionts']
+>>> #Remove an unneeded section
+>>> del s.grade.scores['useless']
+>>> s.save() #Don't forget to save
+\end{verbatim}
 \end{document}

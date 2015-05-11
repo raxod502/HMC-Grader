@@ -11,8 +11,11 @@
 }
 \usepackage{graphicx}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \usepackage{multicol}
+\usepackage{fancyvrb}
 
 
 
@@ -416,10 +419,270 @@ in that particular field of the rubric. If you need to remove a section of the r
 graded you will need to use the command line to remove or rename the assigned points. Example in section
 \ref{sec:assigning_points:fixing_rubrics}.
 
+\subsubsection{Problem Settings}
+The settings section contains four toggles to change the way the problem handles submissions.
 
+\begin{description}
+\item[Allow Partners] If this box is checked the student submission page allows students to select one partner
+to submit with. Otherwise that box is disabled.
+\item[Is this problem open for submissions] When this box is checked the students can click the submit button.
+when it is unchecked that button is removed.
+\item[Release Autograder Comments] When this box is checked any comments that the auto-grader makes are shown
+to the students before their grade is marked as done. Otherwise a student looking at their grade will see a 
+place-holder comment telling them to check back when the grading is finished.
+\item[Finish grading after autograder] When this is checked the auto-grader will mark a submission as done
+grading once it has finished. If the auto-grader fails to grade an assignment it will be left in the 
+\emph{Waiting for Autograder} state. 
+\end{description}
+
+\subsection{Tests}
+One of the major features of the system is its ability to auto-grade student submissions. To allow this each
+problem has a section in its settings page to add multiple test files (See figure \ref{fig:problem_tests}).
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{diagrams/problem_tests}
+\caption{The problem tests lists}
+\label{fig:problem_tests}
+\end{figure}
+
+\subsubsection{Adding Tests}
+Adding a test is fairly simple. First select the unit-test file you want to upload.
+Next select the type of unit test that the file is for. The currently implemented test types are:
+
+\begin{description}
+\item[Python (pyunit)] This type runs a pyunit test file.
+\item[Java (junit4)] This type runs a Junit4 style test file.
+\item[Prolog (plunit)] This type runs a Prolog file that implements plunit tests.
+\item[Racket (rackunit)] This type runs a rackunit test file. \textbf{Note:} There are 
+several subtleties to running the rackunit tests which are described in Section \ref{sec:writing_tests}.
+\item[Picobot] This type runs a picobot program in various mazes from various starting positions. 
+An online picobot simulator can be found at the HMC Picobot site
+\url{http://www.cs.hmc.edu/picobot/}.
+\item[JFLAP] This type runs various inputs through DFAs and NFAs defined using the JFLAP program. 
+\textbf{Note:} The JFLAP simulator that this type uses is based off of a python script that was developed
+over many years for use internal to HMC. It may contain some bugs in edge cases that don't occur in standard
+HMC assignments.
+\item[JFLAP (Turing Machine)] This type runs various inputs through turnig machines defined using the JFLAP program. 
+\textbf{Note:} The JFLAP simulator that this type uses is based off of a python script that was developed
+over many years for use internal to HMC. It may contain some bugs in edge cases that don't occur in standard
+HMC assignments.
+\item[Supplemental File] Supplemental files are never executed. Instead these files are meant to allow
+the test files to get external data or link in extra code pieces. 
+\end{description}
+
+\subsection{Test Settings}
+By default when you add a test file to a problem it will parse the file to look for tests. Each test it 
+finds it will assign one point to an unspecified rubric section. This functionality provides a useful
+default but it is often useful to have more power when specifying which tests go to what rubric sections
+and how many points they are worth. 
+
+To allow for this functionality the site provides a test settings page, 
+seen in Figure \ref{fig:test_settings}.
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{diagrams/test_settings}
+\caption{The test point allocation page}
+\label{fig:test_settings}
+\end{figure}
+
+To allocate points you must first create a \emph{Test Section}. Once you have a test section you can 
+define how many points it is worth, which rubric section it assigns points to, and which tests are 
+part of that section. 
+
+\noindent\textbf{Note:} Any test that is not in a section will not be displayed to the student. If you want
+a test to be run but not have any points assigned to it you should put it in its own 0 point section.
+
+
+\subsection{Writing Tests}
+\label{sec:writing_tests}
+There are some idiosyncrasies with some of the auto-grader systems (mostly stemming from the fact 
+that some languages do not easily support external unit-tests). This section covers some of the 
+test writing issues that attempt to combat those idiosyncrasies.
+
+\subsubsection{Generic Test Features}
+One of the biggest features of the testing framework is being able to provide external output.
+To help the system differentiate between student code output, test framework output, and output 
+intended to be presented to the student, the system uses a simple annotation system. 
+
+When a test wants to produce output that is presented to the student in the web interface the print
+statement should begin with the name of the test and a colon. This is probably best shown in an example:
+
+\begin{verbatim}
+def testThatPrints(self):
+  x = studentCode()
+  print "testThatPrints: Your code produced %d" % (x) 
+\end{verbatim}
+
+This will print out \texttt{Your code produced \#} to the student in the grading comments
+(where \# is whatever number their code produced). 
+
+\pagebreak
+\subsubsection{Python}
+Python has relatively few issues but there are some things to point out. First it is recommended to us 
+\texttt{import foo as bar}. This helps prevent name conflicts with the unit-testing framework or your 
+test classes. Below is a simple example file:
+
+\begin{verbatim}
+import hw3pr2 as hw
+import unittest
+
+
+class BasicTests(unittest.TestCase):
+  def testA(self):
+    self.assertEqual(hw.foo(3), 2)
+    
+
+
+if __name__ == '__main__':
+  unittest.main()
+\end{verbatim}
+
+Another important point is that a python test file must be executable on its own. 
+This means that it must contain a "main". 
+
+\pagebreak
+\subsubsection{Java}
+Java, like python, has relatively few issues with the auto-grader. Currently the only tested style of
+test writing is using the \texttt{@Test} decorator. Below is a simple test file:
+
+\begin{verbatim}
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+public class BasicTests {
+
+  /* This tests whether the foo function multiplies by 3 */
+  @Test
+  public void testA() {
+    assertTrue( foo(2) == 6 );
+  }
+}
+\end{verbatim}
+
+The biggest issue with the Java auto-grader is the way its test detection regex works. Even though
+Java will let you put a comment between the decorator and the function the regex doesn't do a very
+good job detecting the test name without the decorator being directly adjacent to the function 
+definition.
+
+\pagebreak
+\subsubsection{Racket}
+Racket is one of the more complicated testing systems. Because students submit self contained racket 
+files racket doesn't want to import the student's code into the test file. To combat this the auto-grader 
+performs temporary modifications to the students code, such as removing the \texttt{\#lang racket}
+declaration. 
+
+Additionally if a student has failed to implement a function to in their submitted code the grading will
+fail. To combat this it is recommended to create a different test file for each function you wish to
+test. Because each test file is executed independently a failure in one file will not affect the others.
+
+The Racket auto-grader uses the \emph{rackunit} framework. This framework allows us to add comments to
+the tests which we use as test names. Because of limitations of the test name extraction regular expression
+tests must be at most split across 2 lines. This makes for terribly unattractive test files and we are working
+on improving its capabilities. An example test file is below:
+
+\begin{verbatim}
+;;;Racket - Unit Tests Example
+
+#lang racket
+(include "change.rkt")
+(require rackunit)
+
+(check-equal? (min-change 1 '(1 5 10 25 50)) '(1)
+	"one-cent")
+(check-equal? (min-change 42 '(1 5 10 25 50)) '(1 1 5 10 25)
+	"42-cents us coins: your test didn't make 42 cents change with us coins")
+(check-equal? (min-change 42 '(1 5 21 35)) '(21 21)
+	"42-cents weird coins")
+(check-equal? (min-change 0 '(1 5 21 35)) '()
+	"no change")
+\end{verbatim}
+
+In this case the names of the tests are anything in in the comment strings before a colon. If there is no
+colon the name is the whole string. 
+
+\pagebreak
+\subsubsection{Prolog}
+Prolog has relatively few issues with the auto-grader. The test system utilizes the basic Prolog
+unit-testing framework. When importing the student's submitted code it is important to turn off 
+loading unit-tests. An example file is below:
+
+\begin{verbatim}
+:- set_test_options([load(never)]).
+:- include('sort.pl').
+:- set_test_options([load(always)]).
+
+:- begin_tests(selectionSort).
+test(selectionSortT1) :- selectionSort([1, 2, 3], [1, 2, 3]), !.
+:- end_tests(selectionSort).
+\end{verbatim}
+
+\subsubsection{JFLAP and JFLAP (Turing Machine)}
+The JFLAP and JFLAP (Turing Machine) use a simple text file format to specify tests. 
+The format consists simply of an input string to be fed to the automaton and then 
+if that input should reject. The biggest issue is that the auto-grader only knows what
+file to run the tests on based on the name of the solution file. For example the file 
+\texttt{part1.sols} will grade the JFLAP file \texttt{part1.jff}. An example file follows
+
+\begin{verbatim}
+ reject
+100101
+100100 reject
+1
+00 reject
+\end{verbatim}
+
+Inputs that reject are followed by a space and the word reject. All others accept. To indicate the empty 
+string as an input simply leave a blank line or a just the space and the word reject.
+
+\subsubsection{Picobot}
+Similar to JFLAP, Picobot uses a text input file. The format consists of which map to test the 
+program on, what file the program is contained in and then a list of starting positions. An example
+file is below
+
+\begin{verbatim}
+emptyMap
+hw0pr3.txt
+###
+topleftcorner: 1,1
+toprightcorner: 23,1
+bottomrightcorner: 23,23
+middle: 10, 10
+othermiddle: 9,9
+\end{verbatim}
+
+There are three available maps:
+\begin{enumerate}
+\item \texttt{emptyMap} Figure \ref{fig:empty_map}
+\item \texttt{mazeMap} Figure \ref{fig:maze_map}
+\item \texttt{extraMap} Figure \ref{fig:extra_map}
+\end{enumerate}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{diagrams/emptyMap}
+		\caption{The empty map}
+		\label{fig:empty_map}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{diagrams/mazeMap}
+		\caption{The maze map}
+		\label{fig:maze_map}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{diagrams/extraMap}
+		\caption{The extra map}
+		\label{fig:extra_map}
+	\end{subfigure}
+	\caption{The various maps available to the Picobot auto-grader}
+	\label{fig:maps}
+\end{figure}
+
+\pagebreak
 \section{Wiki Use}
 \label{sec:wiki}
-
+TODO
 
 \chapter{Administration}
 \label{ch:admin}

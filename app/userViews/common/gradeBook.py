@@ -117,7 +117,11 @@ def serveGradebook(cid, raw):
     students = User.objects.filter(courseStudent=course)
 
     for s in students:
-      row = [(s.firstName + ' ' + s.lastName), s.username]
+      if course.anonymousGrading:
+        row = [(str(s.firstName) + ' ' + str(s.lastName)), \
+                (s.username+ ' (' + course.getIdentifier(s.username) + ')')]
+      else:
+        row = [(str(s.firstName) + ' ' + str(s.lastName)), s.username]
       userCourseScore = 0
       scores = getStudentAssignmentScores(course, s)
       for a in scores:

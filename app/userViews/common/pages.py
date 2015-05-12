@@ -21,7 +21,7 @@ from app.helpers.wikiextension import WikiExtension
 #Generic python imports from other libraries
 from werkzeug import secure_filename
 from markdown.extensions.attr_list import AttrListExtension
-import re, markdown
+import re, markdown, os
 
 @app.route('/page/view/id/<pgid>')
 def viewPage(pgid):

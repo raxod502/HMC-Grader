@@ -682,7 +682,109 @@ There are three available maps:
 \pagebreak
 \section{Wiki Use}
 \label{sec:wiki}
-TODO
+The \csgt system provides a wiki like system for providing problem descriptions, grading notes, and
+even full course websites. 
+
+\noindent\textbf{Note:} The wiki system saw relatively little use during our first semester of testing. 
+Because of this the wiki system may contain more issues than other parts of the \csgt system.
+
+\subsection{Wiki page permissions}
+One of the most critical points of the wiki system is the ability to set the view and edit permissions.
+The permissions table is seen in Figure \ref{fig:wiki_permissions}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{diagrams/wiki_permissions}
+\caption{The wiki page permissions table}
+\label{fig:wiki_permissions}
+\end{figure}
+
+For each category of users you can assign either \emph{view} or \emph{edit} permissions. The only 
+restrictions are that if a group does not have view permission they cannot have edit permissions and
+you cannot give edit permissions to users who are not registered for the site. The vertical columns
+have the following meanings:
+
+\begin{description}
+\item[Anyone] Any person on the internet. The page does not check for credentials.
+\item[Any User] Any person who has a login with this instance of the \csgt system. 
+\item[Course Users] Any person who is registered as a student in the course that owns this page.
+\item[Any Grutor] Any person who is registered as a user for any course.
+\item[Course Grutors] Any person who is registered as a grutor for the course that owns this page.
+\end{description}
+
+Course instructors always have access and the ability to edit a page. 
+
+\subsection{Wiki syntax}
+The basic wiki syntax is based on Markdown (\url{http://daringfireball.net/projects/markdown/syntax})
+but there are several extensions to allow for designing nicer looking pages. 
+
+The first major extension enabled is the Attribute list extension 
+(\url{http://pythonhosted.org//Markdown/extensions/attr_list.html}).
+This extension allows you to specify attributes such as CSS classes and styles. Additionally
+you can specify IDs to use as anchors for links. 
+
+The second major extension is a custom wiki link syntax extension. Default links in markdown allow
+you to link to external sites. Because links are long strings of UUID's for the wiki it is impractical
+to use them to create links (\textbf{Note:} It is planned to add easier links in the future). To solve 
+this the markdown syntax has been expanded to include a wiki link as follows:
+
+\begin{verbatim}
+[Text]<Semester Name, Course Name, Page Title>
+[Text]<Course Name, Page Title>
+[Text]<Page Title>
+\end{verbatim} 
+
+The difference in the three lines is that the less information you provide the more it will grab from
+the course that owns the current page.
+
+Like in most wikis if a page you reference doesn't exist that page will be created. That page will inherit
+the permissions of the page that created it. 
+
+Along with links and text you can upload an image and load that into a page. To access an image you use
+something like the link syntax but starting with a "!".
+
+\begin{verbatim}
+![Alt Text]<Semester Name, Course Name, Page Title, Image Name>
+![Alt Text]<Course Name, Page Title, Image Name>
+![Alt Text]<Page Title, Image Name>
+![Alt Text]<Image Name>
+\end{verbatim}
+
+Like links it will load information not provided from the page that the link exists in. You can also use
+the attribute list to specify a width and height of the image.
+
+\pagebreak
+Below is a small example page:
+\begin{verbatim}
+Welcome to the homepage of the CS Test course for Test Semester!
+
+# HI IM A RED HEADER # {style="color:red;"}
+This is stuff that is blue
+{style="color:blue;"}
+
+<pre>
+Test code blocks
+</pre>
+
+[Text]<Test Semester, CS Test, Test Page> 
+
+[Other]<Fake Semester, CS Test, Test Page>
+
+[Not created yet]<Test Semester, CS Test, Not Created>
+
+![Alt Test]<Alien.PNG>
+\end{verbatim}
+
+The rendered page is shown in Figure \ref{fig:wiki_example}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{diagrams/example_wiki}
+\caption{An example wiki page}
+\label{fig:wiki_example}
+\end{figure}
+
+
 
 \chapter{Administration}
 \label{ch:admin}

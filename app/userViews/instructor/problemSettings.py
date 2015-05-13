@@ -25,6 +25,7 @@ from app.structures.models.course import *
 
 #Import the forms needed on these pages
 from app.structures.forms import AddTestForm, ProblemOptionsForm
+from app.structures.models.pages import *
 
 #Import app helpers
 from app.plugins.autograder import getTestFileParsers

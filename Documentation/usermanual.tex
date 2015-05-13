@@ -17,6 +17,22 @@
 \usepackage{multicol}
 \usepackage{fancyvrb}
 
+\usepackage{xcolor}
+
+\usepackage{listings}
+\lstset{
+	breaklines = true,
+	keywordstyle=\bfseries\color{green!40!black},
+  	commentstyle=\itshape\color{purple!40!black},
+  	identifierstyle=\color{blue},
+  	stringstyle=\color{orange},
+  	basicstyle=\footnotesize\ttfamily,
+}
+
+\usepackage{amsmath}
+\usepackage{dirtree}
+
+
 
 
 %Some helpful commands
@@ -754,7 +770,7 @@ Like links it will load information not provided from the page that the link exi
 the attribute list to specify a width and height of the image.
 
 \pagebreak
-Below is a small example page:
+\noindent Below is a small example page:
 \begin{verbatim}
 Welcome to the homepage of the CS Test course for Test Semester!
 
@@ -1083,22 +1099,16 @@ $ <venv_name>/bin/python
 \end{verbatim}
 
 
-
-
-\chapter{Development}
-\label{ch:develop}
-Foo
-
 \chapter{Command Line Reference}
 Some functionality is too infrequently used or too cumbersome to provide through
 the web interface. Including:
 
 \begin{itemize}
-  \item Assigning all students a comment and a score for a given prolem.
+  \item Assigning all students a comment and a score for a given problem.
   \item Changing the password of a student.
   \item Adding a user to a large number of courses at once.
   \item Making a user an administrator.
-  \item Creating a large number of user acounts from a file.
+  \item Creating a large number of user accounts from a file.
 \end{itemize}
 
 Other functionality simply hasn't been made available yet
@@ -1121,23 +1131,39 @@ $ cd <your_repository>
 $ export PYTHONPATH=`pwd`
 \end{verbatim}
 
-\section{Using the provided scripts}
+\subsection{The scripts directory}
 The repository contains several useful scripts in the directory
 \texttt{app/scripts}.
 
-\subsection{Adding batches of users}
-The three scripts \texttt{addUsersFromList}, \texttt{addUsersFromSakai},
-\texttt{addGrutorsFromList} all provide examples for how to read \texttt{CSV}
-style files and creating user accounts from them.
-
-Theses scripts were designed for the data format used by the Harvey Mudd
-College Registrar and so may not be immediately useful at other schools, but
-they will provide good reference.
-
-\subsection{Assigning Points}
+\section{Assigning Points}
 \label{sec:assigning_points}
+\subsection{The \texttt{giveFullPoints} Script}
+The give full points script allows you to assign a specific number of points to a
+section of the rubric for all submissions, as well as leave a comment in the grader 
+comment section. 
 
-\subsubsection{Removing points from removed rubric sections}
+To configure the script for your specific course there are a few variables to set.
+
+\begin{enumerate}
+\item \texttt{courseName} The name of the course you are working on.
+\item \texttt{semester} The semester the course is in.
+\item \texttt{comments} The comments string to leave.
+\item \texttt{section} What rubric section to edit.
+\item \texttt{score} How many points to give.
+\end{enumerate}
+
+The \texttt{courseName} and \texttt{semester} variable can also be grabbed using 
+\texttt{raw\_input}. 
+
+\begin{verbatim}
+courseName = raw_input("Course Name: ")
+semester = raw_input("Course Semester: ")
+\end{verbatim}
+
+The script will automatically enumerate all available assignments and problems and allow you to pick 
+dynamically.
+
+\subsection{Removing points from removed rubric sections}
 \label{sec:assigning_points:fixing_rubrics}
 When a section is removed from the rubric the system doesn't remove any assigned points from submissions.
 To handle this situation you must delete or move the assigned points in the submission's grade object.
@@ -1149,4 +1175,335 @@ To handle this situation you must delete or move the assigned points in the subm
 >>> del s.grade.scores['useless']
 >>> s.save() #Don't forget to save
 \end{verbatim}
+
+\section{Changing a User Password}
+For security reasons there is no web-facing way to change an arbitrary users password. Instead 
+this is accomplished through the command line as follows:
+
+\begin{verbatim}
+>>> from app.models.structures.user import *
+>>> user = User.objects.get(username="someUsername")
+>>> user.setPassword("new password")
+>>> user.save()
+\end{verbatim}
+
+\section{Adding a user to courses}
+It is easy to add a user to a course through the web. But if you want to add a user to 
+more than one course at a time it can be difficult and involves clicking a lot of links.
+It is sometimes easier to add a user to courses through the command line as follows:
+
+\begin{verbatim}
+>>> from app.models.structures.user import *
+>>> from app.models.structures.course import *
+>>> # Get the user
+>>> user = User.objects.get(username="someUsername")
+>>> # Get some courses
+>>> course0 = Course.objects.get(semester="semester", name="name")
+>>> course1 = Course.objects.get(semester="semester", name="othername")
+>>> #Add the user
+>>> user.courseStudent.append(course0)
+>>> user.courseGrutor.append(course1)
+>>> #Save the changes
+>>> user.save()
+\end{verbatim}
+
+\section{Making an administrator user}
+Administrator users have the ability to create courses and add users. An administrator
+is automatically an instructor in all courses. To create a new administrator do the
+following:
+
+\begin{verbatim}
+>>> from app.models.structures.user import *
+>>> from app.models.structures.course import *
+>>> user = User.objects.get(username="someUsername")
+>>> user.isAdmin = True
+>>> #We need to retroactively add them to all courses
+>>> user.courseInstructor = Course.objects
+>>> user.save()
+\end{verbatim}
+
+\section{Adding batches of users}
+The three scripts \texttt{addUsersFromList}, \texttt{addUsersFromSakai},
+\texttt{addGrutorsFromList} all provide examples for how to read \texttt{CSV}
+style files and creating user accounts from them.
+
+Theses scripts were designed for the data format used by the Harvey Mudd
+College Registrar and so may not be immediately useful at other schools, but
+they will provide good reference. 
+
+For more info on how to add users see Section \ref{sec:createusers}.
+
+\section{Marking Submissions as Done}
+Currently the easiest way to mark a batch of submissions as done is through the command line.
+This functionality will eventually be added the web interface. This works as follows:
+
+\begin{verbatim}
+>>> from app.models.structures.user import *
+>>> from app.models.structures.course import *
+>>> course = Course.objects.get(semester="semester", name="name")
+>>> #Find the assignment we want
+>>> course.assignments[#].name
+>>> #repeat above until we find the one we want
+>>> #Get the assignment we want based on its index
+>>> assignment = course.assignments[#]
+>>> #Find the problem we want
+>>> assignment.problems[#].name
+>>> problem = assignment.problems[#]
+>>> #loop through all submissions
+>>> for submissionList in problem.studentSubmisssions.itervalues():
+>>>   #Modify the latest submission
+>>>   submissionList[-1].status = SUBMISSION_GRADED
+>>>   submissionList[-1].save()
+\end{verbatim}
+
+\section{Regrade all submissions}
+The easiest way to do this is through the \texttt{regradeSubmissions} script. 
+Simply run the script:
+\begin{verbatim}
+$ <venv>/bin/python ./app/scripts/regradeSubmissions.py
+\end{verbatim}
+
+Then follow the instructions, it will guide you through the whole process.
+
+
+\chapter{Development}
+\label{ch:develop}
+One of the major benefits of the \csgt system is that it is easily extensible. 
+It is written in python (which is increasingly becoming a first language taught in
+college courses) so that it may be easier to pick up for many students.
+
+\section{Auto-grader Plug-in Development}
+The greatest feature of the \csgt system is the auto-grader plug-in system. Auto-grader
+plug-ins consist of three major parts.
+
+\begin{enumerate}
+\item \texttt{PLUGIN\_NAME} This variable sets the name of the plug-in that will be
+displayed on the web interface
+\item \texttt{testFileParser(filename)} This function parses the given test file and
+extracts the test names.
+\item \texttt{runTests(cmdPrefix, testFile, timeLimit)} This function is designed to 
+run the test file given in \texttt{testFile}. It uses \texttt{cmdPrefix} when running
+any sub-processes. If the computation takes longer than \texttt{timeLimit} it will
+report a time-out.
+\end{enumerate}
+
+A full example of an auto-grader plug-in for python is located in 
+Appendix \ref{ch:example_plugin}.
+
+\subsection{testFileParser}
+The test file parser is a relatively simple function for most languages. This function is given
+a filename as input and as output it should produce a list of strings that contain the names 
+of the tests contained in that file. 
+
+\noindent\textbf{Note:} This can be done with either simple regular expressions or a more complicated parser.
+
+\subsection{runTests} 
+
+The \texttt{runTests} function can be more complicated than the \texttt{testFileParser}. It takes in
+three arguments 
+\begin{description}
+\item[cmdPrefix] A list of strings. This list is either empty or contains a list of commands to
+switch to a less privileged user help prevent some potential security issues with student code.
+\item[testFile] The name of the file that contains the tests to be run.
+\item[timeLimit] The maximum number of seconds that the the test may take before reporting a 
+time-out. This prevents non-halting code from consuming the system.
+\end{description}
+
+With these inputs the \texttt{runTests} function should produce two dictionaries as output, the 
+\texttt{summary} dictionary and the \texttt{failedTests} dictionary. The \texttt{summary} dictionary
+provides information about the success or failure of the tests. This dictionary must contain the following
+values. 
+
+\begin{description}
+\item[died] This is a boolean value indicating if there was a crash or some other type of failure where 
+some subset of tests failed to run. This is often used when there was a compiler error.
+\item[timeout] This is a boolean value indicating if the tests ran longer than the time specified by 
+\texttt{timeLimit}. 
+\item[totalTests] This is an integer representing the total number of tests that were run. This value is
+only used to provide some feedback to the user and so if it cannot be determined from the test output 
+\(0\) may be passed.
+\item[failedTests] This is an integer representing the number of failed tests. This is used to provide a
+summary to the user.
+\item[rawOut] This variable should contain the raw test output gathered from the standard output of the
+test script.
+\item[rawErr] This variable should contain the raw test output gathered from the standard error of the
+test script. If the system died due to a parse error or some other error in the \texttt{runTests} function
+this variable can be replaced with a different message for diagnostics.
+\end{description}
+
+Assuming that the tests did not die or incur a time-out the function must return a dictionary of failed 
+tests. When the tests do die or time-out this dictionary can be empty. Otherwise it should only be empty
+if no tests have failed.
+
+This dictionary is a mapping: \(\text{Test Name} \rightarrow \text{Info Dictionary}\).
+Currently the \emph{Info Dictionary} only contains one value \texttt{hint}. The reason it is a dictionary
+is for future extensibility. 
+
+\begin{description}
+\item[hint] This should be an error message explaining why the test failed. This can be extracted from
+the test output or can be generated by the \texttt{runTests} function.
+\end{description}
+
+\section{Late calculator Development}
+The late calculator is another useful plug-in. This plug-in changes the way the system calculates the 
+student's final score based on how many and which assignments were turned in late. This plug-ing
+contains two major components:
+
+\begin{enumerate}
+\item \texttt{PLUGIN\_NAME} This is a string which gives the name of the plug-in to the web-interface.
+\item \texttt{calculateGrades(gradeList)} This gets given a grade list (which is a data structure explained
+below) and returns a modified grade list with the adjusted scores. 
+\end{enumerate}
+
+\subsection{The Grade List Structure}
+
+The grade list structure is a list of lists. Each nested list represents one Assignment group and each
+element of that list is one problem in that Assignment Group. If a student didn't submit anything for 
+one problem the element at that index will be \texttt{None}, otherwise it is a dictionary with the
+following values:
+
+\begin{description}
+\item[rawTotalScore] This is the total score assigned by the combination of the auto-grader and the graders.
+\item[maxScore] This is the maximum possible score for this problem.
+\item[timeDelta] This is the time difference between when the problem is submitted and when the problem was
+due. 
+\item[isLate] This is a boolean representing if a problem should be considered late. Even if the 
+\texttt{timeDelta} says an assignment is late if this is \texttt{False} that means an instructor manually
+unmarked the assignment as late.
+\item[finalTotalScore] This is the score after penalties or extra credit are assigned for turning the problem
+in early or late. The initial dictionary doesn't have this value and must be added by the function.
+\item[highlight] This is initially not present in the dictionary. It is a string representing what 
+color the cell should be highlighted ("red", "blue", "green", "yellow"). If this is unset it won't be 
+highlighted. 
+\end{description}
+
+Consider the following set of problems and submissions:
+
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+	\textbf{Assignment Group} & Week 0 & Week 0 & Week 1 & Week 1\\
+\hline
+	\textbf{Problem Name} & Problem 0 & Problem 1 & Problem 0 & Problem 1\\
+\hline
+	\textbf{Points} & 10pts (late) & 12pts & No Submission & 11pts\\
+\hline
+\end{tabular}
+
+This gets translated to the following grade list:
+\begin{lstlisting}[language=Python]
+[
+  [
+    {'rawTotalScore':10, 'isLate': True, 'timeDelta':+2Days, 
+     'maxScore': 15},
+     #This has been marked not late by an instructor
+    {'rawTotalScore':12, 'isLate': False, 'timeDelta':+2Days, 
+     'maxScore': 15}
+  ],
+  [
+    None,
+    {'rawTotalScore':11, 'isLate': False, 'timeDelta':-1Day, 
+     'maxScore': 15}
+  ]
+]
+\end{lstlisting}
+
+An example function is shown in Appendix \ref{ch:example_late_plugin} and below:
+
+\begin{lstlisting}[language=Python]
+def calculateGrades(gradeList):
+  '''Allows for 3 late submissions and then gives 0'''
+  lateCount = 0
+  for assignment in gradeList:
+    for problem in assignment:
+      if problem['isLate']:
+        lateCount += 1
+        problem['highlight'] = "red" #Highlight all late hws red
+        if lateCount > 3:
+          problem['finalTotalScore'] = 0
+  return gradeList
+\end{lstlisting}
+
+
+\section{Core Development Practices}
+Beyond plug-ins the \csgt system is designed to be relatively easy to maintain and extend. 
+This section attempts to cover the major design decisions and coding practices for developing
+the \csgt system further. 
+\\
+\\
+\noindent\textbf{Note: } Much of what follows in this section falls under the "Do what I say not
+what I do" practice of coding standards. This system was developed initially as I was learning
+to write python based websites. Some of that early code was rough but still exists in the system.
+I have tried to do several refactors to get rid of the old code. Unfortunately some still exists,
+sorry.
+
+\subsection{Repository Layout}
+The repository is structured as shown in Figure \ref{fig:repository_structure}.
+
+\begin{figure}
+\dirtree{%
+.1 HMC-Grader.
+.2 app.
+.3 helpers.
+.3 plugins.
+.3 scripts.
+.3 static.
+.3 structures.
+.3 templates.
+.3 userViews.
+.2 Documentation.
+.2 TestFiles.
+.2 config.py.
+.2 run.py.
+}
+\caption{HMC-Grader repository structure}
+\label{fig:repository_structure}
+\end{figure}
+
+Within the \texttt{userViews} directory there are several sub-directories for storing code 
+relevant to specific pages. Each directory has a category of pages it services as follows:
+
+\begin{description}
+\item[admin] This folder contains code for pages that are only accessible to an administrator 
+account.
+\item[common] This folder is for pages that are accessible to many different classes of user.
+\item[grutor] This folder is for pages that are accessible to the grader users.
+\item[instructor] This folder is for pages that are accessible to the instructor only.
+\item[student] This folder is for pages that are used by the student users.
+\end{description}
+
+The \texttt{templates} folder contains a mirrored set of directories to the \texttt{userViews}
+directory. If there is a view function in a folder in \texttt{userViews} the template file that 
+it uses will be in the sub-folder with the same name in the \texttt{templates} directory.
+
+\subsection{One file per page policy}
+To make debugging easier each page in the site has its own individual python file in the 
+\texttt{userViews}. For example the page \texttt{templates/grutor/gradeSubmissions.html} is
+implemented in \texttt{userViews/grutor/gradeSubmissions.py}. The python file is designed to 
+implement all of the functions needed to handle that page. Such functions include
+
+\begin{itemize}
+\item The view function.
+\item Redirection functions to go from this page to other pages while performing actions.
+\item AJAX functions for performing manipulations of data on the page.
+\end{itemize}
+
+\subsection{AJAX vs Redirect}
+For the best user experience any time information on the page is being transferred to or 
+from the server it should be done with an AJAX call. This prevents the page from reloading
+(and losing any other modified data) as well as it makes it easier to use the forward and
+back buttons in the browser.
+
+If you are attempting to change the page while performing and intermediate action a redirect 
+should be used. For example when leaving the \texttt{templates/grutor/gradeSubmissions.html}
+page there is a redirect which marks the submission being that was being graded as "Done".
+\appendix
+\chapter{Example Auto-grader plugin}
+\label{ch:example_plugin}
+\lstinputlisting[language=Python]{../app/plugins/autograder/pythongrader.py}
+
+\chapter{Example Late Calculator plugin}
+\label{ch:example_late_plugin}
+\lstinputlisting[language=Python]{../app/plugins/latework/euros.py}
+
+
 \end{document}

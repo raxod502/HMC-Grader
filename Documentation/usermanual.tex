@@ -745,9 +745,9 @@ to use them to create links (\textbf{Note:} It is planned to add easier links in
 this the markdown syntax has been expanded to include a wiki link as follows:
 
 \begin{verbatim}
-[Text]<Semester Name, Course Name, Page Title>
-[Text]<Course Name, Page Title>
-[Text]<Page Title>
+[Text]{Semester Name, Course Name, Page Title}
+[Text]{Course Name, Page Title}
+[Text]{Page Title}
 \end{verbatim} 
 
 The difference in the three lines is that the less information you provide the more it will grab from
@@ -760,10 +760,10 @@ Along with links and text you can upload an image and load that into a page. To 
 something like the link syntax but starting with a "!".
 
 \begin{verbatim}
-![Alt Text]<Semester Name, Course Name, Page Title, Image Name>
-![Alt Text]<Course Name, Page Title, Image Name>
-![Alt Text]<Page Title, Image Name>
-![Alt Text]<Image Name>
+![Alt Text]{Semester Name, Course Name, Page Title, Image Name}
+![Alt Text]{Course Name, Page Title, Image Name}
+![Alt Text]{Page Title, Image Name}
+![Alt Text]{Image Name}
 \end{verbatim}
 
 Like links it will load information not provided from the page that the link exists in. You can also use
@@ -782,13 +782,13 @@ This is stuff that is blue
 Test code blocks
 </pre>
 
-[Text]<Test Semester, CS Test, Test Page> 
+[Text]{Test Semester, CS Test, Test Page} 
 
-[Other]<Fake Semester, CS Test, Test Page>
+[Other]{Fake Semester, CS Test, Test Page}
 
-[Not created yet]<Test Semester, CS Test, Not Created>
+[Not created yet]{Test Semester, CS Test, Not Created}
 
-![Alt Test]<Alien.PNG>
+![Alt Test]{Alien.PNG}
 \end{verbatim}
 
 The rendered page is shown in Figure \ref{fig:wiki_example}.

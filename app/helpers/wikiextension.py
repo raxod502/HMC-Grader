@@ -6,8 +6,8 @@ from app.structures.models.pages import *
 from flask import url_for
 
 ID_REGEX = r"(?<!\\),"
-WIKI_LINK_REGEX = r"(?<!!)\[(.+)\]<((?:[^<\\>]|\\.)+?)>"
-IMG_LINK_REGEX =  r"!\[(.*)\]<((?:[^<\\>]|\\.)+?)>"
+WIKI_LINK_REGEX = r"(?<!!)\[(.+)\]{((?:[^\{\\\}]|\\.)+?)}"
+IMG_LINK_REGEX =  r"!\[(.*)\]{((?:[^\{\\\}]|\\.)+?)}"
 
 def extractPageInfo(idents):
   idents = map(lambda x: x.strip(), idents)

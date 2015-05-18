@@ -1,0 +1,35 @@
+{% extends "base-layout.html" %}
+
+{% block title %}
+Archived Courses
+{% endblock %}
+
+{% block rows %}
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    <h1>Archived Courses</h1>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Semester</th>
+          <th>Course Name</th>
+          <th>Course Settings</th>
+          <th>Grading Pages</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in courses %}
+          <tr>
+            <td>{{c.semester}}</td>
+            <td>{{c.name}}</td>
+            <td><a href="{{url_for('instructorCourseSettings', cid=c.id)}}" class="btn btn-s btn-default">Settings</a></td>
+            <td><a href="{{url_for('grutorAssignments', cid=c.id)}}" class="btn btn-s btn-default">Assignments</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+{% endblock %}

@@ -48,8 +48,17 @@ def submitAssignment(pid, uid):
   try:
     p = Problem.objects.get(id=pid)
     c,a = p.getParents()
-    #For security purposes we reject anyone who isnt in this class
+
+    #UID lets us know if this is the student submitting or an instructor
+    #submitting for a student
     if uid == None:
+      #If the student is submitting for themselves only do it if the problem
+      #is open
+      if not p.isOpen:
+        flash("This problem has been closed for submissions.")
+        abort(403)
+
+      #For security purposes we reject anyone who isnt in this class
       if not ( c in current_user.courseStudent):
         abort(403)
       u = current_user

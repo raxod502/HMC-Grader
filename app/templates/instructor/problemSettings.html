@@ -237,6 +237,10 @@ function cleanID(id){
   var newId = newId.replace(/\W/g, '')
   return newId
 }
+
+function cleanName(name) {
+  return name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/>/g, '&gt;');
+}
 </script>
 
 <script>
@@ -250,7 +254,7 @@ var rubric = {{problem.rubric|dedecimal|tojson}};
 var change = false;
 
 function addRubricRow(){
-  var key = $("#rubricName").val()
+  var key = cleanName($("#rubricName").val());
   var points = Number($("#rubricPoints").val())
   if (key == ""){
     alert("You must provide a name for the rubric section")
@@ -402,7 +406,7 @@ function makeRubricTable(){
     $('#rubricTotalRow').before("<tr id='rubric_"+cleanID(key)+"'></tr>")
     $('#rubric_'+cleanID(key)).append("<td>"+key+"</td>")
     $('#rubric_'+cleanID(key)).append("<td>"+rubric[key]+"</td>")
-    $('#rubric_'+cleanID(key)).append("<td><button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+key+"')\"><span class='glyphicon glyphicon-minus'></span></button></td>")
+    $('#rubric_'+cleanID(key)).append("<td><button type='button' class='btn btn-xs btn-danger' onclick=\"markRowForRemoval('"+cleanID(key)+"')\"><span class='glyphicon glyphicon-minus'></span></button></td>")
     totalPoints += Number(rubric[key]);
   }
   $('#rubricTotal').html(totalPoints.toFixed(2))

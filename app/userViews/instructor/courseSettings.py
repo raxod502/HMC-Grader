@@ -32,7 +32,7 @@ from app.helpers.filestorage import *
 
 #Import app helper functions
 from app.plugins.latework import getLateCalculators
-import shutil, random, string
+import shutil, random, string, bleach
 
 @app.route('/editcourse/<cid>')
 @login_required
@@ -155,7 +155,7 @@ def instructorCreateAssignmentGroup(cid):
 
 
           #Create the assignment and problem
-          a = AssignmentGroup(form.name.data)
+          a = AssignmentGroup(bleach.clean(form.name.data))
           a.save()
           c.assignments.append(a)
 

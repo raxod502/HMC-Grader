@@ -37,27 +37,37 @@ body {
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Courses<b class="caret"></b></a>
           <ul class="dropdown-menu">
-            {% for c in activeCourses()|sort(attribute='name') %}
-            <li><a href="{{c.homepage}}">{{c.name}}</a></li>
-            {% endfor %}
+            {% if activeCourses()|length > 0 %}
+              {% for c in activeCourses()|sort(attribute='name') %}
+              <li><a href="{{c.homepage}}">{{c.name}}</a></li>
+              {% endfor %}
+            {% else %}
+              <li><a href="#">No current courses</a></li>
+            {% endif %}
           </ul>
         </li>
         {% if g.user.is_authenticated() %}
         <li{% if active_page == "grutorList"%} class="active" {% endif %}><a href="{{url_for('viewActiveGrutors')}}">Active Grutors</a></li>
-        {% if g.user.studentActive()|length > 0 %}
+        {% if g.user.courseStudent|length > 0 %}
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student<b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li class="dropdown-header">Assignments</li>
-            {% for c in g.user.studentActive()|sort(attribute='name') %}
-            <li><a href="{{url_for('studentAssignments', cid=c.id)}}">{{c.name}}</a></li>
-            {% endfor %}
-            <li class="divider"></li>
-            <li><a href="{{url_for('viewGrades')}}">My Grades</a></li>
+            {% if g.user.studentActive()|length > 0 %}
+              {% for c in g.user.studentActive()|sort(attribute='name') %}
+              <li><a href="{{url_for('studentAssignments', cid=c.id)}}">{{c.name}}</a></li>
+              {% endfor %}
+            {% else %}
+              <li><a href="#">No current courses</a></li>
+            {% endif %}
+            {% if g.user.studentActive()|length < g.user.courseStudent|length %}
+              <li class="divider"></li>
+              <li><a href="{{url_for('studentOldCourses')}}">Old Courses</a></li>
+            {% endif %}
           </ul>
         </li>
         {% endif %}
-        {% if g.user.gradingCourses()|length > 0%}
+        {% if g.user.gradingActive()|length > 0 %}
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Grader<b class="caret"></b></a>
           <ul class="dropdown-menu">
@@ -67,13 +77,21 @@ body {
           </ul>
         </li>
         {% endif %}
-        {% if g.user.instructorActive()|length > 0 %}
+        {% if g.user.courseInstructor|length > 0 %}
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Instructor<b class="caret"></b></a>
           <ul class="dropdown-menu">
-            {% for c in g.user.instructorActive()|sort(attribute='name') %}
-            <li><a href="{{url_for('instructorCourseSettings', cid=c.id)}}">{{c.name}}</a></li>
-            {% endfor %}
+            {% if g.user.instructorActive()|length > 0 %}
+              {% for c in g.user.instructorActive()|sort(attribute='name') %}
+              <li><a href="{{url_for('instructorCourseSettings', cid=c.id)}}">{{c.name}}</a></li>
+              {% endfor %}
+            {% else %}
+              <li><a href="#">No current courses</a></li>
+            {% endif %}
+            {% if g.user.instructorActive()|length < g.user.courseInstructor|length %}
+              <li class="divider"></li>
+              <li><a href="{{url_for('oldCourses')}}">Old Courses</a></li>
+            {% endif %}
           </ul>
         </li>
         {% endif %}

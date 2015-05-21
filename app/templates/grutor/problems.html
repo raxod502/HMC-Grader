@@ -73,7 +73,7 @@ Submissions for grading
       <tbody>
         {% for user in users|sort(attribute="username") %}
         <tr>
-          <td>{% if not course.anonymousGrading %}{{user.username}}{% else %}{{course.getIdentifier(user.username)}}{% endif %}</td>
+          <td>{% if not course.anonymousGrading %}{{user.username}}{% else %}{{course.getIdentifier(user.keyOfUsername())}}{% endif %}</td>
           {% with sub = problem.getLatestSubmission(user) %}
           {% if sub == None %}
             <td class="active">No Submission</td>

@@ -30,5 +30,5 @@ def getStudentAuxScores(course, user):
   scores = []
   for group in course.gradeBook.auxillaryGrades:
     for col in group.columns:
-      scores.append({'score':col.scores[user.username].totalScore(), 'maxScore':col.maxScore})
+      scores.append({'score':col.scores[user.keyOfUsername()].totalScore(), 'maxScore':col.maxScore})
   return scores

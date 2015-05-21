@@ -22,26 +22,25 @@ td a {
 {% endblock %}
 
 {% block rows %}
-{% for c in g.user.courseStudent %}
 <div class="row">
   <div class="col-sm-12">
-    <h2>{{c.semester}}/{{c.name}}</h2>
+    <h2>{{course.semester}}/{{course.name}}</h2>
   </div>
 </div>
 <div class="row">
   <div class="col-sm-2"></div>
   <div class="col-sm-12">
-    <table class="table table-responsive table-bordered" id="{{c.id}}">
+    <table class="table table-responsive table-bordered" id="{{course.id}}">
       <thead>
         <tr> <!-- This row is for the gradebook groups -->
           <th rowspan="2"></th>
-          {% for a in c.gradeBook.groups() %}
+          {% for a in course.gradeBook.groups() %}
           <th colspan="{{a.getWidth()}}">{{a.name}}</th>
           {% endfor %}
           <th rowspan="2">Total</th>
         </tr>
         <tr> <!-- This row is for the gradebook columns -->
-          {% for c in c.gradeBook.columns() %}
+          {% for c in course.gradeBook.columns() %}
           {% if c == None %}
           <th>None</th>
           {% else %}
@@ -51,14 +50,14 @@ td a {
         </tr>
         <tr>
           <th>Max Score</th>
-          {% for a in c.gradeBook.columns() %}
+          {% for a in course.gradeBook.columns() %}
           {% if a == None %}
           <th>None</th>
           {% else %}
           <th>{{a.maxScore}}</th>
           {% endif %}
           {% endfor %}
-          <th>{{c.gradeBook.totalPoints()}}</th>
+          <th>{{course.gradeBook.totalPoints()}}</th>
         </tr>
       </thead>
       <tbody>
@@ -67,33 +66,25 @@ td a {
   </div>
   <div class="col-sm-2"></div>
 </div>
-{% if not loop.last %}
-<hr>
-{% endif %}
-{% endfor %}
 {% endblock %}
 
 {% block scripts %}
 {{super()}}
 <script>
 $(function() {
-  courses = {{courses|tojson}};
-
-  for(var i = 0; i < courses.length; i++) {
-    data = {'cid': courses[i]};
-    $.ajax({
-      url:"{{url_for('studentRenderGrades')}}",
-      type:'POST',
-      async:true,
-      contentType:'application/json',
-      data: JSON.stringify(data),
-      dataType: 'json',
-      success: function(data) {
-        console.log(data)
-        $('#'+data.cid+' tbody').append(data.res);
-      }
-    });
-  }
+  data = {'cid': {{cid|tojson}}};
+  $.ajax({
+    url:"{{url_for('studentRenderGrades')}}",
+    type:'POST',
+    async:true,
+    contentType:'application/json',
+    data: JSON.stringify(data),
+    dataType: 'json',
+    success: function(data) {
+      console.log(data)
+      $('#'+data.cid+' tbody').append(data.res);
+    }
+  });
 })
 </script>
 {% endblock %}

@@ -27,7 +27,7 @@ from app.helpers.filestorage import getUserPhotoDir, getUserPhotoPath
 from app.helpers.filestorage import ensurePathExists
 
 #Generic python imports
-import os
+import os, bleach
 
 LOGIN_ERROR_MSG = "Invalid Username/Password"
 
@@ -263,12 +263,12 @@ def userUpdateSettings():
     form = UserSettingsForm(request.form)
     if form.validate():
       user = current_user
-      user.firstName = form.firstName.data
-      user.lastName = form.lastName.data
+      user.firstName = bleach.clean(form.firstName.data)
+      user.lastName = bleach.clean(form.lastName.data)
       if form.email.data == "None":
         user.email = None
       else:
-        user.email = form.email.data
+        user.email = bleach.clean(form.email.data)
 
       f = request.files.getlist('photo')[0]
       if len(f.filename) > 0:

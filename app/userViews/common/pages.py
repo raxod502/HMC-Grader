@@ -21,12 +21,15 @@ from app.helpers.wikiextension import WikiExtension
 #Generic python imports from other libraries
 from werkzeug import secure_filename
 from markdown.extensions.attr_list import AttrListExtension
-import re, markdown
+import re, markdown, os
+
+import bleach
 
 @app.route('/page/view/id/<pgid>')
 def viewPage(pgid):
   page = Page.objects.get(id=pgid)
-  text = markdown.markdown(page.text, [WikiExtension(page), AttrListExtension()])
+  text = bleach.clean(page.text)
+  text = markdown.markdown(text, [WikiExtension(page), AttrListExtension()])
   if page.canView(g.user):
     return render_template('pages/viewpage.html', page=page, text=text)
   else:
@@ -37,7 +40,8 @@ def viewPage(pgid):
 @login_required
 def editPage(pgid):
   page = Page.objects.get(id=pgid)
-  text = markdown.markdown(page.text, [WikiExtension(page), AttrListExtension()])
+  text = bleach.clean(page.text)
+  text = markdown.markdown(text, [WikiExtension(page), AttrListExtension()])
   if page.canEdit(g.user):
     return render_template('pages/editpage.html', page=page, text=text, form=PageImageForm())
   else:
@@ -87,7 +91,7 @@ def pagePreview(pgid):
   content = request.get_json()
   try:
     pg = Page.objects.get(id=pgid)
-    pg.text = content["text"]
+    pg.text = bleach.clean(content["text"])
     html = markdown.markdown(pg.text, [WikiExtension(pg), AttrListExtension()])
     return jsonify(res=html)
   except Exception as e:

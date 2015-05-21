@@ -25,6 +25,7 @@ from app.structures.models.course import *
 
 #Import the forms needed on these pages
 from app.structures.forms import AddTestForm, ProblemOptionsForm
+from app.structures.models.pages import *
 
 #Import app helpers
 from app.plugins.autograder import getTestFileParsers
@@ -33,7 +34,7 @@ from app.plugins.autograder import getTestFileParsers
 from werkzeug import secure_filename
 import json
 from decimal import Decimal
-import dateutil
+import dateutil, bleach
 
 @app.route('/editproblem/<pid>')
 @login_required
@@ -95,8 +96,8 @@ def instructorSaveProblemSettings(pid):
         if p.name != form.name.data:
           #We must move the path to accomodate the change
           moveProblemPath(c,a,p, form.name.data)
-        p.name = form.name.data
-        p.gradeColumn.name = form.name.data
+        p.name = bleach.clean(form.name.data)
+        p.gradeColumn.name = bleach.clean(form.name.data)
         p.gradeColumn.save()
         p.duedate = dateutil.parser.parse(form.hiddentime.data)
         p.allowPartners = form.allowPartners.data
@@ -106,22 +107,22 @@ def instructorSaveProblemSettings(pid):
 
         #Assign gradenotes
         if len(form.gradeNotes.data) > 0:
-          p.gradeNotes = form.gradeNotes.data
+          p.gradeNotes = bleach.clean(form.gradeNotes.data)
         else:
           p.gradeNotes = None
 
         if len(form.problemPage.data) > 0:
-          p.problemPage = form.problemPage.data
+          p.problemPage = bleach.clean(form.problemPage.data)
         else:
           p.problemPage = None
 
         if len(form.requiredFiles.data) > 0:
-          p.requiredFiles = form.requiredFiles.data.strip()
+          p.requiredFiles = bleach.clean(form.requiredFiles.data.strip())
         else:
           p.requiredFiles = None
 
         if len(form.strictFiles.data) > 0:
-          p.strictFiles = form.strictFiles.data.strip()
+          p.strictFiles = bleach.clean(form.strictFiles.data.strip())
         else:
           p.strictFiles = None
 
@@ -132,11 +133,13 @@ def instructorSaveProblemSettings(pid):
           rubricSec = rubricSec.replace('$',u'＄').replace('.', u'．')
           p.rubric[rubricSec] = Decimal(v)
 
+
         #Find which keys were removed
         toDel = []
         for k in p.rubric.iterkeys():
           rubricSec = k
           rubricSec = rubricSec.replace('$',u'＄').replace('.', u'．')
+          newRubricKeys = [x.replace('$',u'＄').replace('.', u'．') for x in newRubric.keys()]
           #Terrible list comprehension so that we can correct the keys
           if not rubricSec in [x.replace('$',u'＄').replace('.', u'．') for x in newRubric.keys()]:
             toDel.append(rubricSec)

@@ -35,7 +35,8 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
   testProc = Command(cmdPrefix + ['python', testFile])
 
-  timeoutReached, testOut, testError = testProc.run(timeout=int(timeLimit), env=environ)
+  timeoutReached, testOut, testError = \
+    testProc.run(timeout=int(timeLimit), env=environ)
 
   #Check for a timeout
   if timeoutReached:
@@ -45,7 +46,6 @@ def runTests(cmdPrefix, testFile, timeLimit):
     summary['failedTests'] = 0
     summary['timeout'] = timeoutReached
     summary['died'] = False
-    summary['generalError'] = ""
     summary['rawOut'] = ""
     summary['rawErr'] = ""
 
@@ -66,7 +66,6 @@ def runTests(cmdPrefix, testFile, timeLimit):
     summary['failedTests'] = 0
     summary['timeout'] = timeoutReached
     summary['died'] = True
-    summary['generalError'] = testError
 
     return summary, {}
 

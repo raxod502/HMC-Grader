@@ -48,8 +48,17 @@ def submitAssignment(pid, uid):
   try:
     p = Problem.objects.get(id=pid)
     c,a = p.getParents()
-    #For security purposes we reject anyone who isnt in this class
+
+    #UID lets us know if this is the student submitting or an instructor
+    #submitting for a student
     if uid == None:
+      #If the student is submitting for themselves only do it if the problem
+      #is open
+      if not p.isOpen:
+        flash("This problem has been closed for submissions.")
+        abort(403)
+
+      #For security purposes we reject anyone who isnt in this class
       if not ( c in current_user.courseStudent):
         abort(403)
       u = current_user
@@ -120,7 +129,7 @@ def uploadFiles(pid, uid):
           #Remove the files
           shutil.rmtree(userSubPath)
           #remove the submission from the submission list
-          p.studentSubmissions[user.username].submissions = p.studentSubmissions[user.username].submissions[:-1]
+          p.studentSubmissions[user.keyOfUsername()].submissions = p.studentSubmissions[user.keyOfUsername()].submissions[:-1]
           #delete the submission
           userSub.delete()
           raise error
@@ -131,10 +140,10 @@ def uploadFiles(pid, uid):
           #Remove the files
           shutil.rmtree(userSubPath)
           #remove the submission from the submission list
-          p.studentSubmissions[user.username].submissions = p.studentSubmissions[user.username].submissions[:-1]
+          p.studentSubmissions[user.keyOfUsername()].submissions = p.studentSubmissions[user.keyOfUsername()].submissions[:-1]
 
-          if len(p.studentSubmissions[user.username].submissions) == 0:
-            del p.studentSubmissions[user.username]
+          if len(p.studentSubmissions[user.keyOfUsername()].submissions) == 0:
+            del p.studentSubmissions[user.keyOfUsername()]
             p.save()
 
           #delete the submission
@@ -248,18 +257,18 @@ def createSubmission(problem, user, now=datetime.datetime.utcnow()):
     user: The user object for this submission
   '''
   #Make sure the user has a submisssion list
-  if user.username not in problem.studentSubmissions:
-    problem.studentSubmissions[user.username] = StudentSubmissionList()
+  if user.keyOfUsername() not in problem.studentSubmissions:
+    problem.studentSubmissions[user.keyOfUsername()] = StudentSubmissionList()
     problem.save()
 
   #Create a grade entry
   grade = GBGrade()
   grade.save()
-  problem.gradeColumn.scores[user.username] = grade
+  problem.gradeColumn.scores[user.keyOfUsername()] = grade
   problem.gradeColumn.save()
 
   #Get the submission number
-  subNum = len(problem.studentSubmissions[user.username].submissions)+1
+  subNum = len(problem.studentSubmissions[user.keyOfUsername()].submissions)+1
 
   c, a = problem.getParents()
   filePath = getSubmissionPath(c, a, problem, user, subNum)
@@ -282,7 +291,7 @@ def createSubmission(problem, user, now=datetime.datetime.utcnow()):
   grade.save()
 
   #Add the submission to the submission list
-  problem.studentSubmissions[user.username].addSubmission(sub)
+  problem.studentSubmissions[user.keyOfUsername()].addSubmission(sub)
 
   sub.save()
 

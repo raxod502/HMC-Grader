@@ -117,7 +117,11 @@ def serveGradebook(cid, raw):
     students = User.objects.filter(courseStudent=course)
 
     for s in students:
-      row = [(s.firstName + ' ' + s.lastName), s.username]
+      if course.anonymousGrading:
+        row = [(str(s.firstName) + ' ' + str(s.lastName)), \
+                (s.username+ ' (' + course.getIdentifier(s.username) + ')')]
+      else:
+        row = [(str(s.firstName) + ' ' + str(s.lastName)), s.username]
       userCourseScore = 0
       scores = getStudentAssignmentScores(course, s)
       for a in scores:
@@ -194,10 +198,10 @@ def commonRenderGrade(cid, instr):
     if instr:
       outString += u.username
       if c.anonymousGrading:
-        outString += " (" + c.getIdentifier(u.username) + ")"
+        outString += " (" + c.getIdentifier(u.keyOfUsername()) + ")"
     else:
       if c.anonymousGrading:
-        outString += c.getIdentifier(u.username)
+        outString += c.getIdentifier(u.keyOfUsername())
       else:
         outString += u.username
     outString += "</td>"
@@ -235,7 +239,7 @@ def commonRenderGrade(cid, instr):
         continue
 
       for col in group.columns:
-        score = col.scores.setdefault(u.username, None)
+        score = col.scores.setdefault(u.keyOfUsername(), None)
         if score:
           outString += "<td>%.2f</td>" % (score.totalScore())
           userCourseScore += score.totalScore()
@@ -384,11 +388,11 @@ def editAuxillaryGrades(cid, instr, col):
     users = User.objects.filter(courseStudent=course)
 
     for u in users:
-      if not u.username in column.scores:
+      if not u.keyOfUsername() in column.scores:
         grade = GBGrade()
         grade.scores['score'] = 0
         grade.save()
-        column.scores[u.username] = grade
+        column.scores[u.keyOfUsername()] = grade
 
     column.save()
 
@@ -412,8 +416,8 @@ def saveGradeColumn(cid,col):
 
     for id in content['scores']:
       u = User.objects.get(id=id)
-      column.scores[u.username].scores['score'] = content['scores'][id]
-      column.scores[u.username].save()
+      column.scores[u.keyOfUsername()].scores['score'] = content['scores'][id]
+      column.scores[u.keyOfUsername()].save()
 
     column.save()
 

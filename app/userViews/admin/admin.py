@@ -137,6 +137,10 @@ def deactivateCourse(cid):
 
   try:
     course = Course.objects.get(id=cid)
+    for a in course.assignments:
+      for p in a.problems:
+        p.isOpen = False
+        p.save()
     course.isActive = False
     course.save()
     return redirect(url_for('adminCourses'))

@@ -1,0 +1,33 @@
+{% extends "base-layout.html" %}
+
+{% block title %}
+Archived Courses
+{% endblock %}
+
+{% block rows %}
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    <h1>Archived Courses</h1>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Semester</th>
+          <th>Course Name</th>
+          <th>My Submissions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in courses %}
+          <tr>
+            <td>{{c.semester}}</td>
+            <td>{{c.name}}</td>
+            <td><a href="{{url_for('studentAssignments', cid=c.id)}}" class="btn btn-small btn-default">Submissions</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+{% endblock %}

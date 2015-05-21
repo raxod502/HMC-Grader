@@ -15,7 +15,7 @@ Assignments for {{course.name}}
   </div>
   <div class="col-sm-8">
     <h3>Submssion for: {{course.name}}/{{assignment.name}}/{{problem.name}}</h3>
-    <h3>User: {% if not course.anonymousGrading %}{{user.username}}{% else %}{{course.getIdentifier(user.username)}}{% endif %}</h3>
+    <h3>User: {% if not course.anonymousGrading %}{{user.username}}{% else %}{{course.getIdentifier(user.keyOfUsername())}}{% endif %}</h3>
   </div>
   <div class="col-sm-2">
   </div>
@@ -82,9 +82,11 @@ Assignments for {{course.name}}
       </tr>
       {% endif %}
       <tr>
-        <td colspan="2" style="text-align:right">
-          <a href="{{url_for('grutorReleaseSubmission', pid=problem.id, uid=user.id, subnum=subnum)}}" class="btn btn-danger btn-xs">Cancel Grade</a>
-          <button onclick="saveAllAndFinish()" class="btn btn-success btn-xs">Finish Grading (save all)</button>
+        <td colspan="2">
+          <button onclick="confirmUnmark()" class="btn btn-danger btn-xs">Mark Ungraded</button>
+          <button onclick="saveAllAndFinish()" class="btn btn-success btn-xs pull-right">Finish Grading (save all)</button>
+          <span class="pull-right">&nbsp;</span>
+          <button onclick="confirmLeave()" class="btn btn-warning btn-xs pull-right">Leave Grade</button>
         </td>
       </tr>
     </table>
@@ -234,7 +236,50 @@ Assignments for {{course.name}}
 {{super()}}
 
 <script>
+function confirmUnmark() {
+  bootbox.dialog({
+    message: "Are you sure you want to mark this assignment as ungraded?<br>Any changes made on this page will be lost unless explicitly saved",
+    title: "Are you sure you want to leave?",
+    buttons: {
+      confirm: {
+        label:"Confirm",
+        className:"btn-danger",
+        callback: function() {
+          window.location.replace("{{url_for('grutorReleaseSubmission', pid=problem.id, uid=user.id, subnum=subnum)}}");
+        }
+      },
+      close: {
+        label:"No",
+        className:"btn-default",
+        callback: function() {}
+      }
+    }
+  })
+}
 
+function confirmLeave() {
+  bootbox.dialog({
+    message: "Are you sure you want to leave this page?<br>This submission will remain in its current state.<br>Any changes made on this page will be lost unless explicitly saved",
+    title: "Are you sure you want to leave?",
+    buttons: {
+      confirm: {
+        label:"Confirm",
+        className:"btn-danger",
+        callback: function() {
+          window.location.replace("{{url_for('grutorGradelistProblem', pid=problem.id)}}")
+        }
+      },
+      close: {
+        label:"No",
+        className:"btn-default",
+        callback: function() {}
+      }
+    }
+  })
+}
+</script>
+
+<script>
 $(document).keydown(function(e) {
     if(e.keyCode == 83 && (navigator.platform.match("Mac")? e.metaKey : e.ctrlKey)){
       e.preventDefault();
@@ -391,6 +436,7 @@ $("#toggleLate").click(function(){
 </script>
 
 <script src="{{url_for('static', filename='moment.js')}}"></script>
+
 <script>
 $(".time").each(function(){
   var t = $(this).text();
@@ -398,7 +444,9 @@ $(".time").each(function(){
   $(this).text(d.format("lll"))
 })
 </script>
+
 <script src="{{url_for('static', filename='highlight/highlight.pack.js')}}"></script>
+
 <script>
 function preview(filename) {
   $("#previewArea").empty();

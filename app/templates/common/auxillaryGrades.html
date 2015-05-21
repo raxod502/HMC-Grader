@@ -49,7 +49,7 @@ Grade book column
           {% for u in users %}
           <tr>
             <td>{% if instructor %}{{u.username}}{% if course.anonymousGrading %} ({{course.getIdentifier(u.username)}}){% endif %}{% else %}{% if course.anonymousGrading %} {{course.getIdentifier(u.username)}}{% else %}{{u.username}}{% endif %}{%endif%}</td>
-            <td><input id="{{u.id}}" type="number" class="form-control" value="{{col.scores[u.username].totalScore()}}"></input></td>
+            <td><input id="{{u.id}}" type="number" class="form-control" value="{{col.scores[u.keyOfUsername()].totalScore()}}"></input></td>
           </tr>
           {% endfor %}
         </tbody>

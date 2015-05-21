@@ -87,7 +87,7 @@ def studentRenderGrades():
         continue
 
       for col in group.columns:
-        score = col.scores.setdefault(u.username, None)
+        score = col.scores.setdefault(u.keyOfUsername(), None)
         if score:
           outString += "<td>%.2f</td>" % (score.totalScore())
           userCourseScore += score.totalScore()

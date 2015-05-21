@@ -182,14 +182,14 @@ class Problem(db.Document):
 
   def getSubmissionNumber(self, user):
     '''gets the number of the latest submission'''
-    if user.username in self.studentSubmissions:
-      return len(self.studentSubmissions[user.username].submissions)
+    if user.keyOfUsername() in self.studentSubmissions:
+      return len(self.studentSubmissions[user.keyOfUsername()].submissions)
     else:
       return 0
 
   def getSubmission(self, user, subnum):
     '''Returns a single submission'''
-    return self.studentSubmissions[user.username].submissions[int(subnum)-1]
+    return self.studentSubmissions[user.keyOfUsername()].submissions[int(subnum)-1]
 
   def getLatestSubmission(self, user):
     '''Gets the latest submission for a user'''
@@ -297,7 +297,7 @@ class Course(db.Document):
   def ensureIDs(self):
     users = User.objects.filter(courseStudent=self)
     for u in users:
-      if u.username in self.anonIds:
+      if u.keyOfUsername() in self.anonIds:
         continue
       else:
         from random import choice, randint
@@ -305,7 +305,7 @@ class Course(db.Document):
         while True:
           ID = choice(ascii_lowercase) + choice(ascii_lowercase)+ str(randint(0,9))
           if not ID in self.anonIds.values():
-            self.anonIds[u.username] = ID
+            self.anonIds[u.keyOfUsername()] = ID
             break
     self.save()
 

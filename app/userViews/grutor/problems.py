@@ -166,10 +166,10 @@ def grutorMakeBlank(pid, uid):
     #Create the grade
     grade = GBGrade()
     grade.save()
-    p.gradeColumn.scores[user.username] = grade
+    p.gradeColumn.scores[user.keyOfUsername()] = grade
 
 
-    p.studentSubmissions[user.username] = StudentSubmissionList()
+    p.studentSubmissions[user.keyOfUsername()] = StudentSubmissionList()
 
     #create a filepath
     filepath = getSubmissionPath(c, a, p, user, 1)
@@ -178,13 +178,13 @@ def grutorMakeBlank(pid, uid):
     sub.problem = p
     #Initial fields for submission
     sub.filePath = filepath
-    sub.grade = p.gradeColumn.scores[user.username]
+    sub.grade = p.gradeColumn.scores[user.keyOfUsername()]
     sub.submissionTime = datetime.datetime.utcnow()
     sub.status = 3
     sub.gradedBy = User.objects.get(id=g.user.id)
 
     sub.save()
-    p.studentSubmissions[user.username].addSubmission(sub)
+    p.studentSubmissions[user.keyOfUsername()].addSubmission(sub)
 
     #The grader is making this so it isn't late
     sub.isLate = False

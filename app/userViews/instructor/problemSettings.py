@@ -134,15 +134,12 @@ def instructorSaveProblemSettings(pid):
           p.rubric[rubricSec] = Decimal(v)
 
 
-        flash(newRubric)
         #Find which keys were removed
         toDel = []
         for k in p.rubric.iterkeys():
           rubricSec = k
           rubricSec = rubricSec.replace('$',u'＄').replace('.', u'．')
-          flash(rubricSec)
           newRubricKeys = [x.replace('$',u'＄').replace('.', u'．') for x in newRubric.keys()]
-          flash(map(lambda x: x == rubricSec, newRubricKeys))
           #Terrible list comprehension so that we can correct the keys
           if not rubricSec in [x.replace('$',u'＄').replace('.', u'．') for x in newRubric.keys()]:
             toDel.append(rubricSec)

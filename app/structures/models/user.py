@@ -67,6 +67,12 @@ class User(db.Document):
   def instructorActive(self):
     return [x for x in self.courseInstructor if x.isActive]
 
+  def keyOfUsername(self):
+    '''Because keys for dictionaries can't contain some characters we must
+    clean the username of the user anytime we put it in a dictionary field'''
+    tmp = re.sub(r'\$', '&dlr;', self.username)
+    return re.sub(r'\.', '&dot;', tmp)
+
 class RecoverAccount(db.Document):
   '''
   An object for recovering an account

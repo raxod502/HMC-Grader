@@ -104,24 +104,25 @@ def grutorGradeRandom(pid):
         continue
 
       if sub.partner == None:
-        res = subCol.find_and_modify(query={'_id': sub.id, 'status':2, 'isLatest':True}, \
-          update={'$set': {'status':3, 'gradedBy': g.user.id}})
+        res = subCol.find_and_modify(query={'_id': sub.id, 'status':SUBMISSION_TESTED, 'isLatest':True}, \
+          update={'$set': {'status':SUBMISSION_GRADING, 'gradedBy': g.user.id}})
       else:
         otherSub = sub.partnerSubmission
         #We use total lock oerdering to prevent deadlock
         subList = sorted([sub, otherSub], key=lambda x: x.id)
-        res = subCol.find_and_modify(query={'_id': subList[0].id, 'status':2, 'isLatest':True}, \
-          update={'$set': {'status':3, 'gradedBy': g.user.id}})
+        res = subCol.find_and_modify(query={'_id': subList[0].id, 'status':SUBMISSION_TESTED, 'isLatest':True}, \
+          update={'$set': {'status':SUBMISSION_GRADING, 'gradedBy': g.user.id}})
         #res = Submission.objects.exec_js(LOCK_QUERY, id=subList[0].id, uid=g.user.id)
         if res == None:
           continue
-        res = subCol.find_and_modify(query={'_id': subList[1].id, 'status':2, 'isLatest':True}, \
-          update={'$set': {'status':3, 'gradedBy': g.user.id}})
+        res = subCol.find_and_modify(query={'_id': subList[1].id, 'status':SUBMISSION_TESTED, 'isLatest':True}, \
+          update={'$set': {'status':SUBMISSION_GRADING, 'gradedBy': g.user.id}})
         #res = Submission.objects.exec_js(LOCK_QUERY, id=subList[1].id, uid=g.user.id)
 
       if not res == None:
         return redirect(url_for("grutorGradeSubmission", pid=pid, uid=user.id, subnum=p.getSubmissionNumber(user)))
     flash("All submissions have been claimed", "warning")
+    flash("Untested submissions or submissions that crashed the auto-grader are not considered by this button. Please look below for such submissions.")
     return redirect(url_for('grutorGradelistProblem', pid=pid))
 
   except (Problem.DoesNotExist, Course.DoesNotExist, AssignmentGroup.DoesNotExist):
@@ -181,7 +182,7 @@ def grutorMakeBlank(pid, uid):
     sub.filePath = filepath
     sub.grade = p.gradeColumn.scores[user.keyOfUsername()]
     sub.submissionTime = datetime.datetime.utcnow()
-    sub.status = 3
+    sub.status = SUBMISSION_GRADING
     sub.gradedBy = User.objects.get(id=g.user.id)
 
     sub.save()

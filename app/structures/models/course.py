@@ -9,6 +9,7 @@ from app.helpers.filestorage import *
 from app.structures.models.user import User
 
 #Some constants for doing submission status stuff
+SUBMISSION_BADSTATE = -1
 SUBMISSION_UNGRADED = 0
 SUBMISSION_TESTING = 1
 SUBMISSION_TESTED = 2

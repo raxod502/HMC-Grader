@@ -2,7 +2,7 @@
 
 from app import app, celery, db
 from app.structures.models.user import User
-from app.structures.models.course import Problem , Course, AssignmentGroup
+from app.structures.models.course import *
 from app.structures.models.gradebook import GBGrade
 
 import os,shutil, json, re, stat
@@ -64,7 +64,7 @@ def rawTestOutput(testOutputDir, summary, testFile):
 def regradeSubmission(submission):
   submission.autoGraderComments = ""
   submission.grade.scores = {}
-  submission.status = 0
+  submission.status = SUBMISSION_UNGRADED
   submission.save()
   gradeSubmission(submission.problem.id, submission.submitter.id, submission.problem.getSubmissionInfo(submission)[1])
 
@@ -82,7 +82,7 @@ def gradeSubmission(pid, uid, subnum):
       sub = problem.getSubmission(user, subnum)
       #Set the status as awaiting grader unless it is already at a higher point
       #than that
-      sub.status = max(sub.status, 2)
+      sub.status = max(sub.status, SUBMISSION_TESTED)
       sub.autoGraderComments = "No tests provided. Testing complete."
       sub.save()
       return
@@ -109,7 +109,7 @@ def gradeSubmission(pid, uid, subnum):
 
     if len(requiredFiles) > 0:
       sub = problem.getSubmission(user, subnum)
-      sub.status = max(sub.status, 2)
+      sub.status = max(sub.status, SUBMISSION_TESTED)
       sub.autoGraderComments = "Submission missing files."
       sub.save()
       shutil.rmtree(testDirPath)
@@ -141,7 +141,7 @@ def gradeSubmission(pid, uid, subnum):
     #Get the submission so we can print results
     sub = problem.getSubmission(user, subnum)
 
-    sub.status = max(sub.status, 1)
+    sub.status = max(sub.status, SUBMISSION_TESTING)
     sub.save()
 
     sub.autoGraderComments = ""
@@ -265,9 +265,9 @@ def gradeSubmission(pid, uid, subnum):
 
     sub = problem.getSubmission(user, subnum)
     if problem.autoGradeOnly:
-      sub.status = 4
+      sub.status = SUBMISSION_GRADED
     else:
-      sub.status = max(sub.status, 2)
+      sub.status = max(sub.status, SUBMISSION_TESTED)
     sub.save()
 
     makeTestInfo(problem, user, subnum, msg="Testing finished")

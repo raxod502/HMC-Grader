@@ -73,6 +73,10 @@ class User(db.Document):
     tmp = re.sub(r'\$', '&dlr;', self.username)
     return re.sub(r'\.', '&dot;', tmp)
 
+def userFromKey(key):
+  tmp = re.sub(r'&dlr;', '$', key)
+  return re.sub(r'&dot;', '.', tmp)
+
 class RecoverAccount(db.Document):
   '''
   An object for recovering an account

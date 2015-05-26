@@ -20,7 +20,7 @@ from app.structures.forms import CreateCourseForm, CreateUserForm
 
 from app.helpers.filestorage import ensurePathExists, getCoursePath
 
-import psutil
+import psutil, bleach
 
 #TODO: Add the statistics rendering
 @app.route('/adminindex')
@@ -189,9 +189,9 @@ def addUser():
         return redirect(url_for('adminUsers'))
       except User.DoesNotExist:
         u = User()
-        u.firstName = form.firstName.data
-        u.lastName = form.lastName.data
-        u.email = form.email.data
+        u.firstName = bleach.clean(form.firstName.data)
+        u.lastName = bleach.clean(form.lastName.data)
+        u.email = bleach.clean(form.email.data)
         u.username = form.username.data
         if form.password.data == "":
           u.setPassword("asdf")

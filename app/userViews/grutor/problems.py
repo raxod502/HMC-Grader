@@ -90,7 +90,8 @@ def grutorGradeRandom(pid):
     random.shuffle(courseUsers)
 
     #For each user try to get a submission for them
-    for username in p.studentSubmissions.keys():
+    for key in p.studentSubmissions.keys():
+      username = userFromKey(key)
       user = User.objects.get(username=username)
 
       #Get the pymongo collection for some atomic actions not provided by

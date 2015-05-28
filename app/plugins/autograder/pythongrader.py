@@ -58,7 +58,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
   summary['rawErr'] = testError
 
   #Parse the results
-  testSummarySearch = re.search("Ran ([0-9]+) tests in", testError)
+  testSummarySearch = re.search("Ran ([0-9]+) tests? in", testError)
 
   #If we don't find the test summary the tests died so we report that
   if not testSummarySearch:

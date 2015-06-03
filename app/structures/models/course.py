@@ -51,7 +51,9 @@ class Submission(db.Document):
       pass
 
   def getStatus(self):
-    if self.status == SUBMISSION_UNGRADED:
+    if self.status == SUBMISSION_BADSTATE:
+      return "danger", "Bad State"
+    elif self.status == SUBMISSION_UNGRADED:
       return "info", "Submitted (Waiting for Auto-grader)"
     elif self.status == SUBMISSION_TESTING:
       return "warning", "Autograde in progress"
@@ -61,6 +63,8 @@ class Submission(db.Document):
       return "warning", "Grading in progress"
     elif self.status == SUBMISSION_GRADED:
       return "success", "Graded"
+    else:
+      return "warning", "Unknown"
 
   def setGrades(self, gradeDict, zeroOthers=False):
     for k in gradeDict.iterkeys():

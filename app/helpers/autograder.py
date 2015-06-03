@@ -71,6 +71,7 @@ def regradeSubmission(submission):
 @celery.task()
 def gradeSubmission(pid, uid, subnum):
   try:
+    sub = None
     user = User.objects.get(id=uid)
     problem = Problem.objects.get(id=pid)
     course, assignment = problem.getParents()
@@ -274,3 +275,13 @@ def gradeSubmission(pid, uid, subnum):
 
   except (User.DoesNotExist, Problem.DoesNotExist, Course.DoesNotExist, AssignmentGroup.DoesNotExist):
     pass
+  except Exception as e:
+    if not sub == None:
+      #If we have a submission object
+      import traceback
+      tb = traceback.format_exc()
+      sub.autoGraderComments = "<pre>" + str(e) + "</pre>"
+      sub.autoGraderComments += "<pre>" + str(tb) + "</pre>"
+      sub.status = SUBMISSION_BADSTATE
+      sub.save()
+      print "Error Reported"

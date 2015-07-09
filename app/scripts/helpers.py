@@ -68,3 +68,10 @@ def getCourse(semester, name):
     return c
   except Course.DoesNotExist:
     return None
+
+def getUser(username):
+  try:
+    u = User.objects.get(username=username)
+    return u
+  except User.DoesNotExist:
+    return None

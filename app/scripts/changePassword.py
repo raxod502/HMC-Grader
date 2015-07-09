@@ -1,7 +1,7 @@
 import sys
 
 from app.scripts.helpers import *
-from app.models.structures.user import *
+from app.structures.models.user import *
 
 if __name__ == "__main__":
   username = raw_input("Username: ")

@@ -1,7 +1,8 @@
 import sys
 
-from app.models.structures.user import *
-from app.models.structures.course import *
+from app.scripts.helpers import *
+from app.structures.models.user import *
+from app.structures.models.course import *
 
 if __name__ == "__main__":
   username = raw_input("Username: ")
@@ -17,3 +18,5 @@ if __name__ == "__main__":
   #We need to retroactively add them to all courses
   user.courseInstructor = Course.objects
   user.save()
+
+  print user.username + " is now an admin"

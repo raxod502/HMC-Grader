@@ -34,7 +34,6 @@ if __name__ == "__main__":
 
   ##### REPLACE THESE LINES TO CUSTOMIZE DIRECTLY #####
   comments = raw_input("Set the comments: ")
-  section = raw_input("Rubic section (ex: hw01pr1): ")
   score = int(raw_input("Set the score: "))
   #####################################################
 
@@ -50,7 +49,7 @@ if __name__ == "__main__":
       problem.save()
 
     #set the grade
-    sub.grade.scores[section] = score
+    sub.grade.scores[problem.name] = score
     sub.grade.save()
     sub.comments = comments
     sub.status = SUBMISSION_GRADED

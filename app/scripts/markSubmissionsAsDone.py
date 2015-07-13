@@ -34,10 +34,7 @@ if __name__ == "__main__":
     print s.username
     sub = problem.getLatestSubmission(s)
     if sub == None:
-      sub, _ = createSubmission(problem, s)
-      sub.isLate = False
-      sub.save()
-      problem.save()
+      continue
 
     # Modify the latest submission
     sub.status = SUBMISSION_GRADED

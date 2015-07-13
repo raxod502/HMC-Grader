@@ -23,8 +23,13 @@ if __name__ == "__main__":
     course = getCourse(semester, cn)
   
     if course == None:
-      print "Could not find " + course + " for the semester " + semester
+      print "Could not find " + course.name + " for the semester " + semester
       sys.exit(1)
 
-    user.courseGrutor.append(course)
-    user.save()
+    print "Adding " + user.username + " as a grutor for " + course.name
+
+    addCourse = query_yes_no("Do you want to add this course?")
+
+    if addCourse:
+      user.courseGrutor.append(course)
+      user.save()

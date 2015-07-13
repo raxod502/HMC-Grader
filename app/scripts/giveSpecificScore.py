@@ -44,11 +44,10 @@ if __name__ == "__main__":
     print "Student: " + s.username
     sub = problem.getLatestSubmission(s)
     if sub == None:
-      continue
-        sub, _ = createSubmission(problem, s)
-        sub.isLate = False
-        sub.save()
-        problem.save()
+      sub, _ = createSubmission(problem, s)
+      sub.isLate = False
+      sub.save()
+      problem.save()
 
     #set the grade
     sub.grade.scores[section] = score

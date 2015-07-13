@@ -1,5 +1,6 @@
 import sys
 
+from app.scripts.helpers import *
 from app.structures.models.user import *
 from app.structures.models.course import *
 
@@ -27,8 +28,18 @@ if __name__ == "__main__":
 
   problem = assignment.problems[index]
 
-  # loop through all submissions
-  for submissionList in problem.studentSubmisssions.itervalues():
+  students = User.objects.filter(courseStudent=course)
+
+  for s in students:
+    print "Student: " + s.username
+    sub = problem.getLatestSubmission(s)
+    if sub == None:
+      sub, _ = createSubmission(problem, s)
+      sub.isLate = False
+      sub.save()
+      problem.save()
+
     # Modify the latest submission
-    submissionList[-1].status = SUBMISSION_GRADED
-    submissionList[-1].save()
+    sub.status = SUBMISSION_GRADED
+    sub.save()
+    

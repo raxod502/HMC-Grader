@@ -31,7 +31,7 @@ if __name__ == "__main__":
   students = User.objects.filter(courseStudent=course)
 
   for s in students:
-    print "Student: " + s.username
+    print s.username
     sub = problem.getLatestSubmission(s)
     if sub == None:
       sub, _ = createSubmission(problem, s)

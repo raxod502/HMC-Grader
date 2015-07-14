@@ -39,4 +39,4 @@ if __name__ == "__main__":
 
   sub = problem.getFiles(user, subNum)
 
-  return sub
+  print sub

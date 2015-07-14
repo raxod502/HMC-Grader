@@ -4,7 +4,6 @@ from app.scripts.helpers import *
 from app.helpers.autograder import *
 
 from app.structures.models.user import *
-from app.userViews.student.submitFiles import createSubmission
 
 from datetime import datetime
 

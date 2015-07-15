@@ -37,6 +37,6 @@ if __name__ == "__main__":
 
   subNum = problem.getSubmissionNumber(user)
 
-  sub = problem.getFiles(user, subNum)
+  subPath = problem.getFilePath(user, subNum)
 
-  print sub
+  print subPath

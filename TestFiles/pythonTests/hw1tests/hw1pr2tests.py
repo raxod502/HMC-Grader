@@ -63,6 +63,13 @@ class flipsideTests(unittest.TestCase):
   def flipsideT4(self):
     assert ' ' == hw.flipside(' ')
 
+class convertFromSecondsTests(unittest.TestCase):
+  def convertFromSecondsT1(self):
+    assert [0,0,10,10] == hw.convertFromSeconds(610)
+
+  def convertFromSecondsT2(self):
+    assert [1,3,46,40] == hw.convertFromSeconds(100000)
+
 
 if __name__ == '__main__':
   unittest.main()

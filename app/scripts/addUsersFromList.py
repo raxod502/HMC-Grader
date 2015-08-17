@@ -32,23 +32,27 @@ Users should be added as:
     print "Not a valid user type"
     sys.exit(1)
 
-  #Actually read the file to get the users info
-  with open(sys.argv[1], 'r') as csvFile:
-    studentReader = csv.reader(csvFile, delimiter=',', quotechar='"')
-    #clear the first 2 rows
-    studentReader.next()
-    studentReader.next()
-    #Get pairs of rows
-    for info, name in pairwise(studentReader):
-      email = info[4]
-      name = name[2]
-      #Extract the name parts
-      lastName, firstMid = name.split(",")
-      firstName = firstMid.strip().split(" ")[0]
+  try:
+    #Actually read the file to get the users info
+    with open(sys.argv[1], 'r') as csvFile:
+      studentReader = csv.reader(csvFile, delimiter=',', quotechar='"')
+      #clear the first 2 rows
+      studentReader.next()
+      studentReader.next()
+      #Get pairs of rows
+      for info, name in pairwise(studentReader):
+        email = info[4]
+        name = name[2]
+        #Extract the name parts
+        lastName, firstMid = name.split(",")
+        firstName = firstMid.strip().split(" ")[0]
 
-      u = addOrGetUser(firstName, lastName, email)
-      if userType == 0:
-        u.courseStudent.append(course)
-      elif userType == 1:
-        u.courseGrutor.append(course)
-      u.save()
+        u = addOrGetUser(firstName, lastName, email)
+        if userType == 0:
+          u.courseStudent.append(course)
+        elif userType == 1:
+          u.courseGrutor.append(course)
+        u.save()
+  except:
+    print "Please provide a csv file"
+    print "Usage is:\n <virtual-env>/bin/python " + sys.argv[0]+ " <path-to-csv-file>"

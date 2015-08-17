@@ -28,7 +28,7 @@ Users should be added as:
 
   userType = int(userType)
 
-  if userType < 0 and userType > 1:
+  if userType < 0 or userType > 1:
     print "Not a valid user type"
     sys.exit(1)
 

@@ -18,7 +18,7 @@ if __name__ == "__main__":
 1) Graders
 >>> ''' ))
 
-  if userType < 0 and userType > 1:
+  if userType < 0 or userType > 1:
     print "Not a valid user type"
     sys.exit(1)
 

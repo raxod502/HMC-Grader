@@ -1,13 +1,14 @@
-import csv, sys, os
+import csv, sys, os, re
 from itertools import izip
 
-print os.path.dirname(os.path.realpath(__file__))
+# print os.path.dirname(os.path.realpath(__file__))
 
 from app.scripts.helpers import *
 
-def pairwise(iterable):
-    a = iter(iterable)
-    return izip(a, a)
+def cleanName(name):
+  regex = re.compile('[^a-zA-Z]')
+  retName = regex.sub('', name)
+  return retName
 
 if __name__ == "__main__":
   semester = raw_input("Course Semester: ")
@@ -36,23 +37,24 @@ Users should be added as:
     #Actually read the file to get the users info
     with open(sys.argv[1], 'r') as csvFile:
       studentReader = csv.reader(csvFile, delimiter=',', quotechar='"')
-      #clear the first 2 rows
-      studentReader.next()
-      studentReader.next()
-      #Get pairs of rows
-      for info, name in pairwise(studentReader):
-        email = info[4]
-        name = name[2]
-        #Extract the name parts
-        lastName, firstMid = name.split(",")
-        firstName = firstMid.strip().split(" ")[0]
 
-        u = addOrGetUser(firstName, lastName, email)
+      #Read info from CSV file
+      for row in studentReader:
+        lastName = row[0]
+        firstName = row[1]
+        email = row[2].strip()
+
+        firstNameClean = cleanName(firstName)
+        lastNameClean = cleanName(lastName)
+
+        u = addOrGetUser(firstNameClean, lastNameClean, email)
         if userType == 0:
           u.courseStudent.append(course)
         elif userType == 1:
           u.courseGrutor.append(course)
         u.save()
+
+        print lastName + ", "+ firstName + " " + "(" + u.username + ")"
   except:
     print "Please provide a csv file"
     print "Usage is:\n <virtual-env>/bin/python " + sys.argv[0]+ " <path-to-csv-file>"

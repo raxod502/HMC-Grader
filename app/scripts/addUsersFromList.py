@@ -53,6 +53,10 @@ Users should be added as:
       name = row[nameIndex]
       email = row[emailIndex].strip()
 
+      #handles empty rows
+      if (name == '') or (email == ''):
+        continue
+
       lastName, firstMidName = name.split(",")
       lastName = lastName.strip()
       firstMidName = firstMidName.strip()

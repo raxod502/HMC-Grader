@@ -48,6 +48,9 @@ Users should be added as:
     #special case for the first loop to check column numbers
     firstLoop = True
 
+    #variable to hold csv output
+    csvOutput = ""
+
     #Read info from CSV file
     for row in studentReader:
       name = row[nameIndex]
@@ -91,3 +94,11 @@ Users should be added as:
 
       print lastName + ", "+ firstMidName + " " + "(" + u.username + "): " + email
   
+      csvOutput += lastName + ","+ firstMidName + "," + u.username + "," + email + ",,,,\n"
+    
+    #After exiting the for loop, write the results out to a new csv file
+    inputFileName = sys.argv[1][:-4]       # taking off the '.csv' part
+    outputFileName = inputFileName + "-output.csv"
+
+    with open(outputFileName, 'w') as f:
+      f.write(csvOutput)  

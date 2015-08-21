@@ -86,9 +86,9 @@ Users should be added as:
             print "Adding users as grutors to " + course.name + " for " + course.semester
 
       u = addOrGetUser(firstMidNameClean, lastNameClean, email)
-      if userType == 0:
+      if (userType == 0) and (not courseInList(course, u.courseStudent)):
         u.courseStudent.append(course)
-      elif userType == 1:
+      elif (userType == 1) and (not courseInList(course, u.courseGrutor)):
         u.courseGrutor.append(course)
       u.save()
 

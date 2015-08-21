@@ -93,6 +93,16 @@ def addOrGetByUsername(username, firstName, lastName, email=None, password="asdf
     u.save()
     return u
 
+def courseInList(course, courseList):
+  try:
+    if course in courseList:
+      return True
+    else:
+      return False
+  except:
+    return None
+
+
 def getCourse(semester, name):
   try:
     c = Course.objects.get(semester=semester, name=name)

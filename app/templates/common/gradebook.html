@@ -6,19 +6,7 @@ Gradebook
 
 {% block styles %}
 {{super()}}
-<style>
-th a {
-  display:block;
-  width:100%;
-  color:black;
-}
-
-td a {
-  display:block;
-  width:100%;
-  color:black;
-}
-</style>
+<link rel="stylesheet" href="{{url_for('static', filename="styles/grades.css")}}"/>
 {% endblock %}
 
 {% block rows %}

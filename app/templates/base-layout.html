@@ -7,14 +7,8 @@
 
 {% block styles %}
 {{super()}}
-<style>
-body {
-  padding-top: 60px;
-  padding-bottom: 60px;
-}
-</style>
-
-<link href="{{url_for('static', filename='octicons/octicons.css')}}" rel="stylesheet">
+<link rel="stylesheet" href="{{url_for('static', filename='styles/base-style.css')}}">
+<link rel="stylesheet" href="{{url_for('static', filename='octicons/octicons.css')}}">
 {% endblock %}
 
 {% block navbar %}

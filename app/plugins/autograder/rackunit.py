@@ -68,7 +68,16 @@ def runTests(cmdPrefix, testFile, timeLimit):
   timeout, testOut, testError = testProc.run(timeout=int(timeLimit), env=environ)
 
   if timeout:
-    return {'timeout':True, 'died':False}, {}
+    print "Timeout reached"
+    summary = {}
+    summary['totalTests'] = 0
+    summary['failedTests'] = 0
+    summary['timeout'] = True
+    summary['died'] = False
+    summary['rawOut'] = ""
+    summary['rawErr'] = ""
+
+    return summary, {}
 
   # startTime = datetime.now()
   # testProc = Popen(cmdPrefix + ['/usr/bin/racket', testFile],\
@@ -94,6 +103,9 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
   try:
     testResults = testError.split(randline)[1]
+    testSummarySearch = re.search("([0-9]+) test\(s\) run", testOut)
+    if (testSummarySearch == None):
+      testSummarySearch = re.search("([0-9]+) test\(s\) run", testError)
   except IndexError:
     # b. If this line was never seen, then something bad happened
     return {'timeout':False, 'died':True, 'rawErr': "Could not parse the test output:\n" + testOut + "\n\n" + testError}, {}
@@ -109,7 +121,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
     summary['died'] = False
     summary['timeout'] = False
-    summary['totalTests'] = 0
+    summary['totalTests'] = int(testSummarySearch.group(1))
     summary['failedTests'] = len(failedTests.keys())
 
     return summary, failedTests

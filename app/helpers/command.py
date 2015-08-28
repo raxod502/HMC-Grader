@@ -17,7 +17,7 @@ class Command(object):
     """
     command = None
     process = None
-    status = None
+    returncode = None
     output, error = '', ''
 
     def __init__(self, command):
@@ -26,7 +26,7 @@ class Command(object):
         self.command = command
 
     def run(self, timeout=None, **kwargs):
-        """ Run a command then return: (status, output, error). """
+        """ Run a command then return: (returncode, output, error). """
         def target(**kwargs):
             try:
                 self.process = subprocess.Popen(self.command, **kwargs)

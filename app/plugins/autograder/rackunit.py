@@ -99,7 +99,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
   summary['rawOut'] = testOut
   summary['rawErr'] = testError
 
-  if testProc.returncode != 0:
+  if testProc.returncode == -1:
     return {'timeout':False, 'died':True, 'rawErr': testError, 'rawOut':testOut}, {}
 
   try:

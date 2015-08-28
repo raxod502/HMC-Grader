@@ -68,6 +68,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
   timeout, testOut, testError = testProc.run(timeout=int(timeLimit), env=environ)
 
   if timeout:
+    print testError
     print "Timeout reached"
     summary = {}
     summary['totalTests'] = 0
@@ -103,9 +104,12 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
   try:
     testResults = testError.split(randline)[1]
+    # if there were no errors, result is printed to stdout
     testSummarySearch = re.search("([0-9]+) test\(s\) run", testOut)
+    # Otherwise, result is printed to stderr
     if (testSummarySearch == None):
       testSummarySearch = re.search("([0-9]+) test\(s\) run", testError)
+
   except IndexError:
     # b. If this line was never seen, then something bad happened
     return {'timeout':False, 'died':True, 'rawErr': "Could not parse the test output:\n" + testOut + "\n\n" + testError}, {}
@@ -121,7 +125,10 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
     summary['died'] = False
     summary['timeout'] = False
-    summary['totalTests'] = int(testSummarySearch.group(1))
+    if testSummarySearch != None:
+      summary['totalTests'] = int(testSummarySearch.group(1))
+    else:
+      summary['totalTests'] = ""
     summary['failedTests'] = len(failedTests.keys())
 
     return summary, failedTests

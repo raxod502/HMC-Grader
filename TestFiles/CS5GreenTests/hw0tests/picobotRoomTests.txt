@@ -1,5 +1,5 @@
 emptyMap
-hw0pr3.txt
+picobotRoom.txt
 ###
 topleftcorner: 1,1
 toprightcorner: 23,1

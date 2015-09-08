@@ -15,10 +15,6 @@ class GetLengthTest(unittest.TestCase):
         self.assertEqual(hw.getLength(["AACC", "A", "T"], 2), [])
 
 class FactorialTest(unittest.TestCase):
-    def testFactorial1(self):
-        self.assertEqual(hw.factorial(1), 1)
-    def testFactorial4(self):
-        self.assertEqual(hw.factorial(4), 24)
     def testFactorial6(self):
         self.assertEqual(hw.factorial(6), 720)
 

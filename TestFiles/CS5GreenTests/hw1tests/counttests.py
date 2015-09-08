@@ -12,7 +12,7 @@ class CountTest(unittest.TestCase):
     def testCount4(self):
         self.assertEqual(hw.count('h','It has not escaped our notice that the specific pairing we have postulated'), 4)
     def testCount5(self):
-        self.assertEqual(hw.count('','It has not escaped our notice that the specific pairing we have postulated'), 0)
+        self.assertEqual(hw.count(' ','It has not escaped our notice that the specific pairing we have postulated'), 12)
 
 if __name__ == '__main__':
     unittest.main()

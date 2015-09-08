@@ -56,7 +56,7 @@ class convertFromSecondsTests(unittest.TestCase):
     def testConvertFromSecondsSecsMinsHrs(self):
         self.assertEqual([0,1,12,1], hw.convertFromSeconds(4321))      
     def testConvertFromSecondsSecsMinsHrsDay(self):
-        self.assertEqual([1,23,13,20], hw.convertFromSeconds(1700000))
+        self.assertEqual([1,23,13,20], hw.convertFromSeconds(170000))
 
 
 if __name__ == '__main__':

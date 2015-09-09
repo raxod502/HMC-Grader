@@ -1,0 +1,8 @@
+diamondMap
+hw0pr5.txt
+###
+upperleftquadrant: 7,10
+upperrightquadrant: 16,10
+lowerleftquadrant: 7,15
+lowerrightquadrant: 16,15
+middle: 12,12

@@ -24,7 +24,7 @@ class FriendlyTest(unittest.TestCase):
     def testFriendly1(self):
         self.assertEqual(type(hw.friendly("Hello")), type(""))
     def testFriendly2(self):
-        self.assertNotEqual(type(hw.friendly("How are you?")), type(""))
+        self.assertEqual(type(hw.friendly("How are you?")), type(""))
     def testFriendly3(self):
         self.assertEqual(hw.friendly("How are you?"), 'Good question!')
     def testFriendly4(self):

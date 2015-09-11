@@ -13,10 +13,9 @@ class GetLengthTest(unittest.TestCase):
         self.assertEqual(hw.getLength(["ATA", "ATCG", "TTT", "A"], 3), ['ATA', 'TTT'])
     def testGetLengthNoMatch(self):
         self.assertEqual(hw.getLength(["AACC", "A", "T"], 2), [])
+    def testGetLengthEmptyString(self):
+        self.assertEqual(hw.getLength(['','A','AGCTA'], 5), ['AGCTA'])
 
-class FactorialTest(unittest.TestCase):
-    def testFactorial6(self):
-        self.assertEqual(hw.factorial(6), 720)
 
 if __name__ == '__main__':
     unittest.main()

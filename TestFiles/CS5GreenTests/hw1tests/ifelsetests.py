@@ -19,6 +19,8 @@ class ORFadvisorTest(unittest.TestCase):
         self.assertEqual(hw.ORFadviser("ATGCTAA"), 'The string is not of the correct length.')
     def testORFadviser5(self):
         self.assertEqual(hw.ORFadviser("ATGCCCGGTAA"), 'The string is not of the correct length.')
+    def testORFadviser6(self):
+        self.assertEqual(hw.ORFadviser("ATGCCCGGGTAA"), 'This is an ORF.')
 
 class FriendlyTest(unittest.TestCase):
     def testFriendly1(self):
@@ -29,8 +31,7 @@ class FriendlyTest(unittest.TestCase):
         self.assertEqual(hw.friendly("How are you?"), 'Good question!')
     def testFriendly4(self):
         self.assertEqual(hw.friendly("Huh?"), 'Good question!')
-    def testFriendly5(self):
-        self.assertEqual(hw.friendly("Spam"), 'I do not understand.')
+
 
 if __name__ == '__main__':
     unittest.main()

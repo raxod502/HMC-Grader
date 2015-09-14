@@ -20,7 +20,7 @@ class LongestORFTest(unittest.TestCase):
     def testLongestORFBothStrands(self):
         self.assertEqual(hw.longestORFBothStrands('TTAGGGGCATGAACACATAG'), "ATGTGTTCATGCCCC")
     def testLongestORFNoncoding(self):
-        temp = longestORFNoncoding("ATG"+100*"CCCAAAGGGTTT"+"TAA",50
+        temp = longestORFNoncoding("ATG"+100*"CCCAAAGGGTTT"+"TAA",50)
         self.assertTrue((0 < temp) and (temp < 1206))
 
 class FindORFsTest(unittest.TestCase):
@@ -30,12 +30,6 @@ class FindORFsTest(unittest.TestCase):
         self.assertEqual(hw.findORFs("CCATGTTTTGACATATGCCC"), ['ATGTTT', 'ATGCCC'])
     def testFindORFsBothStrands(self):
         self.assertEqual(hw.findORFsBothStrands("TGATGTAACAT"), ['ATG', 'ATGTTACATCA'])
-
-class GetCoordinatesTest(unittest.TestCase):
-    def testGetCoordinates1(self):
-        self.assertEqual(hw.getCoordinates("CCA", "GATTGGCC"), [3, 6])
-    def testGetCoordinates2(self):
-        self.assertEqual(hw.getCoordinates("AAA", "GATTTGGCC"), [2, 5])
 
 class GeneFinderTest(unittest.TestCase):
     def testGeneFinder1(self):

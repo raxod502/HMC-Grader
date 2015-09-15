@@ -1,4 +1,4 @@
-import GeneFinder as hw
+import geneFinder as hw
 
 import unittest
 
@@ -20,7 +20,7 @@ class LongestORFTest(unittest.TestCase):
     def testLongestORFBothStrands(self):
         self.assertEqual(hw.longestORFBothStrands('TTAGGGGCATGAACACATAG'), "ATGTGTTCATGCCCC")
     def testLongestORFNoncoding(self):
-        temp = longestORFNoncoding("ATG"+100*"CCCAAAGGGTTT"+"TAA",50)
+        temp = hw.longestORFNoncoding("ATG"+100*"CCCAAAGGGTTT"+"TAA",50)
         self.assertTrue((0 < temp) and (temp < 1206))
 
 class FindORFsTest(unittest.TestCase):

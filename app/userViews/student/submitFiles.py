@@ -280,8 +280,10 @@ def createSubmission(problem, user, now=datetime.datetime.utcnow()):
   sub.grade = grade
   sub.problem = problem
   sub.submissionTime = now
+  GRACE_PERIOD = 42
+  dueDateWithGrace = problem.duedate + datetime.timedelta(minutes=GRACE_PERIOD)
 
-  if problem.duedate < sub.submissionTime:
+  if dueDateWithGrace < sub.submissionTime:
     sub.isLate = True
 
   sub.save()

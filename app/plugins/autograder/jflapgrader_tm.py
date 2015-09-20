@@ -139,7 +139,7 @@ def tm_takingInput(filename):
 def tm_stateTrans2(sState, left, right):
     global BEENTO
     global steps
-    THRESHOLD = 900  # max # of steps...
+    THRESHOLD = 25000  # max # of steps...
     TOO_MANY = "Too many steps!"
     possibleTrans = []
 

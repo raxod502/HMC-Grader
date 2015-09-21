@@ -14,5 +14,16 @@ class FastEDTest(unittest.TestCase):
     def testFastED5(self):
         self.assertEqual(hw.fastEd("lower", "hover"), 2)
 
+class TopNMatchesTest(unittest.TestCase):
+    def testTopNMatchesBaseCase(self):
+        self.assertEqual(hw.topNmatches("test", 0, ["spam", "seam", "wow"]), [])
+    def testTopNMatchesCorrectSpelling(self):
+        self.assertEqual(hw.topNmatches("spam", 1, ["spam", "seam", "wow", "cs5blackrocks", "span", "synecdoche"]), ['spam'])
+    def testTopNMatchesSingleResplacement(self):
+        self.assertEqual(hw.topNmatches("spam", 3, ["spam", "seam", "wow", "cs5blackrocks", "span", "synecdoche"]), ['seam', 'spam', 'span'])
+    def testTopNMatchesReturnsWholeList(self):
+        self.assertEqual(hw.topNmatches("a", 3, ["b", "c", "d"]), ['b', 'c', 'd'])
+    def testTopNMatchesNGreaterThanListLength(self):
+        self.assertEqual(hw.topNmatches("a", 4, ["b", "c", "d"]), ['b', 'c', 'd'])
 if __name__ == '__main__':
     unittest.main()

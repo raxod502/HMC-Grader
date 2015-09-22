@@ -14,7 +14,7 @@
                   "single character in middle")
     (check-equal? (sublist? '(s a) '(s p a m))   #f
                   "characters in list, but not in order: Make sure that the characters are consecutive")
-    (check-equal? (sublist? '(s p) '(s p a m))   #t)
+    (check-equal? (sublist? '(s p) '(s p a m))   #t
                   "characters at beginning of list")
     (check-equal? (sublist? '(a m) '(s p a m))   #t
                   "characters at end of list")

@@ -8,7 +8,14 @@ public class MakePiTest {
    */  
   @Test
   public void testMakePi() {
-    int x[] = { 3, 1, 4 };
-    assertTrue(Arrays.equals(x, Hw2pr8.makePi()));
+    int[] x = { 3, 1, 4 };
+    int[] studentAnswer = Hw2pr8.makePi();
+    assertTrue(Arrays.equals(x, studentAnswer));
+  }
+  @Test
+  public void testMakePiFalse() {
+    int[] x = { 1, 2, 3 };
+    int[] studentAnswer = Hw2pr8.makePi();
+    assertFalse(Arrays.equals(x, studentAnswer));
   }
 }

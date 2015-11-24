@@ -62,6 +62,10 @@ Assignments for {{course.name}}
         {% endwith %}
       </tr>
       <tr>
+        <th>Graded By</th>
+        <td>{% if submission.gradedBy == None %}None{%else%}{{submission.gradedBy.username}}{%endif%}</td>
+      </tr>
+      <tr>
         <th>Toggle Late</th>
         <td>
           <button class="btn btn-xs btn-warning" id="toggleLate">Toggle</button>

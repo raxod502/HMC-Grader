@@ -14,7 +14,7 @@ Your submission
   <div class="col-sm-2">
   </div>
   <div class="col-sm-8">
-    <h3>Submssion for: {{course.name}}/{{assignment.name}}/{{problem.name}}</h3>
+    <h3>Submission for: {{course.name}}/{{assignment.name}}/{{problem.name}}</h3>
   </div>
   <div class="col-sm-2">
   </div>
@@ -60,6 +60,12 @@ Your submission
         <td class="{{c}}">{% if submission.isLate %}<span style="color:red">[Late] </span>{%endif%}{{text}}</td>
         {% endwith %}
       </tr>
+      {% if not course.anonymousGrutors %}
+      <tr>
+        <th>Graded By</th>
+        <td>{% if submission.gradedBy == None %}None{%else%}{{submission.gradedBy.username}}{%endif%}</td>
+      </tr>
+      {% endif %}
     </table>
   </div>
   <div class="col-sm-4">

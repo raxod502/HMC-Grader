@@ -281,8 +281,10 @@ class Course(db.Document):
   #Is this course still being taught at this time
   isActive = db.BooleanField(default=True)
 
-  #Do we show usernames during grading
+  #Do we hide the student's username during grading
   anonymousGrading = db.BooleanField(default=False)
+  #Do we hide who graded an assignment from the student
+  anonymousGrutors = db.BooleanField(default=False)
   #Map real usernames to identifiers
   anonIds = db.MapField(db.StringField())
   #How do we calculate late grades (Defaults to one that just highlights late grades)

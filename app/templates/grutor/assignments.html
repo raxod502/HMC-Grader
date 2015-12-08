@@ -90,7 +90,7 @@ $(function(){
   ]
   for (var i = 0; i < problems.length; ++i) {
     console.log("calculating " + problems[i])
-    var ajaxUrl = "{{url_for('grutorGetStatus', pid="pid")}}";
+    var ajaxUrl = "{{url_for('grutorGetStatus_Assignments', pid="pid")}}";
     console.log(ajaxUrl);
     ajaxUrl = ajaxUrl.replace("pid", problems[i]);
     console.log(ajaxUrl);

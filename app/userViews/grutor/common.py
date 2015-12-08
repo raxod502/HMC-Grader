@@ -23,9 +23,9 @@ from app.structures.forms import SubmitAssignmentForm
 import os, datetime, fcntl, random
 import markdown
 
-@app.route('/grutor/problem/<pid>/status')
+@app.route('/grutor/problem/<pid>/status1')
 @login_required
-def grutorGetStatus(pid):
+def grutorGetStatus_Assignments(pid):
   try:
     p = Problem.objects.get(id=pid)
     c,a = p.getParents()
@@ -39,5 +39,20 @@ def grutorGetStatus(pid):
     # Special case to avoid calculations for CS5G
     else:
       return jsonify(u=0, i=0, d=0)
+  except Problem.DoesNotExist:
+    abort(404)
+
+@app.route('/grutor/problem/<pid>/status2')
+@login_required
+def grutorGetStatus_Problems(pid):
+  try:
+    p = Problem.objects.get(id=pid)
+    c,a = p.getParents()
+
+    if not (c in current_user.gradingCourses()):
+      abort(403)
+
+    u, i, d = p.getStatusCount()
+    return jsonify(u=u, i=i, d=d)
   except Problem.DoesNotExist:
     abort(404)

@@ -116,7 +116,7 @@ $(".time").each(function(){
 
 $(function(){
   $.ajax({
-    url:"{{url_for('grutorGetStatus', pid=problem.id)}}",
+    url:"{{url_for('grutorGetStatus_Problems', pid=problem.id)}}",
     dataType:'json',
     success: function(data){
       $("#ungraded").html(data.u);

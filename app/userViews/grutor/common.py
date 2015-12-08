@@ -33,8 +33,11 @@ def grutorGetStatus(pid):
     if not (c in current_user.gradingCourses()):
       abort(403)
 
-    u, i, d = p.getStatusCount()
-
-    return jsonify(u=u, i=i, d=d)
+    if c.name != "CS5G":
+      u, i, d = p.getStatusCount()
+      return jsonify(u=u, i=i, d=d)
+    # Special case to avoid calculations for CS5G
+    else:
+      return jsonify(u=0, i=0, d=0)
   except Problem.DoesNotExist:
     abort(404)

@@ -58,6 +58,32 @@ Gradebook
         </tr>
         {% endfor %}
         {% endfor %}
+
+        <!-- Add rows for auxillary grades -->
+        {% for GBGroup in course.gradeBook.auxillaryGrades %}
+        <tr>
+          <td rowspan="{{GBGroup.columns|length + 1}}">{{GBGroup.name}}</td>
+        </tr>
+        {% for GBColumn in GBGroup.columns|sort(attribute="name") %}
+        <tr>
+          <td>{{GBColumn.name}}</td>
+          {% with studentGrade = GBColumn.getUserScore(current_user) %}
+          {% if studentGrade == None %}
+          <td></td>
+          <td></td>
+          <td>{{GBColumn.maxScore}}</td>
+          <td>0.00</td>
+          {% else %}
+          <td></td>
+          <td></td>
+          <td>{{GBColumn.maxScore}}</td>
+          <td class="userscore">{{studentGrade}}</td>
+          {% endif %}
+          {% endwith %}
+        </tr>
+        {% endfor %}
+        {% endfor %}
+
         <tr> <!-- Row at the bottom for the total -->
           <td>TOTAL</td>
           <td></td>

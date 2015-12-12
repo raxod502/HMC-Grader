@@ -30,6 +30,10 @@ class GBColumn(db.Document):
     super(GBColumn, self).__init__(**data)
     self.name = name
 
+  def getUserScore(self, user):
+    '''Returns a single user grade'''
+    return self.scores[user.keyOfUsername()].totalScore()
+
   def cleanup(self):
     pass
 

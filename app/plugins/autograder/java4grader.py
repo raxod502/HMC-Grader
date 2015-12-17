@@ -30,7 +30,7 @@ def testFileParser(filename):
   return testNames
 
 def runTests(cmdPrefix, testFile, timeLimit):
-  cmdCompile = ["javac", "-cp", "/usr/share/java/junit4.jar:.:./src", testFile]
+  cmdCompile = ["javac", "-cp", "/usr/share/java/junit4.jar:.;./src", testFile]
   #Not using cmdPrefix because we need to write files to the directory
   compileProc = Popen(cmdCompile, stderr=PIPE)
   _, compOut = compileProc.communicate()
@@ -45,7 +45,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
 
   className = testFile[:-5]
   pathName = os.getcwd()+className
-  cmdRun = ["/usr/bin/java", "-cp", "/usr/share/java/junit4.jar:.:./src", "org.junit.runner.JUnitCore", className]
+  cmdRun = ["/usr/bin/java", "-cp", "/usr/share/java/junit4.jar:.;./src", "org.junit.runner.JUnitCore", className]
 
   # startTime = datetime.now()
   #

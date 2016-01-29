@@ -9,6 +9,7 @@ Submissions for grading
   <div class="col-sm-2">
   </div>
   <div class="col-sm-8">
+    <a href="{{url_for('grutorAssignments', cid=course.id)}}" class="btn btn-primary"><span class="glyphicon glyphicon-arrow-left"></span> All Assignments</a>
     <h1>Submissions for: {{course.name}}/{{assignment.name}}/{{problem.name}}</h1>
   </div>
   <div class="col-sm-2">
@@ -115,7 +116,7 @@ $(".time").each(function(){
 
 $(function(){
   $.ajax({
-    url:"{{url_for('grutorGetStatus', pid=problem.id)}}",
+    url:"{{url_for('grutorGetStatus_Problems', pid=problem.id)}}",
     dataType:'json',
     success: function(data){
       $("#ungraded").html(data.u);

@@ -12,4 +12,11 @@ except User.DoesNotExist:
 	admin.isAdmin = True
 	admin.save()
 
-app.run(host="0.0.0.0", port=5055, debug=True)
+app.run(host="0.0.0.0", port=5050, debug=True)
+
+
+# 
+# command to kill the network connection
+# sudo fuser 5050/tcp -k
+# this is some kind of kill command...
+#

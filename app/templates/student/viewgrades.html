@@ -6,19 +6,7 @@ Gradebook
 
 {% block styles %}
 {{super()}}
-<style>
-th a {
-  display:block;
-  width:100%;
-  color:black;
-}
-
-td a {
-  display:block;
-  width:100%;
-  color:black;
-}
-</style>
+<link rel="stylesheet" href="{{url_for('static', filename='styles/grades.css')}}"/>
 {% endblock %}
 
 {% block rows %}
@@ -32,35 +20,79 @@ td a {
   <div class="col-sm-12">
     <table class="table table-responsive table-bordered" id="{{course.id}}">
       <thead>
-        <tr> <!-- This row is for the gradebook groups -->
-          <th rowspan="2"></th>
-          {% for a in course.gradeBook.groups() %}
-          <th colspan="{{a.getWidth()}}">{{a.name}}</th>
-          {% endfor %}
-          <th rowspan="2">Total</th>
-        </tr>
-        <tr> <!-- This row is for the gradebook columns -->
-          {% for c in course.gradeBook.columns() %}
-          {% if c == None %}
-          <th>None</th>
-          {% else %}
-          <th>{{c.name}}</th>
-          {% endif %}
-          {% endfor %}
-        </tr>
         <tr>
-          <th>Max Score</th>
-          {% for a in course.gradeBook.columns() %}
-          {% if a == None %}
-          <th>None</th>
-          {% else %}
-          <th>{{a.maxScore}}</th>
-          {% endif %}
-          {% endfor %}
-          <th>{{course.gradeBook.totalPoints()}}</th>
+          <td>Assignment Group</td>
+          <td>Problem</td>
+          <td>Status</td>
+          <td>Is Late</td>
+          <td>Max Score</td>
+          <td>Your Score</td>
         </tr>
       </thead>
       <tbody>
+        <!-- Each assignment has a row per problem with columns for the name, max score and student score -->
+        {% for a in course.assignments %}
+        <tr>
+          <td rowspan="{{a.problems|length + 1}}">{{a.name}}</td>
+        </tr>
+        {% for p in a.problems|sort(attribute="name") %}
+        <tr>
+          <td>{{p.name}}</td>
+          {% with sub = p.getLatestSubmission(current_user) %}
+          {% if sub == None %}
+          <td>Unsubmitted</td>
+          <td></td>
+          <td>{{p.gradeColumn.maxScore}}</td>
+          <td>0.00</td>
+          {% else %}
+          {% with c,text = sub.getStatus() %}
+          <td class="{{c}}">
+          {{text}}
+          <td style="text-align:center" class={% if sub.isLate %}"danger"{% else %}"{{c}}" {%endif%}>{% if sub.isLate %}<span class="octicon octicon-check"></span>{%endif%}</td>
+          </td>
+          <td>{{sub.problem.gradeColumn.maxScore}}</td>
+          <td class="userscore">{{sub.grade.totalScore()}}</td>
+          {% endwith %}
+          {% endif %}
+          {% endwith %}
+        </tr>
+        {% endfor %}
+        {% endfor %}
+
+        <!-- Add rows for auxillary grades -->
+        {% for GBGroup in course.gradeBook.auxillaryGrades %}
+        <tr>
+          <td rowspan="{{GBGroup.columns|length + 1}}">{{GBGroup.name}}</td>
+        </tr>
+        {% for GBColumn in GBGroup.columns|sort(attribute="name") %}
+        <tr>
+          <td>{{GBColumn.name}}</td>
+          {% with studentGrade = GBColumn.getUserScore(current_user) %}
+          {% if studentGrade == None %}
+          <td></td>
+          <td></td>
+          <td>{{GBColumn.maxScore}}</td>
+          <td>0.00</td>
+          {% else %}
+          <td></td>
+          <td></td>
+          <td>{{GBColumn.maxScore}}</td>
+          <td class="userscore">{{studentGrade}}</td>
+          {% endif %}
+          {% endwith %}
+        </tr>
+        {% endfor %}
+        {% endfor %}
+
+        <tr> <!-- Row at the bottom for the total -->
+          <td>TOTAL</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>{{course.gradeBook.totalPoints()}}</td>
+          <td id="userTotalScore">Calculating</td>
+        </tr>
+
       </tbody>
     </table>
   </div>
@@ -70,6 +102,7 @@ td a {
 
 {% block scripts %}
 {{super()}}
+<!-- 
 <script>
 $(function() {
   data = {'cid': {{cid|tojson}}};
@@ -87,4 +120,15 @@ $(function() {
   });
 })
 </script>
+ -->
+
+<script language="javascript" type="text/javascript">
+    var scores = document.getElementsByClassName('userscore');
+    var sum = 0;
+    for(var i = 0; i < scores.length; i ++) {
+      sum += isNaN(scores[i].innerHTML) ? 0 : parseFloat(scores[i].innerHTML);
+    }
+    document.getElementById('userTotalScore').innerHTML = sum;
+</script>
+
 {% endblock %}

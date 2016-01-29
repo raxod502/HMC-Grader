@@ -1,0 +1,72 @@
+{
+    "file": "PictureECTest.java",
+    "sections": [
+        {
+            "name": "Flips",
+            "points": 4,
+            "rubric": "Picture\uff0ejava",
+            "tests": [
+                "testFlipHorixontal_Logos",
+                "testFlipHorixontal_Maria",
+                "testFlipVertical_Logos",
+                "testFlipVertical_Maria",
+                "testFlipForwardDiagonal_Logos",
+                "testFlipForwardDiagonal_Maria",
+                "testFlipBackwardDiagonal_Logos",
+                "testFlipBackwardDiagonal_Maria"
+            ]
+        },
+        {
+            "name": "Blur",
+            "points": 4,
+            "rubric": "Picture\uff0ejava",
+            "tests": [
+                "testBlur"
+            ]
+        },
+        {
+            "name": "Chroma Key",
+            "points": 4,
+            "rubric": "Picture\uff0ejava",
+            "tests": [
+                "testChromaKey_Logos",
+                "testChromaKey_Maria"
+            ]
+        },
+        {
+            "name": "Paint Bucket",
+            "points": 4,
+            "rubric": "Picture\uff0ejava",
+            "tests": [
+                "testPaintBucket"
+            ]
+        },
+        {
+            "name": "Show Edges",
+            "points": 4,
+            "rubric": "Picture\uff0ejava",
+            "tests": [
+                "testShowEdgesMickey",
+                "testShowEdges_Geese"
+            ]
+        }
+    ],
+    "tests": [
+        "testFlipHorixontal_Logos",
+        "testFlipHorixontal_Maria",
+        "testFlipVertical_Logos",
+        "testFlipVertical_Maria",
+        "testFlipForwardDiagonal_Logos",
+        "testFlipForwardDiagonal_Maria",
+        "testFlipBackwardDiagonal_Logos",
+        "testFlipBackwardDiagonal_Maria",
+        "testBlur",
+        "testChromaKey_Logos",
+        "testChromaKey_Maria",
+        "testPaintBucket",
+        "testShowEdgesMickey",
+        "testShowEdges_Geese"
+    ],
+    "timeout": 30,
+    "type": "Java (junit4)"
+}

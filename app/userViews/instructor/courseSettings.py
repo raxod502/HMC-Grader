@@ -111,6 +111,7 @@ def instructorSaveCourseSettings(cid):
 
     content = request.get_json()
     c.anonymousGrading = content['anonymousGrading']
+    c.anonymousGrutors = content['anonymousGrutors']
     c.lateGradePolicy = content['lateGradePolicy']
     c.homepage = content['homepage']
     c.save()

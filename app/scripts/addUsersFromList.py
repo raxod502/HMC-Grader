@@ -1,13 +1,14 @@
-import csv, sys, os
+import csv, sys, os, re
 from itertools import izip
 
-print os.path.dirname(os.path.realpath(__file__))
+# print os.path.dirname(os.path.realpath(__file__))
 
 from app.scripts.helpers import *
 
-def pairwise(iterable):
-    a = iter(iterable)
-    return izip(a, a)
+def cleanName(name):
+  regex = re.compile('[^a-zA-Z]')
+  retName = regex.sub('', name)
+  return retName
 
 if __name__ == "__main__":
   semester = raw_input("Course Semester: ")
@@ -28,27 +29,76 @@ Users should be added as:
 
   userType = int(userType)
 
-  if userType < 0 and userType > 1:
+  if userType < 0 or userType > 1:
     print "Not a valid user type"
     sys.exit(1)
 
-  #Actually read the file to get the users info
-  with open(sys.argv[1], 'r') as csvFile:
-    studentReader = csv.reader(csvFile, delimiter=',', quotechar='"')
-    #clear the first 2 rows
-    studentReader.next()
-    studentReader.next()
-    #Get pairs of rows
-    for info, name in pairwise(studentReader):
-      email = info[4]
-      name = name[2]
-      #Extract the name parts
-      lastName, firstMid = name.split(",")
-      firstName = firstMid.strip().split(" ")[0]
+  numRowsToClear = int(raw_input("Number of rows to ignore at the top of the csv: "))
+  nameIndex = int(raw_input("Index of name column: "))
+  emailIndex = int(raw_input("Index of email column: "))
 
-      u = addOrGetUser(firstName, lastName, email)
-      if userType == 0:
+  #Actually read the file to get the users info
+  with open(sys.argv[1], 'rU') as csvFile:
+    studentReader = csv.reader(csvFile, delimiter=',', quotechar='"')
+
+    #clear rows that do not have student info
+    for i in range(numRowsToClear):
+      studentReader.next()
+    
+    #special case for the first loop to check column numbers
+    firstLoop = True
+
+    #variable to hold csv output
+    csvOutput = ""
+
+    #Read info from CSV file
+    for row in studentReader:
+      name = row[nameIndex]
+      email = row[emailIndex].strip()
+
+      #handles empty rows
+      if (name == '') or (email == ''):
+        continue
+
+      lastName, firstMidName = name.split(",")
+      lastName = lastName.strip()
+      firstMidName = firstMidName.strip()
+
+      firstMidNameClean = cleanName(firstMidName)
+      lastNameClean = cleanName(lastName)
+
+      if firstLoop:
+        firstLoop = False
+        usernameEx = createUsername(firstMidNameClean, lastNameClean)
+        print "Your settings would result in entries like:"
+        print lastName + ", "+ firstMidName + " " + "(" + usernameEx + "): " + email
+
+        continueScript = query_yes_no("Do you want to use these index numbers?")
+
+        if not continueScript:
+          print "Please rerun this script with the correct column indexes"
+          sys.exit(1)
+
+        else:
+          if userType == 0:
+            print "Adding users as students to " + course.name + " for " + course.semester
+          if userType == 1:
+            print "Adding users as grutors to " + course.name + " for " + course.semester
+
+      u = addOrGetUser(firstMidNameClean, lastNameClean, email)
+      if (userType == 0) and (not courseInList(course, u.courseStudent)):
         u.courseStudent.append(course)
-      elif userType == 1:
+      elif (userType == 1) and (not courseInList(course, u.courseGrutor)):
         u.courseGrutor.append(course)
       u.save()
+
+      print lastName + ", "+ firstMidName + " " + "(" + u.username + "): " + email
+  
+      csvOutput += lastName + ","+ firstMidName + "," + u.username + "," + email + ",,,,\n"
+    
+    #After exiting the for loop, write the results out to a new csv file
+    inputFileName = sys.argv[1][:-4]       # taking off the '.csv' part
+    outputFileName = inputFileName + "-output.csv"
+
+    with open(outputFileName, 'w') as f:
+      f.write(csvOutput)  

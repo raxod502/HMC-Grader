@@ -123,7 +123,8 @@ class CourseSettingsForm(Form):
   This form handles changing course settings. (It may possibly be expanded in
   the future when we decide on more settings)
   '''
-  anonymousGrading = BooleanField("Use anonymous grading")
+  anonymousGrading = BooleanField("Use anonymous grading (hide student usernames)")
+  anonymousGrutors = BooleanField("Hide grutor usernames from students")
   homepage = TextField("Course Homepage (include http:// for external sites)")
   latePolicy = SelectField("Late Work Policy")
 

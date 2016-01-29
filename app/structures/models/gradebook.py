@@ -30,6 +30,10 @@ class GBColumn(db.Document):
     super(GBColumn, self).__init__(**data)
     self.name = name
 
+  def getUserScore(self, user):
+    '''Returns a single user grade'''
+    return self.scores[user.keyOfUsername()].totalScore()
+
   def cleanup(self):
     pass
 
@@ -53,6 +57,9 @@ class GBGroup(db.Document):
 
   def getWidth(self):
     return max(len(self.columns), 1)
+
+  def getHeight(self):
+    return max(len(self.columns)+1, 1)
 
 
 class GradeBook(db.EmbeddedDocument):
@@ -95,6 +102,15 @@ class GradeBook(db.EmbeddedDocument):
       else:
         for c in a.columns:
           yield c
+
+  def columnsForAssignment(self, assignmentNum):
+    if (assignmentNum >= len(self.assignmentGrades)):
+      yield None
+    
+    else:
+      a = self.assignmentGrades[assignmentNum]
+      for c in sorted(a.columns, key=lambda x: x.name):
+        yield c
 
   def totalPoints(self):
     points = 0

@@ -1,5 +1,5 @@
 #lang racket
-(include "hw2pr1_remove-all.rkt")
+(include "remove-all.rkt")
 (require rackunit)
 (require (prefix-in rackUnit: rackunit/text-ui))
 

@@ -1,5 +1,5 @@
 #lang racket
-(include "hw2pr7_scrabble.rkt")
+(include "scrabble.rkt")
 (require rackunit)
 (require (prefix-in rackUnit: rackunit/text-ui))
 

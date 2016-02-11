@@ -1,0 +1,80 @@
+{% extends "base-layout.html" %}
+
+{% block title %}
+Gradebook
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='styles/grades.css')}}"/>
+{% endblock %}
+
+{% block rows %}
+<div class="row">
+  <div class="col-sm-12">
+    <h2>{{course.semester}}/{{course.name}}</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-12">
+    <table class="table table-responsive table-bordered" id="{{course.id}}">
+      <thead>
+        <tr> <!-- This row is for the gradebook groups -->
+          <th rowspan="2"></th>
+          {% for a in course.gradeBook.groups() %}
+          <th colspan="{{a.getWidth()}}">{{a.name}}</th>
+          {% endfor %}
+          <th rowspan="2">Total</th>
+        </tr>
+        <tr> <!-- This row is for the gradebook columns -->
+          {% for c in course.gradeBook.columns() %}
+          {% if c == None %}
+          <th>None</th>
+          {% else %}
+          <th>{{c.name}}</th>
+          {% endif %}
+          {% endfor %}
+        </tr>
+        
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+
+<script>
+$(function() {
+  data = {'cid': {{cid|tojson}}};
+  $.ajax({
+    url:"{{url_for('studentRenderEuros')}}",
+    type:'POST',
+    async:true,
+    contentType:'application/json',
+    data: JSON.stringify(data),
+    dataType: 'json',
+    success: function(data) {
+      console.log(data)
+      $('#'+data.cid+' tbody').append(data.res);
+    }
+  });
+})
+</script>
+
+
+<script language="javascript" type="text/javascript">
+    var scores = document.getElementsByClassName('userscore');
+    var sum = 0;
+    for(var i = 0; i < scores.length; i ++) {
+      sum += isNaN(scores[i].innerHTML) ? 0 : parseFloat(scores[i].innerHTML);
+    }
+    document.getElementById('userTotalScore').innerHTML = sum;
+</script>
+
+{% endblock %}

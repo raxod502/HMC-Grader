@@ -1,7 +1,7 @@
 {% extends "base-layout.html" %}
 
 {% block title %}
-Gradebook
+Euros
 {% endblock %}
 
 {% block styles %}
@@ -13,32 +13,80 @@ Gradebook
 <div class="row">
   <div class="col-sm-12">
     <h2>{{course.semester}}/{{course.name}}</h2>
+    <a class="btn btn-primary" id="showProblemsTable" onclick="toggleTable();" href="#">Show Problem Details</a>
   </div>
 </div>
+<br />
 <div class="row">
   <div class="col-sm-2"></div>
   <div class="col-sm-12">
-    <table class="table table-responsive table-bordered" id="{{course.id}}">
+    <table class="table table-responsive table-bordered" id="euroDetailsByAssignment">
       <thead>
-        <tr> <!-- This row is for the gradebook groups -->
-          <th rowspan="2"></th>
-          {% for a in course.gradeBook.groups() %}
-          <th colspan="{{a.getWidth()}}">{{a.name}}</th>
-          {% endfor %}
-          <th rowspan="2">Total</th>
+        <tr>
+          <td>Assignment Group</td>
+          <td>Euro Used</td>
         </tr>
-        <tr> <!-- This row is for the gradebook columns -->
-          {% for c in course.gradeBook.columns() %}
-          {% if c == None %}
-          <th>None</th>
-          {% else %}
-          <th>{{c.name}}</th>
-          {% endif %}
-          {% endfor %}
-        </tr>
-        
       </thead>
       <tbody>
+        <!-- Each assignment has a row per problem with columns for the name, max score and student score -->
+        {% with eurosUsed, assignmentList = course.getEuroCountAndLateAssignmentsList(current_user) %}
+        {% for a in course.assignments %}
+        <tr>
+          <td>{{a.name}}</td>
+          {% if a in assignmentList %}
+          <td style="text-align:center" class="danger"><span class="octicon octicon-check"></span></td>
+          {% else %}
+          <td style="text-align:center" class="success"></td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        <tr> <!-- Row at the bottom for the total -->
+          <td>TOTAL</td>
+          <td>{{ eurosUsed }}</td>
+        </tr>
+        {% endwith %}
+      </tbody>
+    </table>
+
+    <table style="display:none;" class="table table-responsive table-bordered" id="euroDetailsByProblem">
+      <thead>
+        <tr>
+          <td>Assignment Group</td>
+          <td>Problem</td>
+          <td>Euro Used</td>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Each assignment has a row per problem with columns for the name, max score and student score -->
+        {% with eurosUsed, assignmentList = course.getEuroCountAndLateAssignmentsList(current_user) %}
+        {% for a in course.assignments %}
+        <tr>
+          <td rowspan="{{a.problems|length + 1}}">{{a.name}}</td>
+        </tr>
+        {% for p in a.problems|sort(attribute="name") %}
+        <tr>
+          
+          {% with sub = p.getLatestSubmission(current_user) %}
+          {% if sub == None %}
+          <td>{{p.name}}</td>
+          <td></td>
+          {% else %}
+          {% with c,text = sub.getStatus() %}
+          <td class={% if sub.isLate %}"danger"{% else %}"{{c}}" {%endif%}>{{p.name}}</td>
+          <td style="text-align:center" class={% if sub.isLate %}"danger"{% else %}"{{c}}" {%endif%}>{% if sub.isLate %}<span class="octicon octicon-check"></span>{%endif%}</td>
+          {% endwith %}
+          {% endif %}
+          {% endwith %}
+        </tr>
+        {% endfor %}
+        {% endfor %}
+
+        <tr> <!-- Row at the bottom for the total -->
+          <td>TOTAL</td>
+          <td></td>
+          <td>{{ eurosUsed }}</td>
+        </tr>
+        {% endwith %}
       </tbody>
     </table>
   </div>
@@ -49,25 +97,6 @@ Gradebook
 {% block scripts %}
 {{super()}}
 
-<script>
-$(function() {
-  data = {'cid': {{cid|tojson}}};
-  $.ajax({
-    url:"{{url_for('studentRenderEuros')}}",
-    type:'POST',
-    async:true,
-    contentType:'application/json',
-    data: JSON.stringify(data),
-    dataType: 'json',
-    success: function(data) {
-      console.log(data)
-      $('#'+data.cid+' tbody').append(data.res);
-    }
-  });
-})
-</script>
-
-
 <script language="javascript" type="text/javascript">
     var scores = document.getElementsByClassName('userscore');
     var sum = 0;
@@ -75,6 +104,13 @@ $(function() {
       sum += isNaN(scores[i].innerHTML) ? 0 : parseFloat(scores[i].innerHTML);
     }
     document.getElementById('userTotalScore').innerHTML = sum;
+</script>
+
+<script type="text/javascript">
+function toggleTable() {
+    var ProblemTable = document.getElementById("euroDetailsByProblem");
+    ProblemTable.style.display = (ProblemTable.style.display == "table") ? "none" : "table";
+}
 </script>
 
 {% endblock %}

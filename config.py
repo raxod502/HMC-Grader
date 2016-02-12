@@ -17,15 +17,14 @@ SECRET_KEY="Grutors <3 SPAM"
 MONGODB_SETTINGS = {'DB': 'submissionsite',
 'username': 'grader',
 'password': 'grutorsLoveGrading',
-'host': '134.173.43.46'}
+'host': '134.173.43.10'}
 
 DATABASE_QUERY_TIMEOUT = 0.5
 
 #
 #Celery config ssettings
 #
-# Current settings are for testing only change for production
-CELERY_BROKER_URL="amqp://grader:grutorsLoveGrading@134.173.43.46"
+CELERY_BROKER_URL="amqp://grader:grutorsLoveGrading@134.173.43.10"
 FLOWER_ACCESS_URL="http://127.0.0.1:5555"
 
 #

@@ -9,13 +9,13 @@ public class MakePiTest {
   @Test
   public void testMakePi() {
     int[] x = { 3, 1, 4 };
-    int[] studentAnswer = Hw2pr8.makePi();
+    int[] studentAnswer = ArrayPractice.makePi();
     assertTrue(Arrays.equals(x, studentAnswer));
   }
   @Test
   public void testMakePiFalse() {
     int[] x = { 1, 2, 3 };
-    int[] studentAnswer = Hw2pr8.makePi();
+    int[] studentAnswer = ArrayPractice.makePi();
     assertFalse(Arrays.equals(x, studentAnswer));
   }
 }

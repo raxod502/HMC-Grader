@@ -320,3 +320,98 @@ class Course(db.Document):
     if not username in self.anonIds:
       self.ensureIDs()
     return self.anonIds[username]
+
+  def getNumberOfEurosUsed(self, user):
+    '''Generates a count of the euros used by a user'''
+    eurosUsed = 0
+    for a in self.assignments:
+      assignmentContainsLateProblems = False
+      for p in sorted(a.problems, key=lambda x: x.name):
+        sub = p.getLatestSubmission(user)
+        if not sub == None:
+          if sub.isLate:
+            assignmentContainsLateProblems = True
+      #After looping through all the problems for the assignment, check if a euro was used
+      if assignmentContainsLateProblems:
+        eurosUsed += 1
+      
+    return eurosUsed
+
+  def getLateProblems(self, user):
+    '''Generates a gradelist of the late problems for a user'''
+    gl = []
+    for a in self.assignments:
+      al = []
+      for p in sorted(a.problems, key=lambda x: x.name):
+        sub = p.getLatestSubmission(user)
+        if not sub == None:
+          if sub.isLate:
+            gradeData = {}
+            gradeData['rawTotalScore'] = sub.grade.totalScore()
+            gradeData['timeDelta'] = p.duedate - sub.submissionTime
+            gradeData['isLate'] = sub.isLate
+            gradeData['maxScore'] = p.totalPoints()
+            al.append(gradeData)
+      gl.append(al)
+
+    return gl
+
+  def getLateAssignments(self, user):
+    '''Generates a list of the late assignments for a user'''
+    assignmentList = []
+    for a in self.assignments:
+      assignmentContainsLateProblems = False
+      for p in sorted(a.problems, key=lambda x: x.name):
+        sub = p.getLatestSubmission(user)
+        if not sub == None:
+          if sub.isLate:
+            assignmentContainsLateProblems = True
+      if assignmentContainsLateProblems:
+        assignmentList.append(a)
+
+    return assignmentList
+
+  def getEuroCountAndLateProblemsList(self, user):
+    '''Generates a count of euros used and a gradelist of the late problems for a user'''
+    gl = []
+    eurosUsed = 0
+    for a in self.assignments:
+      al = []
+      assignmentContainsLateProblems = False
+      for p in sorted(a.problems, key=lambda x: x.name):
+        sub = p.getLatestSubmission(user)
+        if not sub == None:
+          if sub.isLate:
+            assignmentContainsLateProblems = True
+            gradeData = {}
+            gradeData['rawTotalScore'] = sub.grade.totalScore()
+            gradeData['timeDelta'] = p.duedate - sub.submissionTime
+            gradeData['isLate'] = sub.isLate
+            gradeData['maxScore'] = p.totalPoints()
+            al.append(gradeData)
+      #Append the data about late problems to the list
+      gl.append(al)
+
+      #After looping through all the problems for the assignment, check if a euro was used
+      if assignmentContainsLateProblems:
+        eurosUsed += 1
+
+    return eurosUsed, gl
+
+
+  def getEuroCountAndLateAssignmentsList(self, user):
+    '''Generates a count of euros used and a list of the late assignments for a user'''
+    eurosUsed = 0
+    assignmentList = []
+    for a in self.assignments:
+      assignmentContainsLateProblems = False
+      for p in sorted(a.problems, key=lambda x: x.name):
+        sub = p.getLatestSubmission(user)
+        if not sub == None:
+          if sub.isLate:
+            assignmentContainsLateProblems = True
+      if assignmentContainsLateProblems:
+        eurosUsed += 1
+        assignmentList.append(a)
+
+    return eurosUsed, assignmentList

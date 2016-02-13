@@ -1,0 +1,73 @@
+{% extends "base-layout.html" %}
+
+{% block title %}
+Euros Used
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename="styles/grades.css")}}"/>
+{% endblock %}
+
+{% block rows %}
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+    <h2>Euros Used: {{course.semester}}/{{course.name}}</h2>
+  </div>
+  <div class="col-sm-2"></div>
+</div>
+{% if instructor %}
+<div class="row">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8"><a href="{{url_for('serveEurobook', cid=course.id, raw=false)}}" class="btn btn-primary">Download</a></div>
+  <div class="col-sm-2"></div>
+</div>
+<hr>
+{% endif %}
+<!-- Begin gradebook table -->
+<div class="row">
+  <div class="col-sm-12">
+    <table class="table table-responsive table-hover table-bordered" id="{{course.id}}">
+      <thead>
+        <tr> <!-- This row is for the gradebook groups -->
+          <th>Username</th>
+          <th>Total</th>
+          {% for a in course.assignments %}
+          <th>{{a.name}}</th>
+          {% endfor %}
+        </tr>
+        
+      </thead>
+      <tbody class="list">
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('static', filename='list.js')}}"></script>
+<script>
+$(function() {
+  students = {{uids|tojson}};
+
+  for(var i = 0; i < students.length; i++) {
+    data = {'uid':students[i]};
+    $.ajax({
+    url:"{{url_for('commonRenderEuros', cid=course.id, instr=instructor)}}",
+    type:'POST',
+    async:true,
+    contentType:'application/json',
+    data: JSON.stringify(data),
+    dataType: 'json',
+    success: function(data) {
+        $('#{{course.id}} tbody').append(data.res);
+      }
+    });
+  }
+})
+</script>
+
+{% endblock %}

@@ -7,14 +7,13 @@ public class SpampedeBrainTest_CheckParentsBFS {
 	// http://tinyurl.com/spampedeTestBoards
 
 	// IMPORTANT:
-	// The tests in this file assume the BFS runs until spam
+	// The first answer in each test assumes the BFS runs until spam
 	// is dequeued, rather than stopping as soon as you first
 	// find a spam cell. 
 	//
-	// If you write cleverer code that stops early,
-	// most or all of these tests will fail...and that's OK!
-	// You should try running SpampedeBrainTest_CheckParentsBFS_fast 
-	// instead.
+	// The second answer in each test assumes the BFS stops as soon as spam is
+	// enqueued, rather than waiting for it to leave the queue.
+
 	
 	@Test
 	public void testG1_BFS() {
@@ -28,13 +27,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[1, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G1");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -49,13 +54,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[1, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G2");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -70,13 +81,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[3, 2]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G3");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -91,13 +108,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[3, 2]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G4");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -112,13 +135,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[3, 3]\t[null]\t\n"
 				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[4, 3]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
+				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G5");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -133,13 +162,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[1, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G6");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -154,13 +189,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[1, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G7");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -175,13 +216,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[3, 2]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G8");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -196,13 +243,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[3, 2]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G9");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -217,13 +270,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[3, 3]\t[null]\t\n"
 				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[4, 3]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
+				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G10");
 		// System.out.println("Expected:");
 		// System.out.print(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.print(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 	@Test
@@ -238,13 +297,19 @@ public class SpampedeBrainTest_CheckParentsBFS {
 				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[3, 3]\t[null]\t\n"
 				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[4, 3]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
+		String correctParentStringFast = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
+				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[3, 3]\t[null]\t\n"
+				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[4, 3]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G11");
 		// System.out.println("Expected:");
 		// System.out.println(correctParentString);
 		// System.out.println("Actual:");
 		// System.out.println(brain.testing_toStringParent());
-		assertEquals(correctParentString, parentString);
+		assertTrue(correctParentString.equals(parentString) || correctParentStringFast.equals(parentString));
 	}
 
 }

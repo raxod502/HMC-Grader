@@ -19,6 +19,7 @@ public class SpampedeBrainTest_AdvancePede {
 		// System.out.println(mazeString);
 		assertEquals(correctMazeString, mazeString);
 	}
+	
 	@Test
 	public void test_noSpamEaten() {
 		SpampedeBrain brain = SpampedeBrain.getTestGame(TestGame.G2);

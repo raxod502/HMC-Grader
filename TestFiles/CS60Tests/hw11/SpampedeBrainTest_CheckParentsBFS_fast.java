@@ -2,18 +2,17 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class SpampedeBrainTest_CheckParentsBFS {
+public class SpampedeBrainTest_CheckParentsBFS_fast {
 	// Want pictures of the test boards?
 	// http://tinyurl.com/spampedeTestBoards
 
 	// IMPORTANT:
-	// The tests in this file assume the BFS runs until spam
-	// is dequeued, rather than stopping as soon as you first
-	// find a spam cell. 
+	// The tests in this file assume the BFS stops as soon as spam is
+	// enqueued, rather than waiting for it to leave the queue.
 	//
-	// If you write cleverer code that stops early,
-	// most or all of these tests will fail...and that's OK!
-	// You should try running SpampedeBrainTest_CheckParentsBFS_fast 
+	// If you write the algorithm as suggested in class, most
+	// or all of these tests will fail...and that's OK!
+	// You should try running SpampedeBrainTest_CheckParentsBFS 
 	// instead.
 	
 	@Test
@@ -24,8 +23,8 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		String parentString = brain.testing_toStringParent();
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
-				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[1, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
@@ -44,7 +43,7 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		// not checking nextCell only checking parent content
 		String parentString = brain.testing_toStringParent();
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[1, 2]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
@@ -66,9 +65,9 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		String parentString = brain.testing_toStringParent();
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
-				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
-				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[3, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G3");
@@ -86,10 +85,10 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		// not checking nextCell only checking parent content
 		String parentString = brain.testing_toStringParent();
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
-				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
-				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[3, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G4");
@@ -109,8 +108,8 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
 				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
-				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[3, 3]\t[null]\t\n"
-				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[4, 3]\t[null]\t\n"
+				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G5");
@@ -129,8 +128,8 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		String parentString = brain.testing_toStringParent();
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
-				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[1, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
@@ -149,7 +148,7 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		// not checking nextCell only checking parent content
 		String parentString = brain.testing_toStringParent();
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[1, 2]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
@@ -171,9 +170,9 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		String parentString = brain.testing_toStringParent();
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
-				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
-				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[3, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G8");
@@ -191,10 +190,10 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		// not checking nextCell only checking parent content
 		String parentString = brain.testing_toStringParent();
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
-				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
-				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
-				+ "[null]\t[null]\t[3, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[1, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[2, 2]\t[null]\t[null]\t[null]\t\n"
+				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G9");
@@ -214,8 +213,8 @@ public class SpampedeBrainTest_CheckParentsBFS {
 		String correctParentString = "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[1, 2]\t[1, 3]\t[null]\t\n"
 				+ "[null]\t[2, 2]\t[1, 2]\t[2, 2]\t[2, 3]\t[null]\t\n"
-				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[3, 3]\t[null]\t\n"
-				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[4, 3]\t[null]\t\n"
+				+ "[null]\t[3, 2]\t[2, 2]\t[3, 2]\t[null]\t[null]\t\n"
+				+ "[null]\t[4, 2]\t[3, 2]\t[4, 2]\t[null]\t[null]\t\n"
 				+ "[null]\t[null]\t[null]\t[null]\t[null]\t[null]\t\n";
 		// Sample debugging output:
 		// System.out.println("G10");

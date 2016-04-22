@@ -1,5 +1,5 @@
 #lang racket
-(include "Graph.rkt")
+(include "graphFunctions.rkt")
 (require rackunit)
 (require (prefix-in rackUnit: rackunit/text-ui))
 
@@ -12,7 +12,7 @@
     "(min-dist 'e 'b graph5)")
     (check-equal? (min-dist 'd 'd graph5) 0
     "(min-dist 'd 'd graph5)")
-    (check-equal? (min-dist 'f 'a graph5) 42000000
+    (check-equal? (convertWeight (min-dist 'f 'a graph5)) worstCost
     "(min-dist 'f 'a graph5)")
   )
 )

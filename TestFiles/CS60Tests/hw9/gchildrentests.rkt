@@ -1,5 +1,5 @@
 #lang racket
-(include "Graph.rkt")
+(include "graphFunctions.rkt")
 (require rackunit)
 (require (prefix-in rackUnit: rackunit/text-ui))
 

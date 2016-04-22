@@ -4,12 +4,27 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-/**
- * A JUnit test case class. Every method starting with the word "test" will be
- * called when running the test with JUnit.
- */
+
 public class ChangeTest {
 
+  @Test
+  public void test_MinCoins_1_5_10_27_slow() {
+    int[] coinTypes = { 1, 5, 10 };
+    Change ch = new Change(coinTypes);
+    int num_coins = ch.minCoinsSlow(27);
+    int expected_num_coins = 5;
+    assertEquals(expected_num_coins, num_coins);
+  }
+
+  @Test
+  public void test_MinCoins_1_5_10_10_slow() {
+    int[] coinTypes = { 1, 5, 10 };
+    Change ch = new Change(coinTypes);
+    int num_coins = ch.minCoinsSlow(10);
+    int expected_num_coins = 1;
+    assertEquals(expected_num_coins, num_coins);
+  }
+  
   @Test
   public void test_MinCoins_1_5_10_27() {
     int[] coinTypes = { 1, 5, 10 };
@@ -188,11 +203,12 @@ public class ChangeTest {
     int num_coins = ch.minCoins(23);
     int expected_num_coins = 3;
     int[] coins = ch.makeChange(23);
-    int[] expected_coins = { 1, 10, 12 };
+    int[] expected_coins_1 = { 1, 10, 12 };
+    int[] expected_coins_2 = { 5, 9, 9 };
     assertEquals(expected_num_coins, num_coins);
     // System.out.println( "Exp: " + Arrays.toString( expected_coins ) );
     // System.out.println( "Act: " + Arrays.toString( coins ) );
-    assertTrue(Arrays.equals(expected_coins, coins));
+    assertTrue(Arrays.equals(expected_coins_1, coins) || Arrays.equals(expected_coins_2, coins));
   }
 
 }

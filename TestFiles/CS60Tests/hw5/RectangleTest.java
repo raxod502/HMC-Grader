@@ -3,6 +3,8 @@ import org.junit.Test;
  
 public class RectangleTest {
 
+
+	
 	@Test
 	public void testCorneredRectangle1() {
 		Rectangle cr = new CorneredRectangle(2,3,6,7);
@@ -28,6 +30,13 @@ public class RectangleTest {
 	}
 	
 	@Test
+	public void testCorneredRectangle5() {
+		Rectangle cr1 = new CorneredRectangle(0,0,2,2);
+		Rectangle cr2 = new CorneredRectangle(-1,0.5,4,1.5);
+		assertTrue(cr1.overlaps(cr2));
+	}
+	
+	@Test
 	public void testSizedRectangle1() {
 		SizedRectangle sr = new SizedRectangle(2,4,4,8);
 		testGeometry(sr,0,0,4,8);
@@ -49,6 +58,13 @@ public class RectangleTest {
 	public void testSizedRectangle4() {
 		SizedRectangle sr = new SizedRectangle(1,1,2,2);
 		testOverlaps0022(sr);
+	}
+	
+	@Test
+	public void testSizedRectangle5() {
+		SizedRectangle sr1 = new SizedRectangle(1,1,2,2);
+		SizedRectangle sr2 = new SizedRectangle(5,1,20,1);
+		assertTrue(sr1.overlaps(sr2));
 	}
 	
 	// Helper function for any rectangle.

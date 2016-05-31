@@ -274,7 +274,7 @@ def instructorAddProblem(cid,aid):
     ensurePathExists(getProblemPath(c,a,p))
     ensurePathExists(getTestPath(c,a,p))
 
-    flash("This is your first time creating the problem please fill in all the form fields an hit save")
+    flash("This is your first time creating the problem please fill in all the form fields and hit save")
     return redirect(url_for('instructorProblemSettings', pid=p.id))
   except Course.DoesNotExist:
     abort(404)

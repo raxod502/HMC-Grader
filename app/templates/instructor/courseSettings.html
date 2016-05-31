@@ -109,7 +109,7 @@ Edit Course: {{course.name}}
     <hr>
     <div id="studentUsers">
       <input class="search form-control" type="search" placeholder="Search"/>
-      <table class="table">
+      <table class="table sortable">
         <thead>
           <tr>
             <th>Username</th>
@@ -145,7 +145,7 @@ Edit Course: {{course.name}}
     <hr>
     <div id="graderUsers">
       <input class="search form-control" type="search" placeholder="Search"/>
-      <table class="table">
+      <table class="table sortable">
         <thead>
           <tr>
             <th>Username</th>
@@ -177,7 +177,7 @@ Edit Course: {{course.name}}
     <hr>
     <div id="instrUsers">
       <input class="search form-control" type="search" placeholder="Search"/>
-      <table class="table">
+      <table class="table sortable">
         <thead>
           <tr>
             <th>Username</th>
@@ -204,6 +204,7 @@ Edit Course: {{course.name}}
 
 {% block scripts %}
 {{super()}}
+<script src="{{url_for('static', filename='sorttable.js')}}"></script>
 <script src="{{url_for('static', filename='list.js')}}"></script>
 <script>
 var grutorList = new List('graderUsers', {valueNames:['name']})

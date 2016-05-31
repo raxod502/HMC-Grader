@@ -70,7 +70,7 @@ def instructorProblemSettings(pid):
 
     testForm = AddTestForm()
     testFileParsers = getTestFileParsers()
-    testForm.testType.choices = [(x,x) for x in testFileParsers.keys()]
+    testForm.testType.choices = sorted([(x,x) for x in testFileParsers.keys()])
 
     return render_template("instructor/problemSettings.html", course=c, problem=p, assignment=a,\
                            form=ProblemOptionsForm(), testForm=testForm,\

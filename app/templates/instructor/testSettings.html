@@ -27,7 +27,7 @@ Edit Tests
       <thead><tr><th>Rubric Section</th><th>Allocated Points</th><th>Total Points</th>
       </thead>
       <tbody>
-        {% for k, v in problem.rubric.iteritems() %}
+        {% for k, v in problem.rubric.iteritems()|sort() %}
         <tr id="{{k|cleanID}}"><td>{{k}}</td><td>0</td><td>{{v}}</td></tr>
         {% endfor %}
       </tbody>
@@ -136,7 +136,8 @@ function unsaved(){
 
 var gradeSpec = {{data|tojson}};
 var availableTests = gradeSpec.tests;
-var sections = {{problem.rubric.keys()|tojson}};
+var unsortedSections = {{problem.rubric.keys()|tojson}};
+var sections = unsortedSections.sort();
 
 $( document ).ready(function() {
   buildPage();

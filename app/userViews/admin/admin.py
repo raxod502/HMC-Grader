@@ -105,7 +105,7 @@ def adminCourses():
         page.course = c
         page.save()
 
-        c.homepage = url_for('viewPage', pgid=page.id)
+        # c.homepage = url_for('viewPage', pgid=page.id)
         c.save()
 
         #Create the file backing

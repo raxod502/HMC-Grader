@@ -69,7 +69,7 @@ Edit Problem
         <div class="col-sm-6">
           <div class="form-group">
             <label for="{{form.problemPage.id}}" class="control-label">{{form.problemPage.label}}</label>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="{{url_for('instructorMakeProblemPage', pid=problem.id, t='problemPage')}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Make Page</a>
+            <!-- <a href="{{url_for('instructorMakeProblemPage', pid=problem.id, t='problemPage')}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Make Page</a> -->
             {% if problem.problemPage != None %}
             <a target="_blank" href="{{problem.problemPage}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-share"></span> Test Link</a>
             {% endif %}
@@ -79,7 +79,7 @@ Edit Problem
         <div class="col-sm-6">
           <div class="form-group">
             <label for="{{form.gradeNotes.id}}" class="control-label">{{form.gradeNotes.label}}</label>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="{{url_for('instructorMakeProblemPage', pid=problem.id, t='notes')}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Make Page</a>
+            <!-- <a href="{{url_for('instructorMakeProblemPage', pid=problem.id, t='notes')}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Make Page</a> -->
             {% if problem.gradeNotes != None %}
             <a target="_blank" href="{{problem.gradeNotes}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-share"></span> Test Link</a>
             {% endif %}

@@ -32,8 +32,8 @@ def testFileParser(filename):
 
 def runTests(cmdPrefix, testFile, timeLimit):
   startTime = datetime.now()
-
-  testProc = Command(cmdPrefix + ['python', testFile])
+  runCommand = 'python3'# change to just python for using python 2
+  testProc = Command(cmdPrefix + [runCommand, testFile])
 
   timeoutReached, testOut, testError = \
     testProc.run(timeout=int(timeLimit), env=environ)

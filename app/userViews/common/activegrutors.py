@@ -29,6 +29,8 @@ def viewActiveGrutors():
   Template Parameters:
     courses: A list of courses the user is in currently or is grading
     grutorLists: A dictionary mapping course IDs to lists of active graders
+    This feature was removed. To add it back, add the html: <li{% if active_page == "grutorList"%} class="active" {% endif %}><a href="{{url_for('viewActiveGrutors')}}">Active Grutors</a></li>
+    to the base template
   '''
 
   ciForm = ClockInForm()

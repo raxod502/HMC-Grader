@@ -41,6 +41,7 @@
           </ul>
         </li>
         {% if g.user.is_authenticated %}
+        <li{% if active_page == "grutorList"%} class="active" {% endif %}><a href="{{url_for('viewActiveGrutors')}}">Active Grutors</a></li>
         {% if g.user.courseStudent|length > 0 %}
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Student<b class="caret"></b></a>

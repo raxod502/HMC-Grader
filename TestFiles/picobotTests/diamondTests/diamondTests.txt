@@ -1,0 +1,12 @@
+diamondMap
+hw0pr9.txt
+###
+center: 12,12
+northCorner: 1,12
+westCorner: 12,1
+eastCorner: 12,23
+southCorner: 23,12
+NW_wall: 8,8
+NE_wall: 8,16
+SE_wall: 16,16
+SW_wall: 16,8

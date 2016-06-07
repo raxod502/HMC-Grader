@@ -29,27 +29,27 @@ class Page(db.Document):
 
   def canView(self, user):
     return self.perm['anyView'] or \
-      (user.is_authenticated() and self.perm['userView']) or\
-      (user.is_authenticated() and self.perm['cUserView'] and \
+      (user.is_authenticated and self.perm['userView']) or\
+      (user.is_authenticated and self.perm['cUserView'] and \
         (self.course in user.courseStudent or \
          self.course in user.courseGrutor or \
          self.course in user.courseInstructor)) or\
-      (user.is_authenticated() and self.perm['grutorView'] and \
+      (user.is_authenticated and self.perm['grutorView'] and \
         not self.course in user.courseStudent and  \
         len(user.gradingCourses()) > 0) or \
-      (user.is_authenticated() and self.perm['cGrutorView'] and \
+      (user.is_authenticated and self.perm['cGrutorView'] and \
         self.course in user.gradingCourses()) or \
-      (user.is_authenticated() and self.course in user.courseInstructor)
+      (user.is_authenticated and self.course in user.courseInstructor)
 
   def canEdit(self, user):
-    return (user.is_authenticated() and self.perm['userEdit']) or\
-      (user.is_authenticated() and self.perm['cUserEdit'] and \
+    return (user.is_authenticated and self.perm['userEdit']) or\
+      (user.is_authenticated and self.perm['cUserEdit'] and \
         (self.course in user.courseStudent or \
          self.course in user.courseGrutor or \
          self.course in user.courseInstructor)) or\
-      (user.is_authenticated() and self.perm['grutorEdit'] and \
+      (user.is_authenticated and self.perm['grutorEdit'] and \
         not self.course in user.courseStudent and  \
         len(user.gradingCourses()) > 0) or \
-      (user.is_authenticated() and self.perm['cGrutorEdit'] and \
+      (user.is_authenticated and self.perm['cGrutorEdit'] and \
         self.course in user.gradingCourses()) or \
-      (user.is_authenticated() and self.course in user.courseInstructor)
+      (user.is_authenticated and self.course in user.courseInstructor)

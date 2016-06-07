@@ -6,7 +6,7 @@ This module supports all of the forms for the site
 
 from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField, BooleanField, SelectField
-from wtforms import TextAreaField, BooleanField, FileField, DecimalField
+from wtforms import TextAreaField, BooleanField, FileField, DecimalField, IntegerField
 from wtforms.validators import Required, EqualTo, Optional
 from wtforms.validators import Length, Email
 
@@ -127,6 +127,7 @@ class CourseSettingsForm(Form):
   anonymousGrutors = BooleanField("Hide grutor usernames from students")
   homepage = TextField("Course Homepage (include http:// for external sites)")
   latePolicy = SelectField("Late Work Policy")
+  gracePeriod = IntegerField("Late Work Grace Period (minutes)")
 
 class ReuploadTestForm(Form):
   testFile = FileField("File")

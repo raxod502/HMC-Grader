@@ -62,7 +62,7 @@ def login():
     filled in and the form is sent back to the template.
   '''
   #If the user is already authenticated we are done here just go to the index
-  if g.user is not None and g.user.is_authenticated():
+  if g.user is not None and g.user.is_authenticated:
     flash("User is alread logged in", "warning")
     return redirect(url_for('index'))
 

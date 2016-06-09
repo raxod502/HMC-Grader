@@ -178,13 +178,16 @@ $("input[mytype='timeout']").change(function(){
 
 function makeTestSelector(name, index){
   var sec = gradeSpec.sections[index];
-  var sel = '<select id="'+cleanID(name)+'Test" class="form-control">';
+  var availableTests = 0;
+  var options = '';
+  
   for(var i = 0; i < gradeSpec.tests.length; ++i){
     if (sec.tests.indexOf(gradeSpec.tests[i]) == -1){
-      sel += '<option value="'+gradeSpec.tests[i]+'">'+gradeSpec.tests[i]+'</option>'
+      availableTests += 1;
+      options += '<option value="'+gradeSpec.tests[i]+'">'+gradeSpec.tests[i]+'</option>'
     }
   }
-  sel += "</select>"
+  var sel = '<select id="'+cleanID(name)+'Test" class="form-control" multiple="multiple" size="'+availableTests+'">'+options+"</select>";
   return sel
 }
 
@@ -247,8 +250,10 @@ function removeTest(secIndex, testIndex){
 
 function addTest(secIndex){
   var sec = gradeSpec.sections[secIndex];
-  var testName = $("select#"+cleanID(sec.name)+"Test").val();
-  sec.tests.push(testName);
+  var testNames = $("select#"+cleanID(sec.name)+"Test").val()||[];
+  $(testNames).each(function(index,testName){
+    sec.tests.push(testName);
+  })
   buildPage();
   unsaved();
 }

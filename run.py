@@ -12,7 +12,7 @@ except User.DoesNotExist:
 	admin.isAdmin = True
 	admin.save()
 
-app.run(host="0.0.0.0", port=5050, debug=True)#change to false
+app.run(host="0.0.0.0", port=5050, debug=False)#change to false
 
 
 # 

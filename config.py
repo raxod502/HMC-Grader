@@ -35,7 +35,7 @@ STORAGE_HOME="/home/cssummer16/GraderStorage"
 STORAGE_MOUNTED=False
 
 #
-# Email settings
+# Email settings 
 #
 
 SYSTEM_EMAIL_ADDRESS = "cloud@cs.hmc.edu"

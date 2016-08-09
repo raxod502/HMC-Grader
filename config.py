@@ -42,7 +42,6 @@ SYSTEM_EMAIL_ADDRESS = "cloud@cs.hmc.edu"
 
 SMTP_SERVER = "knuth.cs.hmc.edu"
 
-
 #
 # Autograder settings
 #

@@ -96,8 +96,9 @@ def login():
                           active_page="login")
 
 
-@app.route('/recover', methods=['POST'])
+@app.route('/recover', methods=['POST','GET'])
 def requestRecovery():
+
   if request.method == 'POST':
     form = SignInForm(request.form)
     if form.validate():
@@ -145,7 +146,7 @@ def requestRecovery():
     else:
       for v in form.errors.values():
         flash(v[0], "error")
-  return redirect(url_for('login'))
+  return render_template("accounts/login.html")
 
 @app.route('/recover/<rid>', methods=['POST', 'GET'])
 def recovery(rid):

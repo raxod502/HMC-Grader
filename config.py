@@ -24,7 +24,7 @@ DATABASE_QUERY_TIMEOUT = 0.5
 #
 #Celery config ssettings
 #
-CELERY_BROKER_URL="amqp://admin:grutorsLoveGrading@134.173.40.10"
+CELERY_BROKER_URL="amqp://admin:grutorsLoveGrading@134.173.43.10"
 FLOWER_ACCESS_URL="http://127.0.0.1:5555"
 
 #

@@ -16,6 +16,7 @@ def get_ip_address(ifname):
     )[20:24])
 
 SERVER_IP = get_ip_address('eth0')  # '192.168.0.110'
+print 'running as ', SERVER_IP
 #
 # Settings for WTForms
 #

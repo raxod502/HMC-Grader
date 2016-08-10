@@ -146,7 +146,8 @@ def requestRecovery():
     else:
       for v in form.errors.values():
         flash(v[0], "error")
-  return render_template("accounts/login.html")
+  return render_template("accounts/login.html", form=SignInForm(), \
+                          active_page="login")
 
 @app.route('/recover/<rid>', methods=['POST', 'GET'])
 def recovery(rid):

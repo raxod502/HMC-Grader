@@ -6,11 +6,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 import socket
 import fcntl
 import struct
-import netifaces as ni
+import netifaces as ni #requires installation of netifaces in the virtual environment
 
-
-ni.ifaddresses('eth0')
-SERVER_IP = ni.ifaddresses('eth0')[2][0]['addr']
+#get computers eth* ip address
+interfaces = ni.interfaces()
+eth_interface = filter(lambda item: item.startswith('eth'),interfaces)[0]
+print eth_interface
+ni.ifaddresses(eth_interface)
+SERVER_IP = ni.ifaddresses(eth_interface)[2][0]['addr']
 print 'running as ', SERVER_IP
 
 #

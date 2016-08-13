@@ -117,27 +117,21 @@ def requestRecovery():
         import smtplib
         from email.mime.text import MIMEText
 
-        messageText = """\
-        <html>
-        <head></head>
-        <body>
-        <p>It looks like you requested a link to reset your password. <a href='
-        """
-        messageText += url_for('recovery', rid=rec.id, _external=True)
-        messageText += """'>Here</a> is the link. If you didn't request this link
-        and you think this has been recieved in error please contact your system
-        administrator.</p>
-        </body>
-        </html>"""
+        messageText = render_template('accounts/passResetEmail.html',
+          recoveryURL= url_for('recovery', rid=rec.id, _external=True))
 
         msg = MIMEText(messageText,'html')
         msg['Subject'] = 'Password reset request'
         msg['From'] = app.config['SYSTEM_EMAIL_ADDRESS']
         msg['To'] = user.email
 
-        s = smtplib.SMTP(app.config['SMTP_SERVER'])
-        s.sendmail(app.config['SYSTEM_EMAIL_ADDRESS'], [user.email], msg.as_string())
-
+        import os
+        SENDMAIL = "/usr/sbin/sendmail" # sendmail location
+        p = os.popen("%s -t -i" % SENDMAIL, "w")
+        p.write(msg.as_string())
+        status = p.close()
+        if status:
+            print "Sendmail exit status", status
         flash("Password reset request sent", "success")
         return redirect(url_for('login'))
       except User.DoesNotExist:
@@ -146,11 +140,13 @@ def requestRecovery():
     else:
       for v in form.errors.values():
         flash(v[0], "error")
+  print request.method
   return render_template("accounts/login.html", form=SignInForm(), \
                           active_page="login")
 
 @app.route('/recover/<rid>', methods=['POST', 'GET'])
 def recovery(rid):
+  print 'entring recovery' 
   from datetime import datetime, timedelta
   try:
     rec = RecoverAccount.objects.get(id=rid)

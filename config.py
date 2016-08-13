@@ -11,7 +11,7 @@ import netifaces as ni #requires installation of netifaces in the virtual enviro
 #get computers eth* ip address
 interfaces = ni.interfaces()
 eth_interface = filter(lambda item: item.startswith('eth'),interfaces)[0]
-print eth_interface
+#get the IP address associated with the first eth* 
 ni.ifaddresses(eth_interface)
 SERVER_IP = ni.ifaddresses(eth_interface)[2][0]['addr']
 print 'running as ', SERVER_IP
@@ -37,8 +37,8 @@ DATABASE_QUERY_TIMEOUT = 0.5
 #
 #Celery config ssettings
 #
-CELERY_BROKER_URL="amqp://admin:grutorsLoveGrading@"+SERVER_IP
-FLOWER_ACCESS_URL="http://127.0.0.1:5555"
+CELERY_BROKER_URL="amqp://admin:grutorsLoveGrading@134.173.43.10"
+FLOWER_ACCESS_URL="http://127.0.0.1:5555"#Errno 111 likely means that celery flower isnt started
 
 #
 # Settings for file storage

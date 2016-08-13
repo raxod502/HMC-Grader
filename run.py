@@ -1,7 +1,7 @@
 from app import app
 from app import db
 from app.structures.models.user import User
-
+import sys
 
 try:
 	User.objects.get(username="admin")
@@ -12,7 +12,16 @@ except User.DoesNotExist:
 	admin.isAdmin = True
 	admin.save()
 
-app.run(host="0.0.0.0", port=5050, debug=False)#change to false
+# command line flag for test mode
+# run $ venv/bin/python run.py -t     to run in debug mode
+# do NOT do this on production server 
+if str(sys.argv[1]) == '-t':
+  print "##### Warning: running in debug mode #####"
+  debug = True
+else:
+  debug = False
+
+app.run(host="0.0.0.0", port=5050, debug=debug)
 
 
 # 

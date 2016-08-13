@@ -11,7 +11,6 @@ from wtforms.validators import Required, EqualTo, Optional
 from wtforms.validators import Length, Email
 
 
-
 # '''
 # Account management forms
 # '''

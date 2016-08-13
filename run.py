@@ -15,7 +15,7 @@ except User.DoesNotExist:
 # command line flag for test mode
 # run $ venv/bin/python run.py -t     to run in debug mode
 # do NOT do this on production server
-if sys.argv.length>0:
+if len(sys.argv)>0:
   if str(sys.argv[1]) == '-t':
     print "##### Warning: running in debug mode #####"
     debug = True

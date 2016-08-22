@@ -21,8 +21,6 @@ if len(sys.argv)>1:
     print "##### Warning: running in debug mode #####"
     debug = True
 
-
-
 app.run(host="0.0.0.0", port=5050, debug=debug)
 
 

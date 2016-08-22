@@ -5,6 +5,13 @@ from itertools import izip
 
 from app.scripts.helpers import *
 
+NAMES = """
+bmehall
+zdodds
+"""
+
+LoNAMES = NAMES.split()
+
 def cleanName(name):
   regex = re.compile('[^a-zA-Z]')
   retName = regex.sub('', name)
@@ -69,7 +76,7 @@ Users should be added as:
 
       if firstLoop:
         firstLoop = False
-        usernameEx = createUsername(firstMidNameClean, lastNameClean)
+        usernameEx = email#createUsername(firstMidNameClean, lastNameClean)
         print "Your settings would result in entries like:"
         print lastName + ", "+ firstMidName + " " + "(" + usernameEx + "): " + email
 

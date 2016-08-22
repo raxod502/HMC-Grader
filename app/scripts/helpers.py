@@ -57,7 +57,7 @@ def addUser(firstName, lastName, email=None, password="asdf"):
   '''Creates a user with a distinct username'''
   #create the user
   u = User()
-  u.username = createUsername(firstName, lastName)
+  u.username = email#createUsername(firstName, lastName)
   u.firstName = firstName
   u.lastName = lastName
   u.email = email
@@ -81,11 +81,11 @@ def addOrGetUser(firstName, lastName, email=None, password="asdf"):
 
 def addOrGetByUsername(username, firstName, lastName, email=None, password="asdf"):
   try:
-    u = User.objects.get(username=username)
+    u = User.objects.get(username=email)#username)
     return u
   except User.DoesNotExist:
     u = User()
-    u.username = username
+    u.username = email#username
     u.firstName = firstName
     u.lastName = lastName
     u.email = email

@@ -14,7 +14,9 @@ eth_interface = filter(lambda item: item.startswith('eth'),interfaces)[0]
 #get the IP address associated with the first eth* 
 ni.ifaddresses(eth_interface)
 SERVER_IP = ni.ifaddresses(eth_interface)[2][0]['addr']
-print 'running as ', SERVER_IP
+
+import getpass
+SERVERUSER = getpass.getuser()
 
 #
 # Settings for WTForms
@@ -43,7 +45,7 @@ FLOWER_ACCESS_URL="http://127.0.0.1:5555"#Errno 111 likely means that celery flo
 #
 # Settings for file storage
 #
-STORAGE_HOME="/home/cssummer16/GraderStorage"
+STORAGE_HOME="/home/"+SERVERUSER+"/GraderStorage"
 
 STORAGE_MOUNTED=False
 
@@ -53,7 +55,7 @@ STORAGE_MOUNTED=False
 
 SYSTEM_EMAIL_ADDRESS = "cloud@cs.hmc.edu"
 
-SMTP_SERVER = "knuth.cs.hmc.edu"
+SMTP_SERVER = "knuth.cs.hmc.edu"#now running locally email setup in accounts.py
 
 #
 # Autograder settings

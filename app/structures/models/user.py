@@ -57,15 +57,38 @@ class User(db.Document):
     out = self.grutorActive() + self.instructorActive()
     out = list(set(out))
     return out
-
+  #replace next three with user active
   def studentActive(self):
-    return [x for x in self.courseStudent if x.isActive]
+    activeCourses = []
+    for course in self.courseStudent:
+      try:
+        if course.isActive:
+          activeCourses.append(course)
+      except:
+        pass
+    return activeCourses#[x for x in self.courseStudent if x.isActive]
 
   def grutorActive(self):
-    return [x for x in self.courseGrutor if x.isActive]
+    activeCourses = []
+    for course in self.courseGrutor:
+      try:
+        if course.isActive:
+          activeCourses.append(course)
+      except:
+        pass
+    return activeCourses
+    #return [x for x in self.courseGrutor if x.isActive]
 
   def instructorActive(self):
-    return [x for x in self.courseInstructor if x.isActive]
+    activeCourses = []
+    for course in self.courseInstructor:
+      try:
+        if course.isActive:
+          activeCourses.append(course)
+      except:
+        pass
+    return activeCourses
+    #return [x for x in self.courseInstructor if x.isActive]
 
   def keyOfUsername(self):
     '''Because keys for dictionaries can't contain some characters we must

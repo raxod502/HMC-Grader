@@ -32,15 +32,19 @@ SECRET_KEY="Grutors <3 SPAM"
 MONGODB_SETTINGS = {'DB': 'submissionsite',
 'username': 'grader',
 'password': 'grutorsLoveGrading',
-'host': SERVER_IP}
+'host': SERVER_IP}#IP address for main server
+
 
 DATABASE_QUERY_TIMEOUT = 0.5
 
 #
 #Celery config ssettings
 #
+
 CELERY_BROKER_URL="amqp://admin:grutorsLoveGrading@134.173.43.10"
 FLOWER_ACCESS_URL="http://127.0.0.1:5555"#Errno 111 likely means that celery flower isnt started
+
+
 
 #
 # Settings for file storage

@@ -5,11 +5,13 @@ from pick import pick
 from shutil import copyfile
 
 
-import picobotgrader as pg
-
 
 SUBMISSIONS_PATH = os.path.join(os.environ['HOME'],"GraderStorage","submissions")
-
+COPY_PATH = os.environ['HOME']
+def removeDuplicates(seq):
+    seen = set()
+    seen_add = seen.add
+    return [x for x in seq if not (x in seen or seen_add(x))]
 
 def getPaths(path):
 	"""wrapper for os.listdir to remove hidden files and turn folder names into full paths"""
@@ -38,25 +40,59 @@ def pickFolder(folders,label):
 	for folder in folders:
 		displayName = os.path.basename(os.path.normpath(folder))
 		displayList.append(displayName)
+
 	folder, index = pick(displayList, label)
+	displayList.pop(0)
 	if index == 0:
-		return folders
+		return displayList,folders
 	else:
-		return [folders[index-1]]
+		return [displayList[index-1]],[folders[index-1]]
 
-src = "/home/cssummer16/GraderStorage/submissions/Fall_15/CS5G/hw0/hw0pr3/ahector/1/hw0pr3.txt"
-target = "/home/cssummer16/GraderStorage/submissions/Fall_15/CS5G/hw0/hw0pr3/.test/hw0pr3.txt"
-copyfile(src, target)
-print pg.runTests(None,"/home/cssummer16/GraderStorage/submissions/Fall_15/CS5G/hw0/hw0pr3/.test/hw0pr3tests.txt"
-,10)
+def createFolder(folderPath, copyPath):
+		newFolderName = os.path.basename(folderPath)
+		newFolderPath = os.path.join(copyPath, newFolderName)
+		if not os.path.exists(newFolderPath):
+			os.makedirs(newFolderPath)
 
-"""
+
+def copyFolder(path,copyPath,selectedFilters):
+	
+	if len(selectedFilters)==0:
+		print path,copyPath
+		return 
+	else:
+
+		currentFilter = set(selectedFilters.pop(0))
+		availableFolders = set(map(os.path.basename, getPaths(path)))
+		filteredFolderNames = list(currentFilter.intersection(availableFolders))
+		print '#######', filteredFolderNames,'#######',currentFilter,'#######',filteredFolderNames
+
+		for folderName in filteredFolderNames:
+			newPath = os.path.join(path, folderName)
+			newCopyPath = os.path.join(copyPath, folderName)
+			copyFolder(newPath, newCopyPath, selectedFilters)
+
+
+#src = "/home/cssummer16/GraderStorage/submissions/Fall_15/CS5G/hw0/hw0pr3/ahector/1/hw0pr3.txt"
+#target = "/home/cssummer16/GraderStorage/submissions/Fall_15/CS5G/hw0/hw0pr3/.test/hw0pr3.txt"
+#copyfile(src, target)
+#print pg.runTests(None,"/home/cssummer16/GraderStorage/submissions/Fall_15/CS5G/hw0/hw0pr3/.test/hw0pr3tests.txt"
+#,10)
+
 filters = ["Semester", "Class", "Assignment", "Problem", "Student"]
 subFolders = getPaths(SUBMISSIONS_PATH)
+selectedFilters = []
 for filterName in filters:
-	filteredList = pickFolder(subFolders,"Choose "+filterName)
+	displayList,filteredList = pickFolder(subFolders,"Choose " + filterName)
 	subFolders = getSubFolders(filteredList)
+	selectedFilters.append(displayList)
 
+#selectedFilters is in the form [[fall2016], [CS5,CS60]....]
+
+foldersList = []
+copyFolder(SUBMISSIONS_PATH,COPY_PATH,selectedFilters)
+
+"""
 paths = []
 for submission in filteredList:
 	mostRecent = max(os.listdir(submission))
@@ -68,5 +104,4 @@ for submission in paths:
 		print pg.runTests(None,submission+"/hw0pr3.txt",10)
 	except:
 		print 'failed to find test'
-
 """

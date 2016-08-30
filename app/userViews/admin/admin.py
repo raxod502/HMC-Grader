@@ -47,7 +47,11 @@ def adminIndex():
   import urllib2,json
 
   if not app.config['FLOWER_ACCESS_URL'] == None:
-    resp = urllib2.urlopen(app.config['FLOWER_ACCESS_URL'] + '/api/workers')
+    print app.config['FLOWER_ACCESS_URL']
+    proxy_support = urllib2.ProxyHandler({}) ##following lines are used to fix connection refused
+    opener = urllib2.build_opener(proxy_support) #added this line
+    urllib2.install_opener(opener)
+    resp = urllib2.urlopen(app.config['FLOWER_ACCESS_URL'] + '/api/workers') #was resp = urllib2.urlopen(app.config['FLOWER_ACCESS_URL'] + '/api/workers')
     workers = json.loads(resp.read())
   else:
     workers = {}

@@ -5,4 +5,3 @@ topleftcorner: 1,1
 toprightcorner: 23,1
 bottomrightcorner: 23,23
 middle: 10, 10
-random: random

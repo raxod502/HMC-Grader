@@ -1,5 +1,5 @@
 mazeMap
-hw0pr9.txt
+hw0pr4.txt
 ###
 topleftcorner: 1,1
 toprightcorner: 23,1

@@ -1,5 +1,5 @@
 diamondMap
-hw0pr9.txt
+hw0pr5.txt
 ###
 center: 12,12
 northCorner: 1,12

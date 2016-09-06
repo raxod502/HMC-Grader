@@ -66,7 +66,10 @@ def regradeSubmission(submission):
   submission.grade.scores = {}
   submission.status = SUBMISSION_UNGRADED
   submission.save()
-  gradeSubmission(submission.problem.id, submission.submitter.id, submission.problem.getSubmissionInfo(submission)[1])
+  x = submission.problem.getSubmissionInfo(submission)
+  print "submission.problem.getSubmissionInfo(submission) is ", x
+  print "submission.problem.getSubmissionInfo(submission)[1] is ", x[1]
+  gradeSubmission(submission.problem.id, submission.submitter.id, x[1])
 
 @celery.task()
 def gradeSubmission(pid, uid, subnum):

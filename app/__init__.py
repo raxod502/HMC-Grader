@@ -6,7 +6,7 @@ from flask.ext.login import LoginManager, current_user
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.markdown import Markdown
-
+from raven.contrib.flask import Sentry
 #import for celery task manager
 from helpers.celeryconfig import make_celery
 
@@ -14,7 +14,7 @@ from markdown.extensions.attr_list import AttrListExtension
 import bleach, re
 
 app = Flask(__name__)
-
+sentry = Sentry(app, dsn='https://2ea1b692a6dd4a8a88b1d36dc24d58c8:d8818bcaa2da47a69caaf6f9d19702e6@sentry.io/97156')#move dsn to config.py
 #Load the configuration file config.py
 app.config.from_object('config')
 

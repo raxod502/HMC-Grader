@@ -13,6 +13,8 @@ from helpers.celeryconfig import make_celery
 from markdown.extensions.attr_list import AttrListExtension
 import bleach, re
 
+#define a custom version of flask where template errors are ignored
+
 app = Flask(__name__)
 sentry = Sentry(app, dsn='https://2ea1b692a6dd4a8a88b1d36dc24d58c8:d8818bcaa2da47a69caaf6f9d19702e6@sentry.io/97156')#move dsn to config.py
 #Load the configuration file config.py

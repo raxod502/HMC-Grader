@@ -244,7 +244,7 @@ class Problem(db.Document):
       print "key,vaLue: " ,key,value
     for key, value in self.studentSubmissions.iteritems():
       if sub in value.submissions:
-        return User.objects.get(username=key), (value.submissions.index(sub)+1)
+        return User.objects.get(username=key.replace("&dot;",".")), (value.submissions.index(sub)+1)
     return None, -1
 
 

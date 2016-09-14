@@ -77,7 +77,6 @@ def gradeSubmission(pid, uid, subnum):
     problem = Problem.objects.get(id=pid)
     course, assignment = problem.getParents()
 
-
     #First check if tests have even been assigned
     if len(problem.testfiles) == 0:
       #If there are none we are done

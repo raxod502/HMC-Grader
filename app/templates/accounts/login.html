@@ -31,8 +31,8 @@ Login
                 <p class="help-block">{{ form.remember.errors[0] }}</p>
             </div>
             <div class="col-sm-2">
-                <div>Forgot your password? Email <tt>bmehall@hmc.edu</tt> and or <tt>dodds@cs.hmc.edu</tt>.</div>
-                <!--<a style="cursor:pointer;" onClick="submitForm('{{url_for('requestRecovery')}}')" >forgot my password</a>-->
+                <!--<div>Forgot your password? Email <tt>bmehall@hmc.edu</tt> and or <tt>dodds@cs.hmc.edu</tt>.</div>-->
+                <a style="cursor:pointer;" onClick="submitForm('{{url_for('requestRecovery')}}')" >forgot my password</a>
             </div>
             <button onClick="submitForm('{{url_for('login')}}')" class="btn btn-primary" value="in" name="btn">Sign In</button><br>
             

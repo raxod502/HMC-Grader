@@ -1,0 +1,73 @@
+---
+- hosts: flower
+  user: server
+  become: yes
+  become_method: sudo
+  roles:
+  - nginx
+  - gunicorn
+  - mongo
+
+  tasks:
+  - name: set permissions on web root
+    file:
+      path: /var/www/
+      mode: 0775
+      state: directory
+      owner: www-data
+      group: www-data
+      recurse: yes 
+
+  - name: update git repo
+    git:
+      repo: https://github.com/CSGreater-Developers/HMC-Grader.git
+      dest: /var/www/code
+      force: yes
+
+  - name: install packages
+    action: apt pkg={{item}} state=latest update_cache=yes
+    with_items:
+      - build-essential
+      - git-core
+      - vim
+      - nano
+      - python2.7-dev
+      - python-pip
+      - libevent-dev
+
+  - name: update pip using pip
+    action: pip name=pip state=latest
+
+  - name: install server python packages
+    action: pip virtualenv=/var/www/venv name={{item}} state=latest
+    with_items:
+      - flask
+      - flask-script
+      - flask-bootstrap
+      - flask-login
+      - flask-markdown
+      - mongoengine
+      - pymongo
+      - flask-mongoengine
+      - WTForms
+      - python-dateutil
+      - celery
+      - psutil
+      - python-magic
+      - bleach
+      - gevent
+      - flower
+      - raven[flask]
+
+  - name: create config.py
+    template:
+      src: config.py
+      dest: /var/www/code/config.py
+
+
+
+
+
+
+
+

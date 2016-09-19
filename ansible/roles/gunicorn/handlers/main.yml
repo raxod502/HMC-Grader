@@ -1,0 +1,6 @@
+---
+- name: start gunicorn service
+  service: 
+    name: gunicorn.service
+    state: reloaded 
+    enabled: yes

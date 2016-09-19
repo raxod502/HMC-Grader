@@ -467,10 +467,10 @@ function preview(filename) {
       console.log(data);
       if (data.majorType == 'text') {
         if (data.minorType == 'plain'){
-          $("#previewArea").append("<pre style='text-align:left'id='previewText'></pre>");
+          $("#previewArea").append("<pre style='text-align:left; white-space: pre-wrap;'id='previewText'></pre>");
           $("#previewText").text(data.content);
         } else {
-          $("#previewArea").append("<pre style='text-align:left'id='previewText'></pre>");
+          $("#previewArea").append("<pre style='text-align:left; white-space: pre-wrap;'id='previewText'></pre>");
           $("#previewText").text(data.content);
           $("#previewText").each(function(i, e) {hljs.highlightBlock(e)});
         }

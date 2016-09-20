@@ -201,7 +201,11 @@ class Problem(db.Document):
     if self.getSubmissionNumber(user) == 0:
       return None
     else:
-      return self.getSubmission(user, self.getSubmissionNumber(user))
+      latestSubmission = self.getSubmission(user, self.getSubmissionNumber(user))
+      if isinstance(latestSubmission, Submission):
+        return latestSubmission
+      else:
+        return None
 
   def getParents(self):
     a = AssignmentGroup.objects.get(problems=self)

@@ -152,9 +152,9 @@ def recovery(rid):
     rec = RecoverAccount.objects.get(id=rid)
     diff = datetime.utcnow() - rec.created
 
-    if diff > timedelta(hours=2):
-      flash("This recovery ticket has expired")
-      return redirect(url_for('login'))
+    #if diff > timedelta(hours=2):
+     # flash("This recovery ticket has expired")
+      #return redirect(url_for('login'))
 
     if request.method == 'POST':
       form = ResetPasswordForm(request.form)

@@ -120,7 +120,8 @@ Edit Course: {{course.name}}
         <tbody class="list">
           {% for s in students %}
           <tr id="{{s.username}}_student">
-          <td class="name">{{s.username}} {% if course.anonymousGrading %}({{course.getIdentifier(s.username)}}){% endif %}</td>
+          <!--<td class="name">{{s.username}} {% if course.anonymousGrading %}({{course.getIdentifier(s.username)}}){% endif %}</td>-->
+          <td class="name">{{s.username}} </td>
           <td>
             <a href="{{url_for('instructorViewStudent', cid=course.id, uid=s.id)}}" class="btn btn-primary btn-xs">View</a>
           </td>

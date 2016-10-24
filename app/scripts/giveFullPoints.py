@@ -31,9 +31,9 @@ if __name__ == "__main__":
 
   problem = assignment.problems[index]
 
-  comments = "TEST 42"
+  comments = "THANKS FOR ADVENTURING!"
   section = "Points"
-  score = 42
+  score = 5
 
   students = User.objects.filter(courseStudent=course)
 

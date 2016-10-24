@@ -12,12 +12,7 @@ def getStudentAssignmentScores(course, user):
       sub = p.getLatestSubmission(user)
       if not sub == None:
         gradeData = {}
-        try:
-          gradeData['rawTotalScore'] = sub.grade.totalScore()
-        except:
-          gradeData['rawTotalScore'] = 'error'
-
-
+        gradeData['rawTotalScore'] = sub.grade.totalScore()
         gradeData['timeDelta'] = p.duedate - sub.submissionTime
         gradeData['isLate'] = sub.isLate
         gradeData['maxScore'] = p.totalPoints()

@@ -244,8 +244,6 @@ class Problem(db.Document):
 
   def getSubmissionInfo(self, sub):
     I = self.studentSubmissions.iteritems()
-    for key, value in I:
-      print "key,vaLue: " ,key,value
     for key, value in self.studentSubmissions.iteritems():
       if sub in value.submissions:
         return User.objects.get(username=key.replace("&dot;",".")), (value.submissions.index(sub)+1)

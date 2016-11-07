@@ -11,7 +11,7 @@ import netifaces as ni #requires installation of netifaces in the virtual enviro
 #get computers eth* ip address
 interfaces = ni.interfaces()
 eth_interface = filter(lambda item: item.startswith('eth'),interfaces)[0]
-#get the IP address associated with the first eth* 
+#get the IP address associated with the first eth*
 ni.ifaddresses(eth_interface)
 SERVER_IP = ni.ifaddresses(eth_interface)[2][0]['addr']
 
@@ -54,7 +54,7 @@ STORAGE_HOME="/home/"+SERVERUSER+"/GraderStorage"
 STORAGE_MOUNTED=False
 
 #
-# Email settings 
+# Email settings
 #
 
 SYSTEM_EMAIL_ADDRESS = "cloud@cs.hmc.edu"

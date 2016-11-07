@@ -25,7 +25,7 @@ if __name__ == "__main__":
   app.run(host="0.0.0.0", port=5050, debug=debug)
 
 
-  # 
+  #
   # command to kill the network connection
   # sudo fuser 5050/tcp -k
   # this is some kind of kill command...

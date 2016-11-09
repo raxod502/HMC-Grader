@@ -47,6 +47,7 @@ class Command(object):
         timeout = False
         if thread.is_alive():
             timeout = True
-            self.process.terminate()
-            thread.join()
+            if self.process:
+                self.process.terminate()
+                thread.join()
         return timeout, self.output, self.error

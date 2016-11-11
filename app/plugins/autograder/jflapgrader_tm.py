@@ -5,6 +5,8 @@ import xml.parsers.expat
 import argparse
 import sys
 
+import app.plugins.autograder.newjflapgrader as newjflapgrader
+
 PLUGIN_NAME = "Jflap (Turing Machine)"
 
 of = None  # global output file name
@@ -627,7 +629,7 @@ def testFileParser(filename):
 
 from os.path import splitext
 
-def runTests(cmdPrefix, testFile, timeLimit):
+def currentRunTests(cmdPrefix, testFile, timeLimit):
   #The students file is the basename of the test file with the jflap extension
   studentFile = splitext(testFile)[0] + '.jff'
   try:
@@ -735,6 +737,43 @@ def runTests(cmdPrefix, testFile, timeLimit):
     summary['rawErr'] = str(tb)
     summary['timeout'] = False
     return summary, {}
+
+def runTests(cmdPrefix, testFile, timeLimit):
+    # Get the result dictionaries from both systems.
+    print("[JFLAP] Calling into the current testing system...")
+    currentSummary, currentFailedTests = currentRunTests(cmdPrefix, testFile, timeLimit)
+    print("[JFLAP] Calling into the new testing system...")
+    newSummary, newFailedTests = newjflapgrader.runTests(cmdPrefix, testFile, timeLimit)
+    # Get the total number of tests from both systems.
+    currentTotalTests = currentSummary["totalTests"]
+    newTotalTests = newSummary["totalTests"]
+    # Get the names of the failed tests from both systems.
+    currentFailedTestNames = list(currentFailedTests)
+    newFailedTestNames = list(newFailedTests)
+    # Check if there is a substantial difference between the results
+    # obtained by the two systems.
+    agree = (currentTotalTests == newTotalTests and
+             sorted(currentFailedTestNames, key=newjflapgrader.len_lex) ==
+             sorted(newFailedTestNames, key=newjflapgrader.len_lex))
+    # TODO(Radon): Replace these print statements with appropriate
+    # logging calls.
+    print("[JFLAP] Current and new JFLAP testers {} for"
+          " file '{}'{}"
+          .format("agree" if agree else "disagree",
+                  testFile,
+                  "." if agree else "!"))
+    print("[JFLAP] --> Current tester")
+    print("[JFLAP] summary = {}" .format(currentSummary))
+    print("[JFLAP] failedTests = {}" .format(currentFailedTests))
+    print("[JFLAP] --> New tester")
+    print("[JFLAP] summary = {}" .format(newSummary))
+    print("[JFLAP] failedTests = {}" .format(newFailedTests))
+    # Defer to the current system.
+    return currentSummary, currentFailedTests
+
+if __name__ == "__main__":
+    for filename in sys.argv[1:]:
+        runTests([], filename, None)
 
 #
 # Below is the remains of the old script. It is left here for completeness if

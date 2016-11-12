@@ -17,6 +17,27 @@ next = 1                # display next instruction?
 register_display = 0    # display the registers graphically?
 memory_display = 0      # display the memory contents graphically?
 
+## Automated running of test cases
+
+test_case = None
+test_case_is_exhaustive = None
+input_index = 0
+output_index = 0
+
+## Exception classes
+
+class HMMMTestFailure(Exception):
+    """Exception thrown when a HMMM program fails a test case passed using
+    the --test-case command-line parameter.
+    """
+    pass
+
+
+class HMMMTestSuccess(Exception):
+    """Exception thrown when it has been determined that a HMMM program
+    has passed a test case and execution may be aborted immediately."""
+    pass
+
 # translation dictionaries
 
 #
@@ -161,7 +182,7 @@ def simulationError(message):
     """Issue an error message and halt program execution."""
     print("\n\n" + message)
     print("Halting program execution.")
-    sys.exit()
+    sys.exit(1)
 
 def run() :
     global pc,  memory, loop_check, lpc, codesize
@@ -176,10 +197,10 @@ def run() :
             execute(ir)         # execute instruction
         except KeyboardInterrupt :
             print("\n\nInterrupted by user, halting program execution...\n")
-            sys.exit()
+            sys.exit(1)
         except EOFError :
             print("\n\nEnd of input, halting program execution...\n")
-            sys.exit()
+            sys.exit(1)
 
 def checkOverflow(register, ir, lpc):
 
@@ -192,7 +213,7 @@ def checkOverflow(register, ir, lpc):
         simulationError("Integer Overflow Error: Result was larger than 16 bits.\n")
 
 def execute(ir) :
-    global memory, register, pc, debug, ask, lpc
+    global memory, register, pc, debug, ask, lpc, input_index, output_index
 
     if ir == "" or valid_integer(ir):
         simulationError("Bad instruction at memory location " + lpc)
@@ -242,7 +263,7 @@ def execute(ir) :
                     print("")
                 elif command == "q" or command == "quit" :
                     print("Aborting Program...")
-                    sys.exit()
+                    sys.exit(1)
                 elif command == "r" or command == "run" :
                     print("Continuing program...")
                     debug = 0
@@ -282,19 +303,51 @@ def execute(ir) :
             # in both situations!
             pass
 
-        UserInput = input("Enter number: ")
-        while UserInput == "" \
-          or  (not (UserInput.isdigit() \
-            or (UserInput[0] == '-' and UserInput[1:].isdigit()))) \
-          or not valid_integer(int(UserInput)):
-            print("\n\nIllegal input: number must be in [-32768,32767]")
-            UserInput = input("Enter number (q to quit): ")
-            if UserInput == "q" :
-                sys.exit()
-        register[args[0]] = int(UserInput)
+        if test_case:
+            try:
+                # Get the next input.
+                inputs = test_case[0]
+                UserInput = inputs[input_index]
+                input_index += 1
+            except IndexError:
+                error = "program called 'read' after input was exhausted"
+                raise HMMMTestFailure(error)
+            print("read {}".format(UserInput))
+        else:
+            UserInput = input("Enter number: ")
+            while UserInput == "" \
+              or  (not (UserInput.isdigit() \
+                or (UserInput[0] == '-' and UserInput[1:].isdigit()))) \
+              or not valid_integer(int(UserInput)):
+                print("\n\nIllegal input: number must be in [-32768,32767]")
+                UserInput = input("Enter number (q to quit): ")
+                if UserInput == "q" :
+                    sys.exit(1)
+            UserInput = int(UserInput)
+        register[args[0]] = UserInput
 
     elif opcode == "write":
-        print(register[args[0]])
+        output = register[args[0]]
+        print(output)
+        if test_case:
+            try:
+                # Check the next output.
+                outputs = test_case[1]
+                if outputs[output_index] not in (output, Ellipsis):
+                    error = ("program output '{}' when '{}' was expected"
+                             .format(output, outputs[output_index]))
+                    raise HMMMTestFailure(error)
+                output_index += 1
+            except IndexError:
+                error = ("program output '{}' when no more output was expected"
+                         .format(output))
+                raise HMMMTestFailure(error)
+            if output_index == len(outputs) and not test_case_is_exhaustive:
+                # If we've reached the end of the expected output, and
+                # any amount of additional output would be allowable
+                # (i.e. not test_case_is_exhaustive) then everything
+                # is OK.
+                raise HMMMTestSuccess
 
     elif opcode == "jumpi":
         pc = register[args[0]]
@@ -413,7 +466,7 @@ def readfile(filename) :
         f = open(filename,"r")    # file with machine code
     except:
         print("Cannot open file: ", filename)
-        sys.exit()
+        sys.exit(1)
     address = 0
     codesize = 0
     while 1 :
@@ -421,22 +474,25 @@ def readfile(filename) :
         for c in line:
             if c not in "01 \n":
                 print("\nERROR: Not a valid binary file.\n")
-                sys.exit()
+                sys.exit(1)
         if line == "": break
         memory[address] = line
         address = address + 1
         codesize = codesize + 1
     if codesize == 0:
         print("\nERROR: Empty file.\n")
-        sys.exit()
+        sys.exit(1)
     f.close()
 
+
 def main ( argList=None ) :
-    global debug, register_display, memory_display, visualize
+    global debug, register_display, memory_display, visualize, \
+        test_case, test_case_is_exhaustive
 
     # argument handling:
     fname = 0
     filename = "out.b"
+    accepting_test_case = False
     if not argList:
         argList = []
 
@@ -445,6 +501,27 @@ def main ( argList=None ) :
             filename = arg
             fname = 0
             continue
+        elif accepting_test_case:
+            if test_case:
+                print("hmmmSimulator: more than one test case specified")
+                sys.exit(1)
+            test_case, test_case_is_exhaustive = eval(arg)
+            if not test_case[1] and not test_case_is_exhaustive:
+                # Vacuous test case: no expected output; because the
+                # test case is not exhaustive, nothing that the
+                # program could print could fail the test case; and
+                # determining whether the input is consumed is
+                # equivalent to the halting problem for a possibly
+                # non-terminating program (which is what is generally
+                # indicated by a non-exhaustive test). We can't do
+                # anything useful, so just pass the test.
+                print("Warning: vacuous test case.")
+                print("[[ test case passed ]]")
+                sys.exit(0)
+            accepting_test_case = False
+        elif arg == "--test-case"
+            accepting_test_case = True
+            debug = 2
         elif arg[:2] == "-f" :
             if arg[2:] :
                     filename = arg[2:]
@@ -457,16 +534,23 @@ def main ( argList=None ) :
             debug = 2
         elif arg == "-r" or arg == "-mr" or arg == "-rm" or arg == "--register-display" :
             register_display = 1
-        elif arg == "-h" or arg == "--help" :
+        else:
+            if arg not in ("-h", "--help"):
+                print("error: unrecognized argument: {}" .format(arg))
             print("hmmmSimulator.py")
             print("  Python program for simulating a Harvey Mudd Miniature Machine.")
             print("Takes files compiled with hmmAssembler.py as input.")
             print("  Options:")
-            print("    -d, --debug     debugging mode")
-            print("    -f filename     use filename as the input file")
-            print("    -h, --help      print this help message")
-            print("    -n, --no-debug  do not prompt for debugging mode\n")
-            sys.exit()
+            print("    -d, --debug               debugging mode")
+            print("    -f filename               use filename as the input file")
+            print("    -h, --help                print this help message")
+            print("    -n, --no-debug            do not prompt for debugging mode\n")
+            print("    --test-case <test-case>   run the provided test case")
+            print("  Warning: --test-case is *not* validated, use hmmmgrader.py for validation")
+            if arg in ("-h", "--help"):
+                sys.exit(0)
+            else:
+                sys.exit(1)
 
     if filename == "" :
         filename = input("Enter binary input file name: ")
@@ -490,15 +574,55 @@ def main ( argList=None ) :
 
     try :
         run()
+        inputs, outputs = test_case
+        if input_index < len(inputs):
+            remaining = inputs[input_index:]
+            if len(remaining) > 1:
+                error = ("inputs {} were not consumed by the program"
+                         .format(remaining))
+            else:
+                error = ("input '{}' was not consumed by the program"
+                         .format(remaining[0]))
+            raise HMMMTestFailure(error)
+        if output_index < len(outputs):
+            remaining = outputs[output_index:]
+            all_ellipses = True
+            for output in remaining:
+                if output is not Ellipsis:
+                    all_ellipses = False
+                    break
+            if len(remaining) > 1:
+                if all_ellipses:
+                    error = ("expected at least {} more outputs from the program"
+                             .format(len(remaining)))
+                else:
+                    error = ("expected outputs {} were not produced by the"
+                             " program"
+                             .format(remaining))
+            else:
+                if all_ellipses:
+                    error = "expected at least one more output from the program"
+                else:
+                    error = ("expected output '{}' was not produced by the"
+                             " program"
+                             .format(remaining[0]))
+            raise HMMMTestFailure(error)
     except KeyboardInterrupt :
         print("\n\nInterrupted by user, halting program execution...\n")
-        sys.exit()
+        sys.exit(1)
     except EOFError :
         print("\n\nEnd of input, halting program execution...\n")
-        sys.exit()
+        sys.exit(1)
+    except HMMMTestFailure as e:
+        print("[[ test case failed: {} ]]".format(str(e)))
+        sys.exit(1)
+    except HMMMTestSuccess:
+        pass
+    print("[[ test case passed ]]")
+    sys.exit(0)
 
 # When this module is executed from the command line, as in "python filename.py"
 # __name__ will be __main__, so main () will be executed.
 # However, when this module is imported into the python environment __name__ will
 # be something else, so main() will not be executed automatically
-if __name__ == "__main__" : main ()
+if __name__ == "__main__" : main(sys.argv[1:])

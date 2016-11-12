@@ -725,8 +725,8 @@ def run_tests(command_prefix, test_file, time_limit):
                     # (because if you can put the name of the JFLAP
                     # file in the test file, you can just name the
                     # test file instead).
-                    error = ("Test file '{}' does not match of the available"
-                             " JFLAP files, which are: {}"
+                    error = ("Test file '{}' does not match any of the"
+                             " available JFLAP files, which are: {}"
                              .format(test_filename,
                                      ", ".join("'{}'".format(file)
                                                for file in jflap_filenames)))

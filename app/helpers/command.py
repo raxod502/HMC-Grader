@@ -25,8 +25,13 @@ class Command(object):
             command = shlex.split(command)
         self.command = command
 
-    def run(self, timeout=None, **kwargs):
-        """ Run a command then return: (returncode, output, error). """
+    def run(self, timeout=None, compatibility=True, **kwargs):
+        """Run a command.
+
+        If compatibility mode is on (default), then return (timeout,
+        output, error). Else return (returncode, output, error,
+        timeout).
+        """
         def target(**kwargs):
             try:
                 self.process = subprocess.Popen(self.command, **kwargs)
@@ -50,4 +55,7 @@ class Command(object):
             if self.process:
                 self.process.terminate()
                 thread.join()
-        return timeout, self.output, self.error
+        if compatibility:
+            return timeout, self.output, self.error
+        else:
+            return self.returncode, self.output, self.error, timeout

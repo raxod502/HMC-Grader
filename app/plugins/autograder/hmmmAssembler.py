@@ -315,40 +315,55 @@ def main(programAsString = None) :
     oname = 0
     filename = ""
     outputname = "out.b"
+    program = None
+    receiving_program_text = False
 
     # here, we check in case there were command-line inputs
     if not programAsString:
         for arg in sys.argv:
-            if fname:
+            if receiving_program_text:
+                program = []
+                for line in arg.splitlines():
+                    line = line.strip()
+                    try:
+                        line = line[:line.find("#")]
+                    except ValueError:
+                        pass
+                    if line:
+                        program.append(line)
+                receiving_program_text = False
+            elif fname:
                 filename = arg
                 fname = 0
-                continue
-            if oname:
+            elif oname:
                 outputname = arg
                 oname = 0
-                continue
-            if arg[:2] == "-f":
+            elif arg == "--program-text":
+                receiving_program_text = True
+            elif arg[:2] == "-f":
                 if arg[2:]:
                         filename = arg[2:]
                 else: fname = 1
-            if arg[:2] == "-o":
+            elif arg[:2] == "-o":
                 if arg[2:]:
                         outputname = arg[2:]
                 else: oname = 1
-            if arg == "-h" or arg == "--help":
+            elif arg == "-h" or arg == "--help":
                 print("hmmmAssembler.py")
                 print("  Python program for assembling Harvey Mudd Miniature Machine code.")
                 print("  Options:")
-                print("    -f filename     use filename as the input file")
-                print("    -o filename     use filename as the output file")
-                print("    -h, --help        print this help message\n")
+                print("    -f filename                   use filename as the input file")
+                print("    -o filename                   use filename as the output file")
+                print("    --program-text program-text   pass the program text as an argument")
+                print("    -h, --help                    print this help message")
                 sys.exit()
 
-        # the optional input prompt
-        if filename == "":
-            filename = input("Enter input file name: ")
-        # to read from stdin instead we would use:  program = sys.stdin.readlines()
-        program = readfile(filename)
+        if not program:
+            # the optional input prompt
+            if filename == "":
+                filename = input("Enter input file name: ")
+            # to read from stdin instead we would use:  program = sys.stdin.readlines()
+            program = readfile(filename)
         # the optional output prompt
         if outputname == "":
             outputname = input("Enter output file name: ")
@@ -395,4 +410,5 @@ def main(programAsString = None) :
 # However, when this module is imported into the python environment __name__ will
 # be something else, so main() will not be executed automatically
 if __name__ == "__main__" :
-    main ()
+    if main():
+        sys.exit(1)

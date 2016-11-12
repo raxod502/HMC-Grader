@@ -1,13 +1,4 @@
 # !/usr/bin/env python3
-#
-# $Id: hmmmAssembler.py,v 1.4 2007/10/08 08:10:11 geoff Exp $
-#
-# hmmmAssembler.py
-# Ran Libeskind-Hadas, 2006
-# modified by Peter Mawhorter, June 2006
-# Extensively modified by Geoff Kuenning, October 2007
-# slight modification by Kaya Woodall, June 2012
-# converted to Python3 by Trevor Fung, Summer 2016
 
 import sys, string, re, textwrap
 from binary import *
@@ -405,27 +396,3 @@ def main(programAsString = None) :
 # be something else, so main() will not be executed automatically
 if __name__ == "__main__" :
     main ()
-
-# $Log: hmmmAssembler.py,v $
-# Revision 1.5 2012/06/18 1:52:30 kaya
-# Rewrote HMMM commands by mapping new commands to old. New shortcuts can be found on the HMMM Directory page.
-# Included dictionary so the program can be run in old or new mode, as internal commands
-# remain unaltered.
-#
-# Revision 1.4  2007/10/08 08:10:11  geoff
-# Add support for the neg instruction.  This required generalizing the
-# "z" operand specifier.  Also get rid of the obsolete version of the
-# opcodes table, which I neglected to delete earlier.
-#
-# Revision 1.3  2007/10/07 09:18:58  geoff
-# Fix the masks on mov and data to correctly reflect the format of those
-# two pseudo-operations.
-#
-# Revision 1.2  2007/10/07 07:47:14  geoff
-# Major changes to improve the instruction architecture.  Unfortunately,
-# as part of these changes I converted all tabs to blanks, so there are
-# spurious diffs.  Modifications include:
-#
-# 1. Better table-driven encoding unified with simulator encoding tables.
-# 2. Major rewrite of assembly code to use tables rather than if/elif.
-#

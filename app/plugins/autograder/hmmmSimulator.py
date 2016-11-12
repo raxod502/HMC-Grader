@@ -1,12 +1,4 @@
 # !/usr/bin/env python3
-# hmmmSimulator.py
-#
-# $Id: hmmmSimulator.py,v 1.4 2007/10/08 08:10:12 geoff Exp $
-#
-# Ran Libeskind-Hadas, 2006
-# modified by Peter Mawhorter, June 2006
-# extensively modified by Geoff Kuenning, October 2007
-# converted to Python3 by Trevor Fung, Summer 2016
 
 import sys, string, re
 import importlib
@@ -510,23 +502,3 @@ def main ( argList=None ) :
 # However, when this module is imported into the python environment __name__ will
 # be something else, so main() will not be executed automatically
 if __name__ == "__main__" : main ()
-
-# $Log: hmmmSimulator.py,v $
-# Revision 1.4  2007/10/08 08:10:12  geoff
-# Add support for the neg instruction.
-#
-# Revision 1.3  2007/10/07 09:18:58  geoff
-# Fix the masks on mov and data to correctly reflect the format of those
-# two pseudo-operations.
-#
-# Revision 1.2  2007/10/07 07:47:14  geoff
-# Major changes to improve the instruction architecture.  Unfortunately,
-# as part of these changes I converted all tabs to blanks, so there are
-# spurious diffs.  Modifications include:
-#
-# 1. Table-driven decoding unified with assembler encoding tables.
-# 2. Error-checking and error-reporting functions to simplify the code.
-# 3. Complete rewrite/replacement of disassembly/decoding.
-# 4. Execute function rewritten to simplify structure and reflect new
-#    architecture.
-#

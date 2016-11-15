@@ -396,7 +396,8 @@ print(repr(programs))\
 def testFileParser(filename):
     """Parses the provided test file, returning a list of test names.
 
-    See the user manual for more information about this API function."""
+    See the user manual for more information about this API function.
+    """
     with open(filename) as f:
         lines = f.read().splitlines()
         test_names = set()  # discard duplicate test cases

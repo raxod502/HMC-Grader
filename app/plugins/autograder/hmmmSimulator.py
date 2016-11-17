@@ -519,7 +519,7 @@ def main ( argList=None ) :
                 print("[[ test case passed ]]")
                 sys.exit(0)
             accepting_test_case = False
-        elif arg == "--test-case"
+        elif arg == "--test-case":
             accepting_test_case = True
             debug = 2
         elif arg[:2] == "-f" :

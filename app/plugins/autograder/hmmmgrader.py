@@ -429,6 +429,11 @@ def run_tests(command_prefix, test_file, time_limit):
             script_directory = os.path.split(__file__)[0]
             hmmmAssembler = os.path.join(script_directory, "hmmmAssembler.py")
             hmmmSimulator = os.path.join(script_directory, "hmmmSimulator.py")
+            # Normalize the paths to the assembler and simulator,
+            # since our working directory could be somewhere totally
+            # unrelated when we invoke them.
+            hmmmAssembler = os.path.realpath(hmmmAssembler)
+            hmmmSimulator = os.path.realpath(hmmmSimulator)
             # Get the path to the test file folder.
             test_directory, test_filename = os.path.split(test_file)
             # If the test file is specified only as a filename, then

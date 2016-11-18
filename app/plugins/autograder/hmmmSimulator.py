@@ -574,39 +574,40 @@ def main ( argList=None ) :
 
     try :
         run()
-        inputs, outputs = test_case
-        if input_index < len(inputs):
-            remaining = inputs[input_index:]
-            if len(remaining) > 1:
-                error = ("inputs {} were not consumed by the program"
-                         .format(remaining))
-            else:
-                error = ("input '{}' was not consumed by the program"
-                         .format(remaining[0]))
-            raise HMMMTestFailure(error)
-        if output_index < len(outputs):
-            remaining = outputs[output_index:]
-            all_ellipses = True
-            for output in remaining:
-                if output is not Ellipsis:
-                    all_ellipses = False
-                    break
-            if len(remaining) > 1:
-                if all_ellipses:
-                    error = ("expected at least {} more outputs from the program"
-                             .format(len(remaining)))
-                else:
-                    error = ("expected outputs {} were not produced by the"
-                             " program"
+        if test_case:
+            inputs, outputs = test_case
+            if input_index < len(inputs):
+                remaining = inputs[input_index:]
+                if len(remaining) > 1:
+                    error = ("inputs {} were not consumed by the program"
                              .format(remaining))
-            else:
-                if all_ellipses:
-                    error = "expected at least one more output from the program"
                 else:
-                    error = ("expected output '{}' was not produced by the"
-                             " program"
+                    error = ("input '{}' was not consumed by the program"
                              .format(remaining[0]))
-            raise HMMMTestFailure(error)
+                raise HMMMTestFailure(error)
+            if output_index < len(outputs):
+                remaining = outputs[output_index:]
+                all_ellipses = True
+                for output in remaining:
+                    if output is not Ellipsis:
+                        all_ellipses = False
+                        break
+                if len(remaining) > 1:
+                    if all_ellipses:
+                        error = ("expected at least {} more outputs from the program"
+                                 .format(len(remaining)))
+                    else:
+                        error = ("expected outputs {} were not produced by the"
+                                 " program"
+                                 .format(remaining))
+                else:
+                    if all_ellipses:
+                        error = "expected at least one more output from the program"
+                    else:
+                        error = ("expected output '{}' was not produced by the"
+                                 " program"
+                                 .format(remaining[0]))
+                raise HMMMTestFailure(error)
     except KeyboardInterrupt :
         print("\n\nInterrupted by user, halting program execution...\n")
         sys.exit(1)
@@ -618,7 +619,8 @@ def main ( argList=None ) :
         sys.exit(1)
     except HMMMTestSuccess:
         pass
-    print("[[ test case passed ]]")
+    if test_case:
+        print("[[ test case passed ]]")
     sys.exit(0)
 
 # When this module is executed from the command line, as in "python filename.py"

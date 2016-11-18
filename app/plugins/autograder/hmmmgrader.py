@@ -332,7 +332,7 @@ print(repr(programs))\
         result = command.run(compatibility=False,
                              cwd=test_directory,
                              timeout=timeout)
-        return_code, stdout, stderr, timeout = result
+        return_code, stdout, stderr, timed_out = result
         if return_code == 0:
             new_programs = eval(stdout)
             for name, program in new_programs.items():
@@ -384,7 +384,7 @@ print(repr(programs))\
                                     for file_ in (set(py_filenames) -
                                                   all_files))))
     if error_data:
-        error += ("; errors (returncode, stdout, stderr, timeout)"
+        error += ("; errors (returncode, stdout, stderr, timed_out)"
                   " while opening files: {}"
                   .format(repr(error_data)))
     raise CouldNotRunHmmmTestsError(error)
@@ -449,10 +449,10 @@ def run_tests(command_prefix, test_file, time_limit):
             result = command.run(compatibility=False,
                                  cwd=test_directory,
                                  timeout=assembly_timeout)
-            return_code, stdout, stderr, timeout = result
+            return_code, stdout, stderr, timed_out = result
             if return_code != 0:
                 error = ("Assembly completed unsuccessfully{}"
-                         .format(" (timed out)" if timeout else ""))
+                         .format(" (timed out)" if timed_out else ""))
                 info = []
                 if stdout.strip():
                     info.append("Output:\n{}".format(stdout.strip()))

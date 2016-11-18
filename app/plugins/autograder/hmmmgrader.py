@@ -473,7 +473,9 @@ def run_tests(command_prefix, test_file, time_limit):
             failed_tests = {}
             all_stdout = ""
             all_stderr = ""
-            timeout = total_test_timeout / len(test_cases)
+            if test_cases:
+                timeout = (total_test_timeout and
+                           total_test_timeout / len(test_cases))
             for name, test_case in test_cases.items():
                 command = Command(command_prefix +
                                   ["python3",

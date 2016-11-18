@@ -107,7 +107,7 @@ def parse_test_case_(string):
     new_inputs = []
     for input_ in inputs:
         if isinstance(input_, tuple):
-            new_inputs.extend(input_[0] * input_[1])
+            new_inputs.extend([input_[0]] * input_[1])
         else:
             new_inputs.append(input_)
     new_outputs = []
@@ -115,7 +115,7 @@ def parse_test_case_(string):
         if output == (Ellipsis, Ellipsis):
             test_io_is_exhaustive = False
         elif isinstance(output, tuple):
-            new_outputs.extend(output[0] * output[1])
+            new_outputs.extend([output[0]] * output[1])
         else:
             new_outputs.append(output)
     new_test_io = new_inputs, new_outputs

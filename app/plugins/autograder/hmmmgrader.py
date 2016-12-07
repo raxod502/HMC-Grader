@@ -213,7 +213,7 @@ def parse_test_case(string):
     If the string is malformed, raises a CouldNotRunHmmmTestsError.
     """
     string = string.strip()
-    if re.match(r"\s*#", string):
+    if re.match(r"\s*#?", string):
         return None
     result = parse_test_case_(string)
     if isinstance(result, str):

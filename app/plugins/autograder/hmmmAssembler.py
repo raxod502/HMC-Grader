@@ -326,7 +326,7 @@ def main(programAsString = None) :
                 for line in arg.splitlines():
                     line = line.strip()
                     try:
-                        line = line[:line.find("#")]
+                        line = line[:line.index("#")]
                     except ValueError:
                         pass
                     if line:

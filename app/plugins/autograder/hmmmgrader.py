@@ -24,6 +24,18 @@ class CouldNotRunHmmmTestsError(Exception):
     pass
 
 
+def exception_name(e):
+    """Returns the name of an exception, e.g. "ValueError".
+
+    >>> try:
+    ...     raise ValueError("uh oh")
+    ... except Exception as e:
+    ...     print(exception_name(e))
+    ValueError
+    """
+    return type(e).__name__
+
+
 def parse_test_case_(string):
     """Helper function for parse_test_case that returns either the parsed
     test case or a string (meaning that an error occurred).

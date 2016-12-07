@@ -177,7 +177,7 @@ def gradeSubmission(pid, uid, subnum):
         testRunner = getTestRunners()[gradeSpec['type']]
 
         #Run the test
-        summary, failedTests = testRunner(prefix, f, gradeSpec.setdefault('timeout', 30))
+        summary, failedTests = testRunner(prefix, f, gradeSpec.setdefault('timeout', 120))
 
         #Put the raw test output in the test output directory
         rawTestOutput(testOutputDir, summary, f)

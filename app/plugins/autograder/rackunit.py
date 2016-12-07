@@ -63,7 +63,7 @@ def runTests(cmdPrefix, testFile, timeLimit):
   #End of manipulation of files
   #Run the tests
 
-  testProc = Command(cmdPrefix + ['/usr/bin/racket', testFile])
+  testProc = Command(cmdPrefix + ['racket', testFile])
 
   timeout, testOut, testError = testProc.run(timeout=int(timeLimit), env=environ)
 

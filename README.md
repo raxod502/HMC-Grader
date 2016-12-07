@@ -1,28 +1,9 @@
 groody-grader
 =============
 
-To run this site you must create a python virtual env for testing. This has to have the following packages installed:
+For information about how to set up the environment for this site,
+please refer to [this Google Doc][google doc]. For more information
+see the [Documentation] directory.
 
- * flask
- * flask-script
- * flask-bootstrap
- * flask-login
- * flask-markdown
- * mongoengine
- * flask-mongoengine
- * WTForms
- * python-dateutil
- * pygments
- * celery
- * flower
- * psutil
- * gunicorn
- * gevent
-
-The site can then be run with the command:
-
-`<virtualenv>/bin/python run.py`
-
-If you use SSHFS it is recommended to use the following command to mount your remote drive
-
-`sshfs -o reconnect user@remotehost:/remote/path /local/path`
+[google doc]: https://docs.google.com/document/d/13Qdk_l6HSlFXSI7Q-jZIHQV38sN82l89R3W9RO7MukM
+[documentation]: Documentation

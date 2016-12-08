@@ -15,7 +15,7 @@ Assignments for {{course.name}}
   </div>
   <div class="col-sm-8">
     <h3>Submssion for: {{course.name}}/{{assignment.name}}/{{problem.name}}</h3>
-    <h3>User: {% if not course.anonymousGrading %}{{user.username}}{% else %}{{course.getIdentifier(user.keyOfUsername())}}{% endif %}</h3>
+    <h3 >User: <span style="background-color:#eee; color:#eee;">{{user.username}}</span></h3>
   </div>
   <div class="col-sm-2">
   </div>

@@ -5,8 +5,11 @@ import os, sys
 # *horrible* hack, since we should really just update the libraries.
 # Unfortunately, there are more pressing problems...
 import warnings
-from flask.exthook import ExtDeprecationWarning
-warnings.simplefilter("ignore", ExtDeprecationWarning)
+try:
+    from flask.exthook import ExtDeprecationWarning
+    warnings.simplefilter("ignore", ExtDeprecationWarning)
+except ImportError:
+    pass
 
 from flask import Flask, g
 from flask.ext.login import LoginManager, current_user

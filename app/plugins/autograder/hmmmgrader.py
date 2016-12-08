@@ -24,6 +24,18 @@ class CouldNotRunHmmmTestsError(Exception):
     pass
 
 
+def exception_name(e):
+    """Returns the name of an exception, e.g. "ValueError".
+
+    >>> try:
+    ...     raise ValueError("uh oh")
+    ... except Exception as e:
+    ...     print(exception_name(e))
+    ValueError
+    """
+    return type(e).__name__
+
+
 def parse_test_case_(string):
     """Helper function for parse_test_case that returns either the parsed
     test case or a string (meaning that an error occurred).
@@ -201,7 +213,7 @@ def parse_test_case(string):
     If the string is malformed, raises a CouldNotRunHmmmTestsError.
     """
     string = string.strip()
-    if re.match(r"\s*#", string):
+    if re.match(r"\s*(#|$)", string):
         return None
     result = parse_test_case_(string)
     if isinstance(result, str):

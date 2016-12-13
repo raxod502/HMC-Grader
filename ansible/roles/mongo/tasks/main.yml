@@ -1,0 +1,50 @@
+---
+- name: install packages
+  apt: 
+    pkg: mongodb
+    state: present
+
+- name: install pymongo #required outside of venv for ansible mongo 
+  pip: 
+    name: pymongo
+
+- name: deactivate authentication for adding admin
+  lineinfile:
+    dest: /etc/mongod.conf
+    line: "auth=false"
+    regexp: "^auth"
+
+- name: allow open mongo connections
+  lineinfile:
+    dest: /etc/mongod.conf
+    regexp: "bind"
+    state: absent
+
+- name: create admin user
+  mongodb_user:
+    name: siteUserAdmin
+    database: admin
+    password: password
+    state: present
+    roles:
+      - { role: "userAdminAnyDatabase", db: "admin" }
+
+- name: activate authentication after adding admin
+  lineinfile:
+    dest: /etc/mongod.conf
+    line: "auth=true"
+    regexp: "^auth"
+
+- name: create grader user
+  mongodb_user:
+    login_user: siteUserAdmin
+    login_password: password
+    name: grader
+    database: submissionsite
+    password: grutorsLoveGrading
+    state: present
+    roles:
+      - {role: "dbOwner", db: "submissionsite" }
+
+
+

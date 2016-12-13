@@ -1,0 +1,4 @@
+---
+project_name: submissionSite
+project_root: /var/www
+project_repo: https://github.com/CSGreater-Developers/HMC-Grader.git

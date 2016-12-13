@@ -1,0 +1,16 @@
+---
+- name: install gunicorn in virtualenv
+  action: pip virtualenv=/var/www/venv name=gunicorn state=latest
+
+- name: create sockets folder
+  file: 
+    path: /var/www/sockets
+    state: directory
+    mode: 077
+
+- name: configure daemon
+  copy: src={{item.src}} dest={{item.dest}}
+  with_items:
+    - {src: 'gunicorn.service', dest: '/etc/systemd/system/gunicorn.service'}
+  notify:
+    - start gunicorn service

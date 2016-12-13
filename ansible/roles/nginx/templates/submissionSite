@@ -1,0 +1,11 @@
+server {
+    listen 80;
+    server_name 134.173.43.137;
+    
+
+    location / {
+        root /var/www/code;
+        include proxy_params;
+        proxy_pass http://unix:/var/www/sockets/submissionSite.sock;
+    }
+}

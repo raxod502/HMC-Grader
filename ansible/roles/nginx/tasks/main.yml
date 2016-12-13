@@ -1,0 +1,14 @@
+---
+- name: Installs nginx web server
+  apt: pkg=nginx state=installed update_cache=true
+
+- name: create nginx configuration file
+  template: src=submissionSite dest=/etc/nginx/sites-available/submissionSite
+
+- name: copy to sites enabled
+  file:
+    state: link
+    path: /etc/nginx/sites-enabled/submissionSite
+    src: /etc/nginx/sites-available/submissionSite
+  notify:
+    - start nginx

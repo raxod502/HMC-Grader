@@ -1,0 +1,12 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www
+ExecStart=/var/www/venv/bin/gunicorn -w 3 -k gevent --bind unix:/var/www/sockets/submissionSite.sock --pythonpath=/var/www/code app:app
+
+[Install]
+WantedBy=multi-user.target
